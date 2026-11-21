@@ -14,7 +14,20 @@ A CAD-derived, fixed-base arm model with seven simulated hinge joints (`J0`–`J
 
 ![preview](preview.png)
 
-This repository is not yet a sword-fighting or RL environment. The sword, contact rules, hardware limits, and robot retargeting controller are pending. See [model status and remaining inputs](docs/model_status.md) for the confirmed baseline as of **2026-11-21**; [Plan 1](docs/plan1_zh.md) supersedes the earlier online Cartesian-policy/Pinocchio roadmap.
+This repository is not yet a sword-fighting or RL environment. A separate generated single-arm sword assembly is now available below; match/contact rules, hardware calibration, and robot skill retargeting remain pending. See [model status and remaining inputs](docs/model_status.md) for the original baseline; [Plan 1](docs/plan1_zh.md) supersedes the earlier online Cartesian-policy/Pinocchio roadmap.
+
+## Four-hole-mounted shinai assembly
+
+The complete CAD base is side-mounted to the right shoulder of a fixed humanoid upper body. A short collar grips the shinai 31 mm below the guard, with its axis **parallel to the measured four-hole face**, not inserted along the face normal. The original CAD XML/meshes and arm scale are preserved. This is a **simulation fixture, not a manufacturing-ready clamp**; there are still seven DOFs and no grasp actuator.
+
+```bash
+python -m sim.inspect_mount --output outputs/mount_inspection
+python -m sim.assembly --headless --output outputs/assembly
+```
+
+For a static viewer that stays open until closed, run `python -m sim.assembly --inspect`. For an interactive physics check, run `python -m sim.assembly`. To save images on a Linux EGL setup, use `MUJOCO_GL=egl python -m sim.assembly --headless --output outputs/assembly --snapshot`.
+
+The default check initializes a near-horizontal, forward-pointing sword, selects a model-gravity-balanced J0 initial angle and completes a 10-second hold/small-J6 out-and-back under the existing provisional joint and torque bounds. It writes an independent scene, trajectory and pass/fail evidence to `outputs/assembly/`; it does not validate the CAD-zero-to-home path or fencing skills. Static inspection is not a physics test. When opening the generated XML directly, select the `assembly_home` keyframe; the Python entry point handles this initialization and gravity-compensated control. [中文装配说明、测量依据与限制](docs/assembly_zh.md) distinguishes measured interface dimensions from assumed fixture, mass and runtime values.
 
 ## Run the audit and demo
 
@@ -88,6 +101,6 @@ On Windows, `view.bat` opens that original scene. It does not run the configured
 - The XML models seven independently actuated joints; the real independent degrees of freedom and any mechanical coupling still need confirmation.
 - Moving mass is `26.532377 kg`, derived from the model's CAD inertial parameters. Printed-part masses, centers of mass, and inertias need calibration.
 - `qpos = 0` is the CAD pose, not a confirmed encoder zero or vertical-sword pose.
-- All robot meshes are visual only. Robot self-contact, robot-floor contact, sword contact, and scoring are not implemented.
+- All original robot meshes are visual only. The separate assembly adds coarse collision proxies; full-CAD contact validation and scoring are not implemented.
 - Raw actuator gains, damping, and armature are placeholders. Transmission ratios and measured motor behavior are not modeled.
-- No sword, calibrated tool frame, source URDF, Pinocchio IK, perception, RL training, or trained-policy evaluation is included.
+- The original scene has no sword/tool sites. The separate assembly adds a proposed grip/tool transform, not a calibrated real installation. Source URDF, Pinocchio IK, perception, RL training and trained-policy evaluation are not included.

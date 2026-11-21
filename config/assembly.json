@@ -1,0 +1,65 @@
+{
+  "schema_version": 2,
+  "parameter_status": "simulation_fixture_and_debug_limits_not_hardware_specification",
+  "source_scene": "scene.xml",
+  "end_effector_body": "end_effector_block",
+  "expected_source_sha256": {
+    "robot.xml": "71e3f1591dba7f7fae24ccd51c5518087900c4da9e68d98c0b928ef1bf0f2f24",
+    "scene.xml": "be8507bc148da1829144d80a51a5dac4474577a8adf5a8dd8328166a55cd2a78",
+    "meshes/End_effector_Block.stl": "fdfec52add1da009897cb1d6d5cee667674b3e28f3d780bc4b84e554541fdb09"
+  },
+  "mount": {
+    "status": "measured_four_hole_STL_face_not_thread_or_load_specification",
+    "center_ee_m": [0.02500000011193873, -0.010912236659784129, 0.022492891460853467],
+    "quat_ee_from_mount_wxyz": [0.9746003847718205, 0.22395108841579522, -0.000000011966535252428095, -0.000000002749761477854017],
+    "face_width_m": 0.05,
+    "hole_pitch_m": 0.0282842712474619,
+    "hole_diameter_m": 0.0053
+  },
+  "fixture": {
+    "status": "proposed_rigid_simulation_adapter_not_manufacturing_ready",
+    "plate_thickness_m": 0.006,
+    "grip_from_pommel_m": 0.29,
+    "grip_center_mount_m": [0.022, 0, 0.04],
+    "quat_mount_from_sword_wxyz": [0.7071067811865476, 0, 0.7071067811865476, 0],
+    "collar_width_m": 0.025,
+    "collar_radial_wall_m": 0.005,
+    "collar_clearance_m": 0.0004,
+    "bridge_half_width_m": 0.009,
+    "mass_kg": 0.10,
+    "com_from_mount_m": [0.008, 0, 0.02],
+    "inertia_diagonal_kg_m2": [0.000045, 0.000055, 0.000045]
+  },
+  "sword": {
+    "status": "photo_mass_and_COM_estimate_rod_inertia_not_identified",
+    "mass_kg": 0.436,
+    "com_from_pommel_m": 0.5,
+    "inertia_diagonal_kg_m2": [0.0424, 0.0424, 0.00005]
+  },
+  "torso": {
+    "status": "fixed_humanoid_upper_body_with_right_shoulder_CAD_mount_not_anatomically_calibrated",
+    "coordinate_frame": "+X forward, +Y left, +Z up",
+    "center_m": [0, 0, 1.05],
+    "right_shoulder_mount_local_m": [0, -0.242, 0.30],
+    "source_base_contact_center_m": [0, 0, -0.008],
+    "quat_world_from_cad_wxyz": [0.7071067811865476, 0.7071067811865476, 0, 0]
+  },
+  "collision": {
+    "status": "coarse_primitives_not_full_CAD_collision_certification",
+    "arm_proxy_radii_m": [0.075, 0.085, 0.045, 0.035, 0.032, 0.025, 0.025],
+    "maximum_allowed_penetration_m": 0.001
+  },
+  "runtime": {
+    "initial_pose": "side_mounted_CAD_pose_with_J0_gravity_balance_reset_not_motion_path",
+    "joint_half_windows_rad": [0.1, 0.15, 0.15, 0.15, 0.15, 0.15, 0.15],
+    "torque_caps_nm": [5, 80, 15, 20, 3, 3, 2],
+    "timestep_s": 0.002,
+    "control_period_s": 0.01,
+    "max_observed_speed_rad_s": 0.5,
+    "max_tracking_error_rad": 0.05,
+    "max_target_speed_rad_s": 0.05,
+    "motion_amplitude_rad": 0.01,
+    "motion_period_s": 8,
+    "default_check_duration_s": 10
+  }
+}

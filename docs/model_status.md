@@ -4,6 +4,8 @@ Status date: **2026-11-21**. This document distinguishes properties of the check
 
 This is the single-arm baseline snapshot. The current research roadmap is [Plan 1](plan1_zh.md): offline retargeted skill templates with discrete PPO scheduling. That roadmap supersedes the prospective online Cartesian-policy/Pinocchio section below; the model measurements and remaining mechanical inputs still apply.
 
+**Assembly update:** a separate generated scene now side-mounts the entire CAD base to a fixed humanoid torso's right shoulder and adds a transverse shinai grip below the guard, tool sites and coarse collision proxies. See [四孔持剑装配](assembly_zh.md) for commands, measured/assumed parameters and checks. The baseline statements below describe the unchanged original XML, not this augmented scene. Real mounting/actuator calibration, skill retargeting and match validation are still pending.
+
 ## Confirmed baseline
 
 The repository contains a MuJoCo arm scene, CAD mesh assets, and a viewer preview. The original README describes a conversion from an Onshape "Global Assembly" URDF export. The source URDF is not included in this baseline, so that conversion history does not establish agreement between an available URDF and the current MJCF.
