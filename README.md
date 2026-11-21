@@ -1,10 +1,20 @@
-# Arm MuJoCo model
+# RL-SwordNet — Plan 1
+
+Plan 1 uses a shared, data-derived skill bank (`Guard`, `Stab`, `ParryUp`) and compares a scripted scheduler with a PPO self-play scheduler for two fixed-base arms. It does **not** implement or compare pure behavior cloning against RL from scratch.
+
+- [中文方案：范围、算法、实验和截至 12 月 3 日的计划](docs/plan1_zh.md)
+- [Skill library setup, format, and source notice](motion_skills/plan1/README.md)
+- [Pinned source manifest](motion_skills/plan1/manifest.json)
+
+This branch provides the plan, a bounded single-arm baseline, and working source-download, numerical-conversion, and phase-sampling tools. **The skill templates are not robot-ready joint trajectories.** Robot/tool retargeting, collision validation, the two-arm environment, scoring, PPO training, and self-play remain planned work. Third-party motion binaries and generated trajectories are not redistributed in Git; the library instructions explain how to obtain and verify the pinned sources locally.
+
+## Single-arm baseline
 
 A CAD-derived, fixed-base arm model with seven simulated hinge joints (`J0`–`J6`). The first milestone is a model audit and a bounded, low-speed single-arm demonstration. The long-term project goal is two fixed robots and sim-to-real evaluation.
 
 ![preview](preview.png)
 
-This repository is not yet a sword-fighting or RL environment. The sword, contact rules, hardware limits, and Cartesian/Pinocchio controller are pending. See [model status and remaining inputs](docs/model_status.md) for the confirmed state as of **2026-11-21**.
+This repository is not yet a sword-fighting or RL environment. The sword, contact rules, hardware limits, and robot retargeting controller are pending. See [model status and remaining inputs](docs/model_status.md) for the confirmed baseline as of **2026-11-21**; [Plan 1](docs/plan1_zh.md) supersedes the earlier online Cartesian-policy/Pinocchio roadmap.
 
 ## Run the audit and demo
 

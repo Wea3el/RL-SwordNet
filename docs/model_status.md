@@ -2,6 +2,8 @@
 
 Status date: **2026-11-21**. This document distinguishes properties of the checked-in model from assumptions about the physical robot. It does not report training results or hardware validation.
 
+This is the single-arm baseline snapshot. The current research roadmap is [Plan 1](plan1_zh.md): offline retargeted skill templates with discrete PPO scheduling. That roadmap supersedes the prospective online Cartesian-policy/Pinocchio section below; the model measurements and remaining mechanical inputs still apply.
+
 ## Confirmed baseline
 
 The repository contains a MuJoCo arm scene, CAD mesh assets, and a viewer preview. The original README describes a conversion from an Onshape "Global Assembly" URDF export. The source URDF is not included in this baseline, so that conversion history does not establish agreement between an available URDF and the current MJCF.

@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "plan_id": "plan1",
+  "status": "candidate_task_space_templates_not_robot_ready",
+  "upstream": {
+    "repository": "https://github.com/nv-tlabs/ASE",
+    "commit": "6f9b4f1f289603eee6a4f45d082bc6e6d83fecec",
+    "motion_path": "ase/data/motions/reallusion_sword_shield",
+    "notice_url": "https://github.com/nv-tlabs/ASE/blob/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/README.txt",
+    "notice": "Motion data is provided courtesy of Reallusion, strictly for noncommercial use. This repository does not grant additional rights or assert redistribution permission."
+  },
+  "sources": {
+    "stab": {
+      "filename": "RL_Avatar_Atk_Stab_Motion.npy",
+      "url": "https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Atk_Stab_Motion.npy",
+      "size_bytes": 178957,
+      "sha256": "84447bd38d1efa356dc44d68f5e5d516760c03cdb236aa1a13c181f3bbc6d3c0",
+      "frames": 128,
+      "fps": 29.997656433091162
+    },
+    "parry_up": {
+      "filename": "RL_Avatar_Sword_ParryUp_Motion.npy",
+      "url": "https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Sword_ParryUp_Motion.npy",
+      "size_bytes": 82077,
+      "sha256": "d883d04247caa594b5a1f142ea18aac930ef7a97603abe22758be386af1d4b99",
+      "frames": 58,
+      "fps": 29.875840662183133
+    }
+  },
+  "skills": [
+    {"action_id": 0, "id": "guard", "kind": "hold", "source": "stab", "description": "Candidate common preparation pose derived from the first stab frame; not a separate human demonstration."},
+    {"action_id": 1, "id": "stab", "kind": "attack", "source": "stab", "description": "Thrust motion template; not an expert decision about when to attack."},
+    {"action_id": 2, "id": "parry_up", "kind": "defence", "source": "parry_up", "description": "Up-parry motion template; successful blocking requires opponent/contact validation."}
+  ],
+  "processing": {
+    "positions_unit": "metres",
+    "source_grip": "right_hand skeletal origin, not a measured clamp point",
+    "source_blade_axis": "right_hand to fixed sword node, source length 0.74 m",
+    "remove_root_translation": true,
+    "body_frame": "fixed per clip from first shoulder line: x=left-right projected horizontally; y=up cross x; z=world up. No anatomical forward claim.",
+    "grip_displacement_scale": 0.5,
+    "reference": "first stab pose in the fixed body frame; directions remain in that frame",
+    "time_contract": "normalised phase only; source timestamps are provenance, NOT approved robot playback timing"
+  }
+}
