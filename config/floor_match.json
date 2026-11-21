@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "status": "exploratory_kinematic_screen_not_hardware_or_defence_validation",
+  "neutral_grip_world_m": [0.05, -0.45, 1.05],
+  "world_from_skill_yaw_deg": 30.0,
+  "mapping_selection": "Exploratory sparse actual-tool IK screen of shared neutral heights 0.90/1.05/1.20 m and yaws -30/0/+30 deg. One mapping shared by both clips; not held-out evaluation.",
+  "exploratory_guard_seed_rad": [1.069, 0.336, -0.636, 1.523, -1.045, -1.201, 0.115],
+  "profiles": ["current_debug", "hypothetical180"],
+  "substeps_per_source_interval": 4,
+  "acceptance": {
+    "grip_error_m": 0.02,
+    "axis_error_deg": 5.0,
+    "tip_error_m": 0.05,
+    "maximum_adjacent_joint_change_rad": 0.20,
+    "penetration_m": 0.001
+  },
+  "solver": {
+    "seed": 20261122,
+    "max_iterations": 120,
+    "internal_grip_tolerance_m": 0.0001,
+    "internal_axis_tolerance_deg": 0.05,
+    "internal_tip_tolerance_m": 0.0005
+  },
+  "transition_samples": 121,
+  "limits_note": "current_debug is the previous tiny diagnostic window, NOT a measured hardware limit. hypothetical180 is an explicitly hypothetical +/-pi radians range, NOT permission to operate hardware.",
+  "collision_note": "Primitive arm proxies and simplified rigid sword only. Not a complete concave-CAD, swept-volume, inter-robot or flexible-shinai collision certificate.",
+  "timing_note": "Source timestamps are animation provenance only; no source-speed playback is authorized. This screen does not execute physics."
+}

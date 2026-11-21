@@ -6,7 +6,46 @@ Plan 1 uses a shared, data-derived skill bank (`Guard`, `Stab`, `ParryUp`) and c
 - [Skill library setup, format, and source notice](motion_skills/plan1/README.md)
 - [Pinned source manifest](motion_skills/plan1/manifest.json)
 
-This branch provides the plan, a bounded single-arm baseline, and working source-download, numerical-conversion, and phase-sampling tools. **The skill templates are not robot-ready joint trajectories.** Robot/tool retargeting, collision validation, the two-arm environment, scoring, PPO training, and self-play remain planned work. Third-party motion binaries and generated trajectories are not redistributed in Git; the library instructions explain how to obtain and verify the pinned sources locally.
+This branch provides the plan, a bounded single-arm baseline, verified source conversion, and an exploratory **floor-mounted arm + shinai motion-matching test**. **The references are not hardware-ready trajectories or trained policies.** Full-CAD collision validation, measured hardware limits, the two-arm environment, scoring, PPO training, and self-play remain pending. Third-party motion binaries and generated trajectories are not redistributed in Git; the library instructions explain how to obtain and verify the pinned sources locally.
+
+## Current setup: floor-fixed arm and first ASE matching test
+
+The current experiment has **no humanoid torso**. The complete original CAD base is fixed to the world in its original upright orientation and translated upward by 8 mm so its measured bottom meets the floor. The arm, transverse near-guard fixture and 1.080 m shinai are not scaled. The actual grip-to-tip distance is 0.790 m. Original XML/meshes and CAD inertias are preserved.
+
+```bash
+python -m sim.floor --inspect
+```
+
+That command displays the CAD-zero geometry only, not an executed motion or a validated reset-to-guard path. The older shoulder-mounted experiment below is retained for comparison and is not used by the floor test.
+
+After obtaining the verified sources as described in the [skill library instructions](motion_skills/plan1/README.md), run:
+
+```bash
+python -m plan1_skills.floor_test --output outputs/floor_matching_round1
+```
+
+Use a new/empty output directory for each run. With a Linux EGL renderer, add `--render` and prefix the command with `MUJOCO_GL=egl`. An existing verified source cache can be selected with `--source-dir PATH`; no third-party runtime or unsafe pickle loading is required. To view the generated joint configurations locally:
+
+```bash
+python -m plan1_skills.view_match --run outputs/floor_matching_round1 --skill stab
+python -m plan1_skills.view_match --run outputs/floor_matching_round1 --skill parry_up
+```
+
+These are explicitly labelled **kinematic previews**, not physics playback. Display duration does not specify robot execution timing.
+
+The test applies one common mapping from [config/floor_match.json](config/floor_match.json) to Guard, Stab and ParryUp, using the real mounted grip/tip sites rather than an assumed end-effector axis. It preserves all 128 Stab and 58 ParryUp source frames and adds interpolation (509 and 229 samples respectively). It retains failed samples, checks adjacent joint changes and interpolated proxy contacts, constructs return-to-Guard connections, and reports static gravity demand against the existing provisional torque caps. The source hand displacement is adapted by the pre-existing factor of 0.5; sword and robot dimensions are unchanged.
+
+The first-round full-frame IK screen found a candidate mapping under **hypothetical ±180° joint bounds**; the original tiny debug windows cannot contain it. This is not confirmation of real joint travel. The original animation timing also produces excessive reference joint speeds and must not be used directly. Results in `summary.json` distinguish pose fitting, primitive-contact screening, gravity demand and untested physics. A successful ParryUp fit does not establish that it intercepts an opponent's sword. The start-up motion from CAD zero to Guard remains unvalidated.
+
+For a separate, genuinely forward-stepped **slow diagnostic**, not a kinematic preview:
+
+```bash
+python -m sim.floor_playback --input outputs/floor_matching_round1/hypothetical180 --skill both --output outputs/floor_playback_round1
+```
+
+This resets directly to Guard, then uses native position actuators with model-gravity feedforward through the **same force caps**. Original gains are preserved (`[2000,2000,2000,2000,200,200,200]`), without external generalized forces or body gravity cancellation. Each saved joint interval is retimed with a stop-to-stop quintic at provisional target bounds of 0.05 rad/s and 0.1 rad/s². The first candidate takes approximately 345 s for Stab and 275 s for ParryUp, including connections and holds, in **simulation time**. This intentionally slow check is not an approved training/combat speed. Output `summary.json` and `trajectory.csv` record actual tracking, complete actuator output, contacts and any failure. Real joint/motor constraints and fast dynamic feasibility remain open.
+
+Local round completed on 2026-11-22: all 509 Stab and 229 ParryUp kinematic samples met the configured error thresholds under the hypothetical range profile (maximum grip fit error 0.100 mm and 0.078 mm, respectively). Both slow forward-step checks completed, with maximum joint tracking errors 0.00582 rad / 0.00363 rad and no proxy penetration, torque saturation or MuJoCo warnings. The checked-in tiny debug-window profile failed pose matching and is not evidence against the data: it was only intended for small joint demos. These results do not validate real joint travel, source-speed execution, full CAD contacts, start-up travel or opponent interception.
 
 ## Single-arm baseline
 
@@ -16,7 +55,7 @@ A CAD-derived, fixed-base arm model with seven simulated hinge joints (`J0`–`J
 
 This repository is not yet a sword-fighting or RL environment. A separate generated single-arm sword assembly is now available below; match/contact rules, hardware calibration, and robot skill retargeting remain pending. See [model status and remaining inputs](docs/model_status.md) for the original baseline; [Plan 1](docs/plan1_zh.md) supersedes the earlier online Cartesian-policy/Pinocchio roadmap.
 
-## Four-hole-mounted shinai assembly
+## Earlier shoulder-mounted shinai assembly (not the current floor setup)
 
 The complete CAD base is side-mounted to the right shoulder of a fixed humanoid upper body. A short collar grips the shinai 31 mm below the guard, with its axis **parallel to the measured four-hole face**, not inserted along the face normal. The original CAD XML/meshes and arm scale are preserved. This is a **simulation fixture, not a manufacturing-ready clamp**; there are still seven DOFs and no grasp actuator.
 

@@ -72,7 +72,9 @@ grip_delta_m, blade_axis = library.sample("parry_up", phase=0.5)
 
 The checked-in arm has seven position actuators, no mounted sword, no calibrated grip site, no measured joint limits, and disabled robot contacts. The small bounded joint demo does not validate these templates. Earlier sparse IK diagnostics used hypothetical limits and mounting assumptions, as detailed in [the proposal](../../docs/plan1_zh.md#8-现有证据与尚未完成事项); they are not an executable skill acceptance test.
 
-Before training, mount the actual shinai, confirm joint/actuator limits, retarget all frames and transitions, select conservative durations, and verify tracking and collisions under MuJoCo dynamics. A ParryUp label alone does not demonstrate a successful defense. The planned PPO policy selects skills only after those checks; no trained policy, self-play runner, reward function, or scoring environment is provided here.
+The separate [floor-mounted experiment](../../README.md#current-setup-floor-fixed-arm-and-first-ase-matching-test) now builds the arm with the proposed near-guard clamp and original-size shinai. `python -m plan1_skills.floor_test` performs full-frame actual-grip/axis IK and sampled diagnostics without changing this source-template contract; `python -m sim.floor_playback` is a separate slow finite-torque check. These are exploratory tests under labelled hypothetical joint ranges, not confirmation of hardware limits or a learned policy.
+
+Before training, confirm real joint/actuator limits and the clamp transform, validate all frames and transitions at the intended execution speed, and verify collisions under MuJoCo dynamics. A ParryUp label alone does not demonstrate a successful defense. The planned PPO policy selects skills only after those checks; no trained policy, self-play runner, reward function, or scoring environment is provided here.
 
 Run the offline checks, including the original single-arm tests, with:
 
