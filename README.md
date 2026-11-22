@@ -1,14 +1,72 @@
 # RL-SwordNet — Plan 1
 
-Plan 1 uses a shared, data-derived skill bank (`Guard`, `Stab`, `ParryUp`) and compares a scripted scheduler with a PPO self-play scheduler for two fixed-base arms. It does **not** implement or compare pure behavior cloning against RL from scratch.
+## Report entry points
 
+- [English preliminary report draft](docs/report_draft_en.md): repository, description, tools, algorithms, planned work/experiments, expected results, preliminary work and ethics.
+- [当前中文项目框架与报告说明](docs/plan1_zh.md)：最新 A1/A2 双 self-play 主线及截至 12 月 3 日的计划。
+- [Current validation status and limitations](docs/skill_validation_zh.md): distinguishes geometric candidates, physical controls and work still required before RL.
+
+Updated 22 November 2026. Use the current documents for the report; the [21 November plan](docs/plan1_20261121_zh.md) is retained as history and its fixed-script/shared-three-skill comparison is superseded. No trained policy or multi-directional defensive coverage is claimed.
+
+The confirmed research goal is **two separately self-play-trained policies** on unchanged floor-fixed arms: A1 selects and times finite predefined skills, while A2 outputs continuous joint-target increments. They must share physical observations, native low-level control and scoring rules, then be frozen for cross-play. This architecture is not yet implemented or cleared for RL.
+
+The current prerequisite is full-window **physical attack/parry validation**. Opt-in `whole_blade_first_touch_v2` scores the actual three finite blade cylinders without skill/phase labels; blade-to-guard contact is neutral legal weapon contact. The first-touch game result is separate from later diagnostic target entries, so a contacted parry cannot hide a delayed hit. Historical v1 rules and failed evidence remain unchanged. The manually authored shared three-skill fixture and earlier ASE conversion below are controls, not the final A1 bank or trained policies. See [acceptance requirements, evidence and reproduction](docs/skill_validation_zh.md).
+
+- [中文动作定义、成对物理验证、时序边界及复现方法](docs/manual_duel_zh.md)
+- [共享技能有效性验证与连续反击阻塞项](docs/skill_validation_zh.md)
+- [完整 ASE 直刺和上拨挡的双机测试与适配结果](docs/ase_duel_zh.md)
 - [中文方案：范围、算法、实验和截至 12 月 3 日的计划](docs/plan1_zh.md)
 - [Skill library setup, format, and source notice](motion_skills/plan1/README.md)
 - [Pinned source manifest](motion_skills/plan1/manifest.json)
 
-This branch provides the plan, a bounded single-arm baseline, verified source conversion, and an exploratory **floor-mounted arm + shinai motion-matching test**. **The references are not hardware-ready trajectories or trained policies.** Full-CAD collision validation, measured hardware limits, the two-arm environment, scoring, PPO training, and self-play remain pending. Third-party motion binaries and generated trajectories are not redistributed in Git; the library instructions explain how to obtain and verify the pinned sources locally.
+This branch provides a bounded single-arm baseline, earlier source conversion/matching tests, and versioned two-arm native-contact skill diagnostics. **The references are not hardware-ready trajectories or trained policies.** Full-CAD collision validation, measured hardware limits, contact-safe continuous transitions, a complete training environment/rewards, PPO training and self-play remain pending. Third-party motion binaries and generated trajectories are not redistributed in Git.
 
-## Current setup: floor-fixed arm and first ASE matching test
+## Shared skill validation before RL
+
+Historical v1 diagnostic:
+
+```bash
+python -m sim.skill_validation --output outputs/shared_new --library-config config/shared_skills_staged_candidate.json --offsets -6 -5 -3 -2.5 -2 -1.5 0 2 3
+python -m sim.policy_validation --output outputs/policies_new --library-config config/shared_skills_staged_candidate.json --duration-s 60
+MUJOCO_GL=egl python -m sim.skill_validation_replay --run outputs/shared_new --baseline a1_attack_guard --defended a1_parry_offset_-2.00 --output outputs/shared_new/comparison.mp4 --start-s 8 --end-s 17
+```
+
+Explicit whole-blade v2 diagnostic, with a 20 ms decision tick and neighbouring parry start samples:
+
+```bash
+python -m sim.skill_validation --output outputs/whole_blade_v2_new --library-config config/shared_skills_staged_candidate.json --rules whole_blade_first_touch_v2 --decision-period-s .02 --offsets -5 -2.1 -2.05 -2 -1.95 -1.9 2
+```
+
+Even a successful sampled window is not a universal parry guarantee. Every final A1 skill must have a real hitting Guard control, full-window defence evidence, timing/direction negative controls, and tested entry/exit transitions. Merely choosing the matching direction never grants immunity.
+
+Use new output paths. The staged manual candidate keeps the 1.080 m sword, original arm dimensions, fixed targets, collision masks and debug torque caps unchanged. It separates upright preparation from sword rotation. Speed/tracking are diagnostics in this pose-first stage, not hardware certification. The shared manual builder's default deliberately retains the earlier simultaneous-preparation candidate; select its staged configuration explicitly. Every output includes failed cases; a successful scheduled parry is not a validated continuous game or autonomous-policy comparison.
+
+## A1 ASE derived five skill geometry pilot
+
+`A1` denotes the finite-skill policy family, not the left `a1` scene slot. A1-family policies may occupy both robot slots during their own self-play; this candidate library does not constrain A2's continuous joint-command action space. Configs and future exports explicitly carry `policy_family=A1`. The present candidates do not establish multi-directional defence or a trainable self-play environment.
+
+This pilot requires the five exact source files listed in `config/ase_pilot_v2.json`, obtained separately under the source terms and kept in a local cache. Use `--source-dir PATH` for that cache; missing/corrupt files are rejected without automatic download. The historical `plan1_skills fetch` command obtains only its two older sources, not the new five-source pilot.
+
+```bash
+python -m sim.ase_pilot --config config/ase_pilot_v2_calibrated_candidate.json --output outputs/ase_pilot_new --ik
+```
+
+This local-cache-only candidate contains Ready, Stab, a horizontal slash and left/right parry seeds, with pinned source hashes, selected frames, authored seams and retiming recorded. The calibrated common mapping passes the sampled actual-model IK and strict proxy-contact screen for all five candidates. **Dynamic attacks, interceptions, joint-loop recovery and continuous switching are not certified; no candidate is admitted to training.** An independent joint-return diagnostic found geometrically clear paths, but some move the sword tip substantially and must be included in full-window defence tests. The original failed mapping and all calibration attempts are retained; see the [current evidence](docs/skill_validation_zh.md).
+
+## Earlier role-specific manual attack and parry test
+
+```bash
+python -m sim.manual_duel --output outputs/manual_duel_new --matrix
+MUJOCO_GL=egl python -m sim.manual_duel_replay --run outputs/manual_duel_new --output outputs/manual_duel_new/comparison.mp4
+```
+
+Use a new output path. Physics-only testing needs the existing requirements; optional MP4 rendering also needs `imageio` and `imageio-ffmpeg`. The replay uses recorded physics states, not command trajectories.
+
+The default attack hits without defence, while the correctly timed active side-parry prevents the hit throughout 11.85 simulated seconds. Mirrored roles and a 1 ms timestep repeat the result; a deliberately late parry fails. Timing/speed sensitivity tests also contain genuine failures: this is a controlled example, **not universal defence or an RL win rate**. Original dimensions/gains/torque caps are unchanged; joint travel remains hypothetical. See the [full evidence and limitations](docs/manual_duel_zh.md).
+
+## Earlier floor-fixed ASE matching test
+
+The later full-clip physical experiment is described in [ASE duel testing](docs/ase_duel_zh.md): `python -m sim.ase_duel --output outputs/ase_original_new`. Both full clips play once with separate guard connections. The original display mapping misses the target; common spatial calibration produces a real native-clip thrust hit, but tested ParryUp timings have not established valid defence. This is geometry-preserving retimed playback, not source-speed imitation or a trained policy.
 
 The current experiment has **no humanoid torso**. The complete original CAD base is fixed to the world in its original upright orientation and translated upward by 8 mm so its measured bottom meets the floor. The arm, transverse near-guard fixture and 1.080 m shinai are not scaled. The actual grip-to-tip distance is 0.790 m. Original XML/meshes and CAD inertias are preserved.
 
@@ -53,7 +111,7 @@ A CAD-derived, fixed-base arm model with seven simulated hinge joints (`J0`–`J
 
 ![preview](preview.png)
 
-This repository is not yet a sword-fighting or RL environment. A separate generated single-arm sword assembly is now available below; match/contact rules, hardware calibration, and robot skill retargeting remain pending. See [model status and remaining inputs](docs/model_status.md) for the original baseline; [Plan 1](docs/plan1_zh.md) supersedes the earlier online Cartesian-policy/Pinocchio roadmap.
+This repository is not yet an RL environment. The manual two-arm fixture supplies controlled contact diagnostics, with explicit v1 tip and v2 whole-blade rules; a complete training game, hardware calibration and autonomous policies remain pending. See [model status and remaining inputs](docs/model_status.md) for the original baseline; the earlier [ASE Plan 1](docs/plan1_20261121_zh.md) remains documented for comparison.
 
 ## Earlier shoulder-mounted shinai assembly (not the current floor setup)
 

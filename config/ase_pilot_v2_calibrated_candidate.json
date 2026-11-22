@@ -1,0 +1,13 @@
+{
+  "schema_version": 2,
+  "library_id": "ase_derived_five_skill_geometry_pilot_v2_calibrated_candidate",
+  "status": "candidate_only_not_a_training_library",
+  "policy_family": "A1",
+  "action_space_kind": "finite_skill_selection",
+  "robot_slot_independent": true,
+  "a2_continuous_action_space": false,
+  "mapping_selection": "Development calibration of eight common mappings in outputs/ase_pilot_mapping_development_v2/summary.json. This retains the pre-existing ase_duel_shared common mapping and its Guard seed; all five sparse candidates passed strict sampled geometry. NOT held-out performance, physical attack/defence evidence, or joint-loop certification. The default identity candidate and all failed mappings remain preserved.",
+  "guard_grip_local_m": [0.24057728286391122, -0.37398459505801546, 0.7221421015755197],
+  "rotation_matrix": [[0.8660254037844387, -0.49999999999999994, 0.0], [0.49999999999999994, 0.8660254037844387, 0.0], [0.0, 0.0, 1.0]],
+  "guard_seed_rad": [0.9101707278193188, -1.1975924110585945, -2.056041917989702, -2.464070537878126, 0.3705722336381225, 0.5394505284391571, -0.12242644021395901]
+}

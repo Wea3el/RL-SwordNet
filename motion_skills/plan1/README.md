@@ -1,6 +1,8 @@
-# Plan 1 skill library
+# Historical Plan 1 reference templates
 
-Three candidate task-space templates support the [Plan 1 proposal](../../docs/plan1_zh.md). They reduce the initial learning problem to skill selection and timing, rather than learning seven joint commands from scratch. These tools prepare references; they do not yet control the robot or train PPO.
+This directory documents the original three-template source converter, retained for reproducibility. It is not the current A1 training library and does not constrain A2's continuous joint actions. See the [current project framework](../../docs/plan1_zh.md) and [report draft](../../docs/report_draft_en.md). These tools prepare references; they do not train PPO or establish effective defence.
+
+The newer five-source A1 geometry pilot is implemented in `sim/ase_pilot.py`, with pinned filenames, hashes and sizes in `config/ase_pilot_v2.json`. After reviewing [the source notice](SOURCES.md), obtain those exact files separately from the pinned ASE source directory into a local cache, then pass `--source-dir PATH` to `python -m sim.ase_pilot`. The historical fetch command below downloads only Stab and ParryUp. The five-source pilot remains unvalidated for dynamic attack/parry and is not admitted to training.
 
 | Action ID | Skill | Definition |
 | --- | --- | --- |

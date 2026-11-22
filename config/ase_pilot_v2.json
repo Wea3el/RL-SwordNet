@@ -1,0 +1,36 @@
+{
+  "schema_version": 2,
+  "library_id": "ase_derived_five_skill_geometry_pilot_v2",
+  "status": "candidate_only_not_a_training_library",
+  "policy_family": "A1",
+  "action_space_kind": "finite_skill_selection",
+  "robot_slot_independent": true,
+  "a2_continuous_action_space": false,
+  "source_commit": "6f9b4f1f289603eee6a4f45d082bc6e6d83fecec",
+  "source_notice": "Reallusion motion data: strictly noncommercial use; no redistribution permission asserted.",
+  "guard_grip_local_m": [0.45, 0.0, 0.95],
+  "rotation_matrix": [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]],
+  "grip_displacement_scale": 0.5,
+  "robot_grip_to_tip_m": 0.79,
+  "samples_per_segment": 9,
+  "keypose_interval_s": 0.8,
+  "authored_seam_s": 0.4,
+  "guard_hold_s": 0.4,
+  "ik_joint_margin_rad": 0.05,
+  "solver_seed": 20261122,
+  "solver_max_iterations": 120,
+  "sources": {
+    "ready": {"filename": "RL_Avatar_Idle_Ready_Motion.npy", "sha256": "330966a0182bdfebb238eaa11273f59be38cedc09fa4b0fa9945714ca336a913", "size_bytes": 144357, "frames": 103, "fps": 29.930090300029132},
+    "stab": {"filename": "RL_Avatar_Atk_Stab_Motion.npy", "sha256": "84447bd38d1efa356dc44d68f5e5d516760c03cdb236aa1a13c181f3bbc6d3c0", "size_bytes": 178957, "frames": 128, "fps": 29.997656433091162},
+    "slash_left": {"filename": "RL_Avatar_Atk_SlashLeft_Motion.npy", "sha256": "88242bcb6e35168179e834f5a82e1fe228e072c9caee3d1b13bb10973d387f25", "size_bytes": 65469, "frames": 46, "fps": 29.99340804218853},
+    "parry_left": {"filename": "RL_Avatar_Sword_ParryLeft_Motion.npy", "sha256": "eb9f9d94ebe8cd5462827493ab111c4292b797a543837500eb052e10236683ce", "size_bytes": 106989, "frames": 76, "fps": 29.90525069088038},
+    "parry_right": {"filename": "RL_Avatar_Sword_ParryRight_Motion.npy", "sha256": "ee209e760b832570ce6ae6ea42d9e7674d0dd6af9030e5d90dc7a771f6ccdf70", "size_bytes": 105605, "frames": 75, "fps": 29.995946493717064}
+  },
+  "skills": [
+    {"id": "guard", "kind": "hold", "source": "ready", "keyframes": [0]},
+    {"id": "stab", "kind": "attack_candidate", "source": "stab", "keyframes": [0, 35, 43, 46, 52, 60, 85, 127]},
+    {"id": "slash_left", "kind": "attack_candidate", "source": "slash_left", "keyframes": [0, 12, 16, 18, 19, 20, 29, 45]},
+    {"id": "parry_left", "kind": "defence_candidate", "source": "parry_left", "keyframes": [0, 10, 12, 15, 18, 23, 40, 75]},
+    {"id": "parry_right", "kind": "defence_candidate", "source": "parry_right", "keyframes": [0, 16, 20, 23, 25, 31, 42, 74]}
+  ]
+}

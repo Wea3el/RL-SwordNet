@@ -1,0 +1,6 @@
+{
+  "attack_prepare_mode": "upright_then_tilt",
+  "attack_ready_grip_local_m": [0.45, 0.2, 1.05],
+  "attack_extended_grip_local_m": [0.65, 0.2, 1.05],
+  "attack_axis_local": [0.967423230596734, -0.25316455696202533, 0.0]
+}
