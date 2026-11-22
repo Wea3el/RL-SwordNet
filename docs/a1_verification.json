@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "scope": "Condensed local native development evidence, not a trained-fencer benchmark or transferable validation certificate",
+  "recorded_date": "2026-11-22",
+  "full_trajectories_and_third_party_arrays_in_git": false,
+  "source_report_sha256": {
+    "outputs/a1_env_tactics_regression_round1/summary.json": "f19f61319795855bd09f5f9613888ad9cc5ab9a894dc9132394c3430c9eb110b",
+    "outputs/a1_env_baseline_screen_round1/summary.json": "1197362a4616d116ddf2e00849986412042a8bc94afaf40c012b6b32d5489eef",
+    "outputs/a1_env_wrong_defence_screen_round1/summary.json": "eb356332f85ca6230f012c7fe5afa537fb1399c0cc63a0bdc22bd58157132d00",
+    "outputs/a1_zero_update_native_round1/summary.json": "4c11eb51b623170b45cfe4609d0b7ba972769b457d8244fbdc55edff7e21fa9a",
+    "outputs/a1_real_batch_optimizer_smoke_round1/summary.json": "b9af7916e8d7f2d93504f4d328166709573ea684a87c2625c4039ddf483b434f"
+  },
+  "source_reports_are_local_not_repo_files": true,
+  "tactics": {
+    "stab_then_slash": {
+      "status": "truncated",
+      "time_s": 80.00000000001793,
+      "result": "timeout_draw",
+      "native_error": null
+    },
+    "slash_then_stab": {
+      "status": "truncated",
+      "time_s": 80.00000000001793,
+      "result": "timeout_draw",
+      "native_error": null
+    },
+    "right25_observed_counter": {
+      "status": "terminated",
+      "time_s": 40.257999999996876,
+      "result": "target_win",
+      "native_error": null
+    }
+  },
+  "baselines": [
+    {
+      "name": "guard_vs_guard",
+      "termination_type": "timeout_draw",
+      "winner": null,
+      "reward": {
+        "a1": 0,
+        "a2": 0
+      },
+      "valid_for_reward": true,
+      "time_s": 30.00000000001368
+    },
+    {
+      "name": "always_stab_vs_guard",
+      "termination_type": "target_win",
+      "winner": "a1",
+      "reward": {
+        "a1": 1,
+        "a2": -1
+      },
+      "valid_for_reward": true,
+      "time_s": 11.917999999998834
+    },
+    {
+      "name": "always_slash_vs_guard",
+      "termination_type": "target_win",
+      "winner": "a1",
+      "reward": {
+        "a1": 1,
+        "a2": -1
+      },
+      "valid_for_reward": true,
+      "time_s": 13.62199999999789
+    },
+    {
+      "name": "always_stab_vs_always_stab",
+      "termination_type": "double_touch",
+      "winner": null,
+      "reward": {
+        "a1": 0,
+        "a2": 0
+      },
+      "valid_for_reward": true,
+      "time_s": 11.917999999998834
+    },
+    {
+      "name": "always_slash_vs_always_slash",
+      "termination_type": "timeout_draw",
+      "winner": null,
+      "reward": {
+        "a1": 0,
+        "a2": 0
+      },
+      "valid_for_reward": true,
+      "time_s": 39.99999999999748
+    },
+    {
+      "name": "always_stab_vs_always_slash",
+      "termination_type": "double_foul",
+      "winner": null,
+      "reward": {
+        "a1": -1,
+        "a2": -1
+      },
+      "valid_for_reward": true,
+      "time_s": 9.495000000000177
+    },
+    {
+      "name": "always_slash_vs_always_stab_mirror",
+      "termination_type": "double_foul",
+      "winner": null,
+      "reward": {
+        "a1": -1,
+        "a2": -1
+      },
+      "valid_for_reward": true,
+      "time_s": 9.495000000000177
+    },
+    {
+      "name": "seeded_uniform_vs_itself",
+      "termination_type": "timeout_draw",
+      "winner": null,
+      "reward": {
+        "a1": 0,
+        "a2": 0
+      },
+      "valid_for_reward": true,
+      "time_s": 39.99999999999748
+    }
+  ],
+  "wrong_direction": {
+    "always_slash_vs_always_right": {
+      "time_s": 13.62199999999789,
+      "attacker_target_win": true
+    },
+    "always_stab_vs_always_left": {
+      "time_s": 11.917999999998834,
+      "attacker_target_win": true
+    }
+  },
+  "zero_update": {
+    "input_hashes_unchanged": true,
+    "two_episodes_valid": true,
+    "episodes": [
+      {
+        "learner_slot": "a1",
+        "time_s": 80.00000000001793,
+        "counts": {
+          "ready_wait": 331,
+          "nonzero_choice": 3,
+          "busy_frames": 3666,
+          "ready_visible_motion": 238
+        },
+        "learner_rows": 334,
+        "weights_unchanged": true,
+        "zero_update_replay": {
+          "max_log_prob_error": 0,
+          "max_value_error": 5.587935447692871e-8,
+          "max_ratio_error": 0
+        }
+      },
+      {
+        "learner_slot": "a2",
+        "time_s": 18.058999999999088,
+        "counts": {
+          "ready_wait": 175,
+          "nonzero_choice": 1,
+          "busy_frames": 727,
+          "ready_visible_motion": 0
+        },
+        "learner_rows": 176,
+        "weights_unchanged": true,
+        "zero_update_replay": {
+          "max_log_prob_error": 0,
+          "max_value_error": 4.6566128730773926e-9,
+          "max_ratio_error": 0
+        }
+      }
+    ]
+  },
+  "optimizer": {
+    "status": "one_explicit_optimizer_smoke_completed",
+    "actor_choice_rows": 510,
+    "complete_learner_episodes": 2,
+    "optimizer_steps_this_call": 1,
+    "finite_gradients": true,
+    "weights_changed": true,
+    "returns_min": -0.8857460618019104,
+    "returns_max": 0,
+    "loss": 0.12763680517673492,
+    "old_logprob_replay_max_error": 0,
+    "old_value_replay_max_error": 5.587935447692871e-8,
+    "frozen_initial_weights_unchanged": true,
+    "learned_fencing_ability_demonstrated": false,
+    "distinct_frozen_snapshots": 2
+  },
+  "release_validation": {
+    "date": "2026-11-23",
+    "prepare": {
+      "status": "complete",
+      "report_path": "outputs/a1_release_rebuild_20261123/prepare_report.json",
+      "report_sha256": "b59c723dc316ceedc12917126c8b7e23a366f0198847ce2ec4008703a664e18d",
+      "runtime_versions": {
+        "python": "3.13.11",
+        "numpy": "2.5.4",
+        "mujoco": "3.4.0"
+      },
+      "stages": [
+        {
+          "name": "pilot",
+          "status": "geometry_passed"
+        },
+        {
+          "name": "adapted",
+          "status": "geometry_passed"
+        },
+        {
+          "name": "right25",
+          "status": "geometry_passed"
+        },
+        {
+          "name": "library",
+          "status": "geometry_passed"
+        }
+      ],
+      "numeric_matches_validated_v5": true,
+      "inputs_unchanged": true
+    },
+    "workspace_unit_tests": {
+      "passed": 411,
+      "failed": 0
+    },
+    "public_train": {
+      "status": "bounded_candidate_training_completed",
+      "report_path": "outputs/a1_release_train_smoke_20261123/summary.json",
+      "report_sha256": "92853ebe073acaba3187ec6f2615d0bc21a38d5f56173ad5f5035c9f67191d35",
+      "updates": 1,
+      "immutable_inputs_verified": true,
+      "actor_choice_rows": 453,
+      "finite_gradients": true,
+      "weights_changed": true,
+      "initial_weight_hash": "2cf5a967267e73fb55ab6aac8f5b4f85b390557155b5167555964c6877725357",
+      "final_weight_hash": "975c536621e27be681ff1e6d2303d4e634516c820b23837b986b3ffd7fb1545d",
+      "distinct_snapshot_count": 2,
+      "safe_checkpoint_load": true,
+      "episodes": [
+        {
+          "learner_slot": "a1",
+          "decision_rows": 176,
+          "time_s": 27.24200000001031,
+          "result": "target_win",
+          "reward": {
+            "a2": 1,
+            "a1": -1
+          }
+        },
+        {
+          "learner_slot": "a2",
+          "decision_rows": 277,
+          "time_s": 14.949999999997154,
+          "result": "double_foul",
+          "reward": {
+            "a1": -1,
+            "a2": -1
+          }
+        }
+      ]
+    },
+    "clean_tree_tests": {
+      "tests_run": 407,
+      "skipped": 2,
+      "failed": 0,
+      "reason": "Two source-data-dependent test fixtures skipped when no ASE cache is present; learner/environment tests ran."
+    }
+  },
+  "limitations": [
+    "No learned fencing performance or statistical win rate is established.",
+    "The previous two-game driver differs from the packaged train CLI; its evidence does not certify new runs.",
+    "Real-to-sim actuator limits, broad collision coverage and continuous A2 remain unverified."
+  ]
+}

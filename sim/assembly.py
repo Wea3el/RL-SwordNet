@@ -80,6 +80,14 @@ def validate_config(config):
     if not 0 < sword["com_from_pommel_m"] < dimensions["total_length_m"]:
         raise ValueError("Sword COM must lie within its length")
     _vector(config["torso"]["center_m"], 3, "torso center")
+    body_scale = config["torso"]["body_scale"]
+    if isinstance(body_scale,(bool,str)) or not isinstance(body_scale,(int,float)):
+        raise ValueError("body_scale must be a finite positive number")
+    _positive(body_scale,"body_scale")
+    for key in ("stand_foot_radius_m","stand_shaft_radius_m","shoulder_adapter_thickness_m"):
+        _positive(config["torso"][key],key)
+    if config["torso"]["center_m"][2]-.40*body_scale+.04<=.08:
+        raise ValueError("Torso height leaves no room for its stand")
     for key in ("right_shoulder_mount_local_m","source_base_contact_center_m"):
         _vector(config["torso"][key],3,key)
     torso_quat = _vector(config["torso"]["quat_world_from_cad_wxyz"],4,"shoulder rotation")
@@ -367,8 +375,11 @@ def configure_camera(assembly,camera,view="overall"):
         camera.lookat[:] = data.site_xpos[site]+np.array([0,-.05,0])
         camera.distance,camera.azimuth,camera.elevation = .85,135,-8
     else:
-        camera.lookat[:] = [.15,-.65,1.0]
-        camera.distance,camera.azimuth,camera.elevation = 3.3,135,-12
+        settings = assembly.config["torso"]
+        top = settings["center_m"][2]+.755*settings["body_scale"]
+        shoulder = mujoco.mj_name2id(model,mujoco.mjtObj.mjOBJ_SITE,"right_shoulder_mount")
+        camera.lookat[:] = [.15,.5*(data.site_xpos[shoulder,1]-.65),.53*top]
+        camera.distance,camera.azimuth,camera.elevation = max(3.3,1.65*top),135,-12
 
 
 def capture_assembly(assembly,path,view="overall"):

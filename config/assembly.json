@@ -39,8 +39,13 @@
   "torso": {
     "status": "fixed_humanoid_upper_body_with_right_shoulder_CAD_mount_not_anatomically_calibrated",
     "coordinate_frame": "+X forward, +Y left, +Z up",
-    "center_m": [0, 0, 1.05],
-    "right_shoulder_mount_local_m": [0, -0.242, 0.30],
+    "body_scale": 2.0,
+    "center_m": [0, 0, 1.45],
+    "reference_frame_note": "right_shoulder_mount_local_m is the unscaled body outer shoulder surface; scale it then offset outward by the unscaled shoulder adapter thickness. Never scale CAD, fixture or shinai.",
+    "right_shoulder_mount_local_m": [0, -0.28, 0.30],
+    "shoulder_adapter_thickness_m": 0.012,
+    "stand_foot_radius_m": 0.40,
+    "stand_shaft_radius_m": 0.085,
     "source_base_contact_center_m": [0, 0, -0.008],
     "quat_world_from_cad_wxyz": [0.7071067811865476, 0.7071067811865476, 0, 0]
   },

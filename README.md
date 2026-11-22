@@ -1,16 +1,120 @@
-# RL-SwordNet — Plan 1
+# RL-SwordNet — A1 minimal self-play
+
+This `A1` branch packages the finite-skill side of the fencing project: two original-size, floor-fixed arms holding 1.080 m shinai, a simultaneous MuJoCo environment, a five-action neural chooser, frozen historical opponents and bounded PPO updates. **It is a development training pipeline, not an already-skilled fencing policy or a hardware-safe controller.**
+
+A1 selects **Guard / Stab / SlashLeft / ParryLeft / ParryRight** and learns when to start them. The future A2 family will learn continuous seven-joint target increments; it is not implemented here. Lowercase `a1` and `a2` in logs are the two physical slots, both running A1-family policies during this self-play.
+
+## Quick start
+
+Run from the repository root. Linux/Python 3.13.11 with MuJoCo 3.4.0, NumPy 2.5.4 and Torch 2.7.0 was used for the recorded checks. CPU execution is supported; no Isaac Gym, Stable-Baselines3 or GPU is required. Other platforms have not been validated. These are the tested versions, not a promise of bit-identical reconstruction with arbitrary dependency versions.
+
+```bash
+git clone --branch A1 --single-branch https://github.com/Wea3el/RL-SwordNet.git
+cd RL-SwordNet
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install torch==2.7.0 --index-url https://download.pytorch.org/whl/cpu
+python -m pip install -r requirements-a1.txt
+```
+
+The CPU wheel index follows [PyTorch's versioned installation instructions](https://pytorch.org/get-started/previous-versions/#v270). The base dependencies remain in `requirements.txt`; the learner additionally requires Torch. For visualization only, install `imageio` and `imageio-ffmpeg` separately.
+
+### 1. Prepare the local skill bank
+
+The Git branch contains source code, robot meshes, configuration, authored defence recipes and a reference fingerprint. It deliberately does **not** redistribute upstream motion binaries or generated motion arrays. Read [the source notice](motion_skills/plan1/SOURCES.md) and the [upstream motion README](https://github.com/nv-tlabs/ASE/blob/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/README.txt) before obtaining data for your intended use.
+
+Put these five files from pinned ASE commit `6f9b4f1f289603eee6a4f45d082bc6e6d83fecec` into `outputs/ase_sources/`. These links point to the exact source files; filenames, byte counts and SHA-256 digests are checked against [the source manifest](config/ase_pilot_v2.json).
+
+- [RL_Avatar_Idle_Ready_Motion.npy](https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Idle_Ready_Motion.npy)
+- [RL_Avatar_Atk_Stab_Motion.npy](https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Atk_Stab_Motion.npy)
+- [RL_Avatar_Atk_SlashLeft_Motion.npy](https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Atk_SlashLeft_Motion.npy)
+- [RL_Avatar_Sword_ParryLeft_Motion.npy](https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Sword_ParryLeft_Motion.npy)
+- [RL_Avatar_Sword_ParryRight_Motion.npy](https://raw.githubusercontent.com/nv-tlabs/ASE/6f9b4f1f289603eee6a4f45d082bc6e6d83fecec/ase/data/motions/reallusion_sword_shield/RL_Avatar_Sword_ParryRight_Motion.npy)
+
+```bash
+python -m sim.a1_prepare --source-dir outputs/ase_sources --output outputs/a1_prepared
+```
+
+This runs offline source verification, calibrated IK, the recorded authored Slash adaptation and the Right25/Left30 defence recipes. The final bank is `outputs/a1_prepared/library`. Source arrays remain local and are decoded through the restricted numeric reader, not `pickle.load`. Rebuilding takes longer than simply loading a bank and may fail if the local numerical result does not match the checked reference; a different result must not silently inherit prior physical validation. Only continue when `prepare_report.json` has `status="complete"` and `numeric_matches_validated_v5=true`; a failed run may leave intermediate files that are not approved for use. The packaged builder has been run from the five local source files and reproduced all five reference curves exactly on the tested system.
+
+Use a new output directory for every command below. Never overwrite failed evidence. Team members who already have the locally validated v5 bank may pass its existing directory instead; the training run records its actual identity.
+
+### 2. Run a zero-update check
+
+```bash
+python -m sim.a1_selfplay \
+  --bank outputs/a1_prepared/library \
+  --runtime-profile config/a1_runtime_rk4_candidate.json \
+  --output outputs/a1_zero_check --episodes 2 --seed 20261122
+```
+
+This only samples two complete games against a frozen initial policy. It verifies action masks, real decision rows, unchanged weights and log-probability replay; it does not optimize the network.
+
+### 3. Run bounded minimal self-play training
+
+```bash
+python -m sim.a1_train \
+  --bank outputs/a1_prepared/library \
+  --runtime-profile config/a1_runtime_rk4_candidate.json \
+  --output outputs/a1_train_small \
+  --updates 2 --episodes-per-update 2 --seed 20261122
+```
+
+The default experiment is four games and two updates, not an unattended long run. Each game is at most 80 simulated seconds. The CLI enforces finite budgets: at most eight updates, two to eight games per update in an even count, and at most 32 games total. It alternates the learner's physical slot, samples a frozen opponent before each game, keeps that opponent fixed throughout the game, performs one on-policy full-batch PPO update, and adds the resulting learner snapshot to a pool of at most four versions. Adam state persists across updates. There is no automatic resume or budget expansion.
+
+A numerical, controller or contact-evidence error stops the batch and saves the invalid episode. It is **not** converted to a draw, dropped and retried, or used for a partial-batch update. Initial, per-update and final candidate checkpoints, RNG state, configuration, source hashes, per-game decisions and native trajectories are written under the selected output directory. Only load checkpoints you trust. A saved checkpoint is not proof of a stronger policy.
+
+### 4. Run the tests
+
+```bash
+OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 python -m unittest discover -s tests -q
+```
+
+Tests do not need the ASE cache to exercise the learner/environment contracts. Rebuilding the real bank and running the full robot are separate integration checks. Test counts and actual recorded native evidence are listed in [A1 validation status](docs/a1_readiness_zh.md).
+
+## Algorithm and physics contract
+
+- **Observations:** own seven joint angles/velocities, current opposing sword tip/grip positions and tip velocity in the observer's frame, plus own executor state. No opposing skill ID, future trajectory, absolute episode clock or opponent checkpoint identity is supplied to the policy.
+- **Actions:** a masked five-action policy with two 64-unit Tanh layers and a value head. A chosen skill runs until it returns to a measured legal Guard state; busy continuation frames are not actor choices. Guard while ready is a real, learnable wait action.
+- **Returns:** variable-duration transitions, `gamma(dt)=exp(-dt/120 seconds)`, complete-episode Monte Carlo targets. The 80-second game limit is a zero-reward draw, not a continuing-task bootstrap. Initial stochastic Guard bias leaves time to observe an opponent; greedy argmax on an untrained policy is not a meaningful evaluation.
+- **Scoring:** actual whole-blade entry into a fixed target, not direction labels. Blade/guard contacts are neutral. Approved motion-based foul attribution precedes hits within the same physics tick; ambiguous/both-active fouls give both sides −1. Error states produce no ordinary reward.
+- **Shared model:** RK4, 1 ms physics, 10 ms low-level control, 20 ms decisions; unchanged fixed-base arm and sword dimensions. Joint travel, torque and contact parameters are developmental estimates. `2 rad/s` is recorded as a diagnostic, not guaranteed by this branch.
+
+The current skills mix ASE-derived attack seeds with authored spatial/timing adaptations and authored parries. This is **not** end-to-end imitation learning from an expert fencing dataset. Limited validated attacks/parries do not guarantee protection against arbitrary A2 trajectories. In particular, long non-interruptible skills, sparse wins and mutual-defense draws remain learning risks.
+
+## Evidence and project documentation
+
+Recorded work before this packaging includes continuous attack/parry regressions, wrong-direction controls, eight constant/random-policy screening games, two valid frozen-policy native games and one PPO optimizer smoke over 510 real learner decisions. The initial games produced one timeout and one learner loss; no learned fencing performance is claimed. Full local trajectories are not committed. The compact [verification manifest](docs/a1_verification.json) preserves the measured outcomes and their source hashes without distributing motion data.
+
+Release checks on 23 November 2026 also reproduced the five-skill bank from source and ran the public training CLI for **one update over two native games**. Those games yielded 453 learner decisions, one target loss and one double foul; the update had finite gradients and saved two distinct snapshots. The full local suite passed 411 tests. A clean archive with no ASE cache passed its available tests (407 run, two source-dependent fixtures skipped). These checks verify packaging and the training path, not improved fencing performance; the default two-update experiment has not been evaluated as a learned policy.
+
+- [中文采样与更新说明](docs/a1_training_zh.md)
+- [中文物理验证、训练状态和剩余风险](docs/a1_readiness_zh.md)
+- [动作来源与重定时](docs/a1_execution_zh.md)
+- [犯规归责及限制](docs/foul_attribution_zh.md)
+- [整个项目的 A1/A2 研究方案](docs/plan1_zh.md)
+
+## Earlier Plan 1 history
+
+The sections below retain earlier model and report history. Their dated candidate results do not override the current A1 instructions above. The original `plan1` and `main` branches are not modified by this branch's publication.
 
 ## Report entry points
 
 - [English preliminary report draft](docs/report_draft_en.md): repository, description, tools, algorithms, planned work/experiments, expected results, preliminary work and ethics.
 - [当前中文项目框架与报告说明](docs/plan1_zh.md)：最新 A1/A2 双 self-play 主线及截至 12 月 3 日的计划。
 - [Current validation status and limitations](docs/skill_validation_zh.md): distinguishes geometric candidates, physical controls and work still required before RL.
+- [A1 finite-skill executor and reproduction](docs/a1_execution_zh.md): closed joint paths, measured own-state entry/exit gates and native whole-window tests.
+- [A1 当前动作验证和训练环境进度](docs/a1_readiness_zh.md)：连续攻防回归、退化策略筛查、两局真实采样和一次更新测试。
+- [A1 采样与更新接口](docs/a1_training_zh.md)：观测、变时长决策、冻结对手和有界零更新入口。
+- [A1 authored defence construction and evidence](docs/a1_defence_zh.md): observation-triggered Stab interceptions, conditional fine-timestep Slash blocks, and remaining stability/coverage gaps.
+- [Offline foul attribution evidence](docs/foul_attribution_zh.md): pre-impact point-motion evidence and ambiguity handling; the approved convention is now opt-in in the new development environment, without rewriting historical scoring.
 
-Updated 22 November 2026. Use the current documents for the report; the [21 November plan](docs/plan1_20261121_zh.md) is retained as history and its fixed-script/shared-three-skill comparison is superseded. No trained policy or multi-directional defensive coverage is claimed.
+Updated 22 November 2026. Use the current documents for the report; the [21 November plan](docs/plan1_20261121_zh.md) is retained as history and its fixed-script/shared-three-skill comparison is superseded. No trained fencing policy or defence against arbitrary attack trajectories is claimed.
 
-The confirmed research goal is **two separately self-play-trained policies** on unchanged floor-fixed arms: A1 selects and times finite predefined skills, while A2 outputs continuous joint-target increments. They must share physical observations, native low-level control and scoring rules, then be frozen for cross-play. This architecture is not yet implemented or cleared for RL.
+The confirmed research goal is **two separately self-play-trained policies** on unchanged floor-fixed arms: A1 selects and times finite predefined skills, while A2 outputs continuous joint-target increments. They must share physical observations, native low-level control and scoring rules, then be frozen for cross-play. A1's neural chooser, decision-only collector, frozen opponent pool and bounded training loop are implemented. The original 510-row optimizer smoke and later public CLI check establish data/update plumbing, not learned fencing. A2 and a frozen policy comparison remain pending.
 
-The current prerequisite is full-window **physical attack/parry validation**. Opt-in `whole_blade_first_touch_v2` scores the actual three finite blade cylinders without skill/phase labels; blade-to-guard contact is neutral legal weapon contact. The first-touch game result is separate from later diagnostic target entries, so a contacted parry cannot hide a delayed hit. Historical v1 rules and failed evidence remain unchanged. The manually authored shared three-skill fixture and earlier ASE conversion below are controls, not the final A1 bank or trained policies. See [acceptance requirements, evidence and reproduction](docs/skill_validation_zh.md).
+Full-window **physical attack/parry validation** remains the prerequisite for each admitted skill. Current finite-bank tests include two attack directions, matching parries and a winning counterattack, followed by new-environment regressions and negative controls. Opt-in `whole_blade_first_touch_v2` scores the actual three finite blade cylinders without skill/phase labels; blade-to-guard contact is neutral legal weapon contact. The first-touch game result is separate from later diagnostic target entries, so a contacted parry cannot hide a delayed hit. Historical v1 rules and failed evidence remain unchanged. The manually authored shared three-skill fixture and earlier ASE conversion below are controls, not the final A1 bank or trained policies. See [acceptance requirements, evidence and reproduction](docs/skill_validation_zh.md).
 
 - [中文动作定义、成对物理验证、时序边界及复现方法](docs/manual_duel_zh.md)
 - [共享技能有效性验证与连续反击阻塞项](docs/skill_validation_zh.md)
@@ -19,7 +123,7 @@ The current prerequisite is full-window **physical attack/parry validation**. Op
 - [Skill library setup, format, and source notice](motion_skills/plan1/README.md)
 - [Pinned source manifest](motion_skills/plan1/manifest.json)
 
-This branch provides a bounded single-arm baseline, earlier source conversion/matching tests, and versioned two-arm native-contact skill diagnostics. **The references are not hardware-ready trajectories or trained policies.** Full-CAD collision validation, measured hardware limits, contact-safe continuous transitions, a complete training environment/rewards, PPO training and self-play remain pending. Third-party motion binaries and generated trajectories are not redistributed in Git.
+This branch provides a bounded single-arm baseline, earlier source conversion/matching tests, versioned two-arm native-contact skill diagnostics, and A1 development sampling/update interfaces. **The references are not hardware-ready trajectories or trained policies.** Measured hardware limits, broad contact/trajectory coverage, continuing self-play training, A2 continuous control and final cross-play evaluation remain pending. Third-party motion binaries and generated trajectories are not redistributed in Git.
 
 ## Shared skill validation before RL
 
@@ -52,6 +156,14 @@ python -m sim.ase_pilot --config config/ase_pilot_v2_calibrated_candidate.json -
 ```
 
 This local-cache-only candidate contains Ready, Stab, a horizontal slash and left/right parry seeds, with pinned source hashes, selected frames, authored seams and retiming recorded. The calibrated common mapping passes the sampled actual-model IK and strict proxy-contact screen for all five candidates. **Dynamic attacks, interceptions, joint-loop recovery and continuous switching are not certified; no candidate is admitted to training.** An independent joint-return diagnostic found geometrically clear paths, but some move the sword tip substantially and must be included in full-window defence tests. The original failed mapping and all calibration attempts are retained; see the [current evidence](docs/skill_validation_zh.md).
+
+The later `sim.a1_skills` builder closes every joint loop explicitly and `sim.a1_control` waits for measured Guard settling before admitting another skill. `sim.a1_validation` tests native execution, transitions and paired opportunities without phase-gated scoring or post-initialization joint resets. These are candidate-validation tools, not trained selectors. See [commands and acceptance gates](docs/a1_execution_zh.md).
+
+Local native checks establish a hitting Stab and an explicitly authored enhanced Slash against Guard in both slots. The original Slash misses, and the original parries failed all 11 tested attack/timing combinations. A later **26-second authored upright parry** now prevents two repeated Stabs after a current 1 mm tip-motion cue, including mirrored delayed starts and a 1 ms repeat. A directional advance/downward cue also passes a fresh two-Stab control; generic motion alone must not preempt the later Left/Right choice. Earlier scheduled successes are not relabelled as autonomous reaction. A legal defence/counter/defence continuation exists, but its counter loses the first touch by 0.3 s.
+
+A vertical Left has now blocked Slash over full 40 s windows at explicit **1 ms and 0.5 ms** physical steps, using a public motion cue. Its old 2 ms trial still fails penetration, and actual trajectories remain timestep-sensitive despite similar first-hit times at the finer settings. The global 2 ms default is unchanged; the mixed Left/Right bank is still a candidate, not approved for full training. The optional `sim.a1_adaptation` and `sim.a1_defence` preserve original source arrays, while `sim.a1_reaction_validation` reproduces the restricted Stab/Right diagnostic with fixed expected action counts. See [versions, failures and reproduction](docs/a1_defence_zh.md). This is not learned self-play, general A2 coverage or hardware certification.
+
+Later checks explicitly use a new RK4/1 ms profile and Right25/Left30 bank. Fresh paired controls pass both Stab→Slash and Slash→Stab over complete 80 s windows, with independently checked pre-hit interception for each attack and completed returns. A separate 80 s diagnostic blocks the first Stab and counterattacks for a real first-touch win by 0.22 s. RK4 1/0.5 ms full Slash contact comparisons also pass; these are fixed-case physical opportunities, not learned self-play or universal A2 defence. The opt-in simultaneous A1-only environment integrates the approved foul convention. A neural chooser, frozen opponent pool, decision-only sampling and bounded training loop are implemented; learned performance and the A2 continuous adapter remain pending. See [current results and environment reproduction](docs/a1_readiness_zh.md). Historical paragraphs above retain their own settings and evidence.
 
 ## Earlier role-specific manual attack and parry test
 
@@ -111,7 +223,7 @@ A CAD-derived, fixed-base arm model with seven simulated hinge joints (`J0`–`J
 
 ![preview](preview.png)
 
-This repository is not yet an RL environment. The manual two-arm fixture supplies controlled contact diagnostics, with explicit v1 tip and v2 whole-blade rules; a complete training game, hardware calibration and autonomous policies remain pending. See [model status and remaining inputs](docs/model_status.md) for the original baseline; the earlier [ASE Plan 1](docs/plan1_20261121_zh.md) remains documented for comparison.
+This original single-arm baseline and the earlier manual two-arm fixture are not themselves RL environments. The newer A1 development environment and sampling/update interfaces are described above; learned policies, A2 continuous control and hardware calibration remain pending. See [model status and remaining inputs](docs/model_status.md) for the original baseline; the earlier [ASE Plan 1](docs/plan1_20261121_zh.md) remains documented for comparison.
 
 ## Earlier shoulder-mounted shinai assembly (not the current floor setup)
 

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "name": "shared_rk4_1ms_candidate",
+  "integrator": "RK4",
+  "physics_timestep_s": 0.001,
+  "control_period_s": 0.01,
+  "decision_period_s": 0.02
+}

@@ -1,0 +1,3 @@
+-r requirements.txt
+# Tested learner version. Install its CPU wheel first if CUDA is not needed.
+torch==2.7.0

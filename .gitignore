@@ -3,3 +3,8 @@ __pycache__/
 .venv/
 outputs/
 .env
+# Local MuJoCo debug dumps, not source models or reusable checkpoints.
+/MJDATA.TXT
+/MUJOCO_LOG.TXT
+/mjmodel.xml
+/mjmodel.mjb

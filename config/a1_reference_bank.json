@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "reference_id": "A1_v5_Right25_Left30_enhancedSlash",
+  "scope": "Numeric runtime identity only; no motion arrays and no new physical admission. Compare dtype, shape and SHA256 of contiguous bytes.",
+  "reference_origin": "outputs/a1_dual_parry_hold8_dt1ms_candidate_v5/library",
+  "skills": {
+    "guard": {
+      "duration_s": 1.6,
+      "arrays": {
+        "qpos": {
+          "dtype": "<f8",
+          "shape": [
+            163,
+            7
+          ],
+          "sha256": "1fdcd73cb19d205c4ca95399152b899e767fe013b5a79e4c91f9ec970093f819"
+        },
+        "time_s": {
+          "dtype": "<f8",
+          "shape": [
+            163
+          ],
+          "sha256": "543f94e40b231c9f1fbb09594dc92be6531b2ae1011b3c40074aaf86a1f38300"
+        },
+        "knot_qpos": {
+          "dtype": "<f8",
+          "shape": [
+            9,
+            7
+          ],
+          "sha256": "24b0c86ce54f636cecb6bc0671cbe1d30636c8e19f608c72e0a6e5de95b08ae4"
+        },
+        "knot_time_s": {
+          "dtype": "<f8",
+          "shape": [
+            9
+          ],
+          "sha256": "3d28489557d7485f296760dcfbc8d4aa1f68aee17fee0e17659a537d7678f883"
+        },
+        "coefficients": {
+          "dtype": "<f8",
+          "shape": [
+            8,
+            6,
+            7
+          ],
+          "sha256": "100fde27cbc3762446f16b05f66e98c4051e2c216053fd5e067165981ad3d291"
+        }
+      }
+    },
+    "stab": {
+      "duration_s": 27.599999999999998,
+      "arrays": {
+        "qpos": {
+          "dtype": "<f8",
+          "shape": [
+            2796,
+            7
+          ],
+          "sha256": "b9e8846c3c511ae116e8b9b33175f0e4bb1df038a8133e277e787fb90613c192"
+        },
+        "time_s": {
+          "dtype": "<f8",
+          "shape": [
+            2796
+          ],
+          "sha256": "2392e9274d6db829f3ac9b1b127f9f648ed1940a9baa2f8d0228f10ffcf71403"
+        },
+        "knot_qpos": {
+          "dtype": "<f8",
+          "shape": [
+            74,
+            7
+          ],
+          "sha256": "dae0ee6c0b1341bbbdef66e7dffa01788ffa9a65b909837091ff6419c419604d"
+        },
+        "knot_time_s": {
+          "dtype": "<f8",
+          "shape": [
+            74
+          ],
+          "sha256": "15d7483b27608441e53bb5639609f855eeed1acf1f724adc94303a8777ec9e31"
+        },
+        "coefficients": {
+          "dtype": "<f8",
+          "shape": [
+            73,
+            6,
+            7
+          ],
+          "sha256": "37cf5f5dbb51bad5e50550128be679dc317253e77d48fb4bd229b8496df35e8f"
+        }
+      }
+    },
+    "slash_left": {
+      "duration_s": 28.72,
+      "arrays": {
+        "qpos": {
+          "dtype": "<f8",
+          "shape": [
+            2909,
+            7
+          ],
+          "sha256": "bd7923b6decd150da00361dea61103480b5d8942455a09833c3bcccc6ceb8de1"
+        },
+        "time_s": {
+          "dtype": "<f8",
+          "shape": [
+            2909
+          ],
+          "sha256": "e700c3a73e952bf466c88a0c37f780d050b954d5337f656826b779b4bf56ecd7"
+        },
+        "knot_qpos": {
+          "dtype": "<f8",
+          "shape": [
+            74,
+            7
+          ],
+          "sha256": "ce63f8b143821f740c4b5c7ab920839080904273a9c57d51ee1c534143dc4efd"
+        },
+        "knot_time_s": {
+          "dtype": "<f8",
+          "shape": [
+            74
+          ],
+          "sha256": "ee2b4b7dbac9a143bf0145b1fd51ca59b004e4555ce9aee8aae0982a2281bd91"
+        },
+        "coefficients": {
+          "dtype": "<f8",
+          "shape": [
+            73,
+            6,
+            7
+          ],
+          "sha256": "d84c9cb8860f05c9ce8780d1989d4e862523e17eed7667950335d88b932ce50a"
+        }
+      }
+    },
+    "parry_left": {
+      "duration_s": 30.0,
+      "arrays": {
+        "qpos": {
+          "dtype": "<f8",
+          "shape": [
+            3017,
+            7
+          ],
+          "sha256": "9b2089a0e6e883a3c7ad9e55dbfb281ec727e5e4f8837b00e38c1895aa154a84"
+        },
+        "time_s": {
+          "dtype": "<f8",
+          "shape": [
+            3017
+          ],
+          "sha256": "c0be0a606570a4d689c3d9cb7fd68d8c4b06fd04c1fe1b13b7ca47b55d1111c2"
+        },
+        "knot_qpos": {
+          "dtype": "<f8",
+          "shape": [
+            82,
+            7
+          ],
+          "sha256": "7ebd1112295ec618604a5c3a387e73fda7999a03fc8d9cecd4aa2c00770ad2c9"
+        },
+        "knot_time_s": {
+          "dtype": "<f8",
+          "shape": [
+            82
+          ],
+          "sha256": "683b9a54e025434077994be13a7af46e206bca8c408f2f5fc3ace83b80669bf0"
+        },
+        "coefficients": {
+          "dtype": "<f8",
+          "shape": [
+            81,
+            6,
+            7
+          ],
+          "sha256": "979f555d874293835b6ea643fd604b27a5084aaa24e9e161fc3fa089f9a0a073"
+        }
+      }
+    },
+    "parry_right": {
+      "duration_s": 25.0,
+      "arrays": {
+        "qpos": {
+          "dtype": "<f8",
+          "shape": [
+            2521,
+            7
+          ],
+          "sha256": "c4b6b6ef476fd1cdde039236705c1078453172d4caced4ecab481fe8ab6f10e5"
+        },
+        "time_s": {
+          "dtype": "<f8",
+          "shape": [
+            2521
+          ],
+          "sha256": "b3e0dafafaa647c18f5dc4b53fe4b98d9162b7926783816c1a82d0dd7450c25e"
+        },
+        "knot_qpos": {
+          "dtype": "<f8",
+          "shape": [
+            98,
+            7
+          ],
+          "sha256": "acc3d2e6e48d029a64e7331dab698daa6bb9a94bf0183ca7deab6e9c0da6875a"
+        },
+        "knot_time_s": {
+          "dtype": "<f8",
+          "shape": [
+            98
+          ],
+          "sha256": "d089e9bfbfef0c17b75392f9c99e409d46180df2ad68a328cf585c8289922145"
+        },
+        "coefficients": {
+          "dtype": "<f8",
+          "shape": [
+            97,
+            6,
+            7
+          ],
+          "sha256": "6d9a384e4c0fb5d82d9b4e6293fc46a3789645a15c22caf8335bb39928ef5f49"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "skill_id": "parry_left",
+  "samples_per_segment": 17,
+  "description": "Explicit Slash-derived forward_vertical_negative_y_wall; controlled candidate, not ASE imitation or certified defence",
+  "keyposes": [
+    {
+      "name": "upright_at_original_guard_grip",
+      "grip_local_m": [
+        0.24057730479925327,
+        -0.37398453728204883,
+        0.7221420992284419
+      ],
+      "axis_local": [
+        0,
+        0,
+        1
+      ],
+      "duration_s": 3
+    },
+    {
+      "name": "ready_negative_world_y_intercept",
+      "grip_local_m": [
+        0.45,
+        0.1,
+        0.72
+      ],
+      "axis_local": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "duration_s": 3
+    },
+    {
+      "name": "finite_slash_protective_hold",
+      "grip_local_m": [
+        0.45,
+        0.1,
+        0.72
+      ],
+      "axis_local": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "duration_s": 16
+    },
+    {
+      "name": "upright_return_to_original_guard_grip",
+      "grip_local_m": [
+        0.24057730479925327,
+        -0.37398453728204883,
+        0.7221420992284419
+      ],
+      "axis_local": [
+        0,
+        0,
+        1
+      ],
+      "duration_s": 3
+    },
+    {
+      "name": "task_return_to_original_guard",
+      "grip_local_m": [
+        0.24057730479925327,
+        -0.37398453728204883,
+        0.7221420992284419
+      ],
+      "axis_local": [
+        0.8232213429674681,
+        0.19769448233027972,
+        0.5321874783748684
+      ],
+      "duration_s": 3
+    }
+  ]
+}

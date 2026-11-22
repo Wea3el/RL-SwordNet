@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import csv
+import copy
 import json
 import tempfile
 import unittest
@@ -205,7 +206,9 @@ class AssemblyTests(unittest.TestCase):
         self.assertLess(float(shoulder_world[1]), float(d.geom_xpos[chest, 1]-m.geom_size[chest, 1]))
         self.assertGreater(float(shoulder_world[2]), float(d.geom_xpos[chest, 2]))
         np.testing.assert_allclose(d.xmat[torso].reshape(3, 3).T @ (shoulder_world-d.xpos[torso]),
-                                   self.config["torso"]["right_shoulder_mount_local_m"], atol=1e-9)
+                                   np.asarray(self.config["torso"]["right_shoulder_mount_local_m"])
+                                   * self.config["torso"]["body_scale"]
+                                   + [0., -self.config["torso"]["shoulder_adapter_thickness_m"], 0.], atol=1e-9)
         rotation = np.array([[1., 0., 0.], [0., 0., -1.], [0., 1., 0.]])
         np.testing.assert_allclose(quaternion_matrix(self.config["torso"]["quat_world_from_cad_wxyz"]), rotation, atol=1e-9)
         source_contact = np.array([0., 0., -.008])
@@ -248,6 +251,106 @@ class AssemblyTests(unittest.TestCase):
             while ancestor and ancestor != torso:
                 ancestor = int(m.body_parentid[ancestor])
             self.assertEqual(ancestor, torso, "A robot link is not attached below the fixed torso")
+
+    def test_default_body_proportions_preserve_the_original_arm_length(self):
+        m, d = self.model, self.data
+        self.assertEqual(self.config["torso"]["body_scale"], 2.)
+        np.testing.assert_allclose(self.config["torso"]["center_m"], [0., 0., 1.45], atol=1e-12)
+        chest = object_id(m, mujoco.mjtObj.mjOBJ_GEOM, "torso_target")
+        shoulders = [object_id(m, mujoco.mjtObj.mjOBJ_GEOM, f"{side}_shoulder") for side in ["right", "left"]]
+        trunk = [object_id(m, mujoco.mjtObj.mjOBJ_GEOM, name)
+                 for name in ["torso_target", "torso_abdomen", "torso_hips"]]
+        self.assertAlmostEqual(2*float(m.geom_size[chest, 1]), .92, places=9)
+        shoulder_width = (max(float(d.geom_xpos[i, 1]+m.geom_size[i, 1]) for i in shoulders)
+                          - min(float(d.geom_xpos[i, 1]-m.geom_size[i, 1]) for i in shoulders))
+        self.assertAlmostEqual(shoulder_width, 1.12, places=9)
+        shoulder_site = object_id(m, mujoco.mjtObj.mjOBJ_SITE, "right_shoulder_mount")
+        plate = object_id(m, mujoco.mjtObj.mjOBJ_GEOM, "shoulder_adapter_plate")
+        thickness = self.config["torso"]["shoulder_adapter_thickness_m"]
+        self.assertAlmostEqual(2*float(m.geom_size[plate, 1]), thickness, places=9)
+        self.assertAlmostEqual(float(d.geom_xpos[plate, 1]+m.geom_size[plate, 1]),
+                               float(d.geom_xpos[shoulders[0], 1]-m.geom_size[shoulders[0], 1]), places=9)
+        self.assertAlmostEqual(float(d.site_xpos[shoulder_site, 1])+thickness,
+                               float(d.geom_xpos[shoulders[0], 1]-m.geom_size[shoulders[0], 1]), places=9)
+        top = max(float(d.geom_xpos[i, 2]+m.geom_size[i, 2]) for i in trunk)
+        bottom = min(float(d.geom_xpos[i, 2]-m.geom_size[i, 2]) for i in trunk)
+        self.assertAlmostEqual(top-bottom, 1.56, places=9)
+        self.assertAlmostEqual(bottom, .65, places=9)
+        stand = object_id(m, mujoco.mjtObj.mjOBJ_GEOM, "mannequin_stand")
+        foot = object_id(m, mujoco.mjtObj.mjOBJ_GEOM, "mannequin_foot")
+        stand_top = float(d.geom_xpos[stand, 2]+m.geom_size[stand, 1])
+        stand_bottom = float(d.geom_xpos[stand, 2]-m.geom_size[stand, 1])
+        self.assertGreater(stand_top-bottom, .001)
+        self.assertAlmostEqual(stand_top, bottom+.04, places=9)
+        self.assertAlmostEqual(stand_bottom, .08, places=9)
+        self.assertAlmostEqual(float(d.geom_xpos[foot, 2]-m.geom_size[foot, 1]), 0., places=9)
+        self.assertAlmostEqual(float(m.geom_size[foot, 0]), .4, places=9)
+
+        def joint_chain_length(model, data):
+            ids = [object_id(model, mujoco.mjtObj.mjOBJ_JOINT, f"J{i}") for i in range(1, 7)]
+            return float(sum(np.linalg.norm(data.xanchor[b]-data.xanchor[a]) for a, b in zip(ids[:-1], ids[1:])))
+
+        original_data = mujoco.MjData(self.original_model)
+        mujoco.mj_forward(self.original_model, original_data)
+        original_length = joint_chain_length(self.original_model, original_data)
+        self.assertAlmostEqual(original_length, 1.223339, delta=1e-6)
+        self.assertAlmostEqual(joint_chain_length(m, d), original_length, places=9)
+
+    def test_body_scale_only_resizes_the_mannequin_not_CAD_or_tools(self):
+        config = copy.deepcopy(self.config)
+        config["torso"]["body_scale"] = 1.
+        smaller = build_assembly(config)
+        m, d, small, small_data = self.model, self.data, smaller.model, smaller.data
+        self.assertEqual((m.nq, m.nv, m.nu), (7, 7, 7))
+        self.assertEqual((small.nq, small.nv, small.nu), (7, 7, 7))
+        self.assertEqual(m.ngeom, small.ngeom)
+        np.testing.assert_allclose(self.assembly.home, smaller.home, atol=1e-10)
+        human = {"torso_target", "torso_abdomen", "torso_hips", "neck", "head", "face_front",
+                 "right_shoulder", "left_shoulder", "left_upper_arm", "left_forearm", "left_hand"}
+        support = {"mannequin_stand", "mannequin_foot"}
+        shoulder = object_id(m, mujoco.mjtObj.mjOBJ_SITE, "right_shoulder_mount")
+        small_shoulder = object_id(small, mujoco.mjtObj.mjOBJ_SITE, "right_shoulder_mount")
+        for i in range(m.ngeom):
+            name = mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_GEOM, i)
+            self.assertEqual(name, mujoco.mj_id2name(small, mujoco.mjtObj.mjOBJ_GEOM, i))
+            self.assertEqual(m.geom_type[i], small.geom_type[i])
+            if name in human:
+                np.testing.assert_allclose(m.geom_pos[i], 2*small.geom_pos[i], atol=1e-10)
+                np.testing.assert_allclose(m.geom_size[i], 2*small.geom_size[i], atol=1e-10)
+            elif name not in support and m.geom_type[i] != mujoco.mjtGeom.mjGEOM_PLANE:
+                # The arm follows the scaled shoulder by translation, but every
+                # source CAD/adapter/tool dimension and shoulder-relative pose
+                # must remain unchanged.
+                np.testing.assert_allclose(m.geom_size[i], small.geom_size[i], atol=1e-12)
+                np.testing.assert_allclose(d.geom_xpos[i]-d.site_xpos[shoulder],
+                                           small_data.geom_xpos[i]-small_data.site_xpos[small_shoulder], atol=1e-9)
+                np.testing.assert_allclose(d.geom_xmat[i], small_data.geom_xmat[i], atol=1e-9)
+        np.testing.assert_allclose(m.mesh_vert, small.mesh_vert, atol=1e-12)
+        np.testing.assert_array_equal(m.mesh_face, small.mesh_face)
+        np.testing.assert_allclose(m.body_mass, small.body_mass, atol=1e-12)
+        np.testing.assert_allclose(m.body_inertia, small.body_inertia, atol=1e-12)
+        for name in ["right_shoulder_mount", "mount_face", "shinai_profile_origin", "shinai_grip",
+                     "shinai_pommel", "shinai_tip", "shinai_guard_near", "shinai_guard_far"]:
+            big_id = object_id(m, mujoco.mjtObj.mjOBJ_SITE, name)
+            small_id = object_id(small, mujoco.mjtObj.mjOBJ_SITE, name)
+            np.testing.assert_allclose(d.site_xpos[big_id]-d.site_xpos[shoulder],
+                                       small_data.site_xpos[small_id]-small_data.site_xpos[small_shoulder], atol=1e-9)
+        foot = object_id(m, mujoco.mjtObj.mjOBJ_GEOM, "mannequin_foot")
+        small_foot = object_id(small, mujoco.mjtObj.mjOBJ_GEOM, "mannequin_foot")
+        np.testing.assert_allclose(m.geom_size[foot], small.geom_size[small_foot], atol=1e-12)
+        self.assertAlmostEqual(float(small_data.geom_xpos[small_foot, 2]-small.geom_size[small_foot, 1]), 0., places=9)
+
+    def test_invalid_body_scales_are_rejected_by_the_configuration_loader(self):
+        invalid = [0, -1, float("nan"), float("inf"), -float("inf"), True, False, "2.0", None, [], {}]
+        with tempfile.TemporaryDirectory(prefix="assembly-invalid-body-scale-") as tmp:
+            path = Path(tmp)/"assembly.json"
+            for value in invalid:
+                with self.subTest(body_scale=value):
+                    config = copy.deepcopy(self.config)
+                    config["torso"]["body_scale"] = value
+                    path.write_text(json.dumps(config))
+                    with self.assertRaises((ValueError, TypeError)):
+                        load_assembly_config(path)
 
     def test_blade_cylinders_are_gapless_and_end_at_the_cad_tip(self):
         m, d, dims = self.model, self.data, self.dimensions

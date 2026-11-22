@@ -7,7 +7,10 @@ whether the game supports useful choices. Every failed run remains evidence.
 from __future__ import annotations
 
 import argparse
+import copy
+import functools
 import hashlib
+import inspect
 import json
 from pathlib import Path
 
@@ -46,8 +49,17 @@ def save_json(path, value):
     Path(path).write_text(json.dumps(_finite_json(value), indent=2, allow_nan=False)+"\n")
 
 
-def freeze_experiment(output, library, scene, *, metadata=None, cfg=None):
+def freeze_experiment(output, library, scene, *, metadata=None, cfg=None, implementation_paths=()):
     """New immutable-evidence folder for standalone/policy validation drivers."""
+    default_implementation_paths = (
+        "sim/shared_skills.py", "sim/shared_control.py", "sim/skill_validation.py",
+        "sim/duel_scene.py", "sim/manual_duel.py", "sim/fencing_rules.py")
+    hashes = {}
+    for supplied in (*default_implementation_paths, *(implementation_paths or ())):
+        path = (ROOT/Path(supplied)).resolve()
+        if not path.is_relative_to(ROOT.resolve()) or not path.is_file():
+            raise ValueError("Implementation evidence must name existing repository files")
+        hashes[str(path.relative_to(ROOT.resolve()))] = hashlib.sha256(path.read_bytes()).hexdigest()
     folder = Path(output).resolve()
     folder.mkdir(parents=True, exist_ok=False)
     cfg = dict(DEFAULT_CONFIG, **(cfg or {}))
@@ -57,8 +69,7 @@ def freeze_experiment(output, library, scene, *, metadata=None, cfg=None):
     frozen = {"runtime_config": cfg, "library_config": library.config, "library_reports": library.reports,
               "skill_segments": {k: v.segments for k,v in library.skills.items()},
               "source_hashes": scene.source_hashes, "metadata": metadata or {},
-              "implementation_sha256": {p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in (
-                  "sim/shared_skills.py", "sim/shared_control.py", "sim/skill_validation.py", "sim/duel_scene.py", "sim/manual_duel.py", "sim/fencing_rules.py")}}
+              "implementation_sha256": hashes}
     save_json(folder/"experiment.json", frozen)
     return folder
 
@@ -82,12 +93,57 @@ def observation(scene, owner, controllers, now):
             "opponent_tip_velocity_local_m_s": rotation@(jac@scene.data.qvel)}
 
 
-def run_trial(scene, library, policies, duration_s, cfg=None, output=None):
+def _controller_implementation_hashes(factory, controllers):
+    """Hash actual controller/factory modules without exposing their contents."""
+    result = {}
+    for implementation in (factory, *(type(c) for c in controllers.values())):
+        while isinstance(implementation, functools.partial):
+            implementation = implementation.func
+        try:
+            filename = inspect.getsourcefile(implementation)
+        except TypeError:
+            filename = None
+        if filename is None:
+            raise ValueError("Custom controller/factory implementation source must be inspectable")
+        path = Path(filename).resolve()
+        label = str(path.relative_to(ROOT.resolve())) if path.is_relative_to(ROOT.resolve()) else str(path)
+        result[label] = hashlib.sha256(path.read_bytes()).hexdigest()
+    return result
+
+
+def _controller_diagnostics(controller):
+    """Optional controller-owned audit data, never added to opponent inputs."""
+    provider = getattr(controller, "diagnostics", None)
+    result = copy.deepcopy(provider()) if callable(provider) else {}
+    if not isinstance(result, dict):
+        raise ValueError("Controller diagnostics() must return a dictionary")
+    for name in ("action_map", "feedback_gates", "ignored_busy_requests", "ignored_requests"):
+        if name not in result and hasattr(controller, name):
+            result[name] = copy.deepcopy(getattr(controller, name))
+    result.setdefault("events", copy.deepcopy(controller.events))
+    return result
+
+
+def run_trial(scene, library, policies, duration_s, cfg=None, output=None, *, controller_factory=None):
+    """Run native physics with the historical controller, or an explicit v2 one.
+
+    A custom ``factory(library)`` is invoked independently for both slots. Its
+    request/state/target/events interface matches SkillController; optional
+    observe_own_state(q, qvel, now) receives copies of current OWN state only,
+    once per physics frame before either policy's decision snapshot. A
+    nonempty controller.failure invalidates the trial and prevents a new
+    action from being accepted. Custom controllers cannot opt into v1's old
+    animation-phase scoring. None preserves the historical default path.
+    """
     cfg = dict(DEFAULT_CONFIG, **(cfg or {}))
     rules_version = cfg.get("rules_version", "tip_attack_v1")
     if rules_version not in {"tip_attack_v1", "whole_blade_first_touch_v2"}:
         raise ValueError("Unknown rules version")
     full_blade = rules_version == "whole_blade_first_touch_v2"
+    if controller_factory is not None and not full_blade:
+        raise ValueError("Custom controller_factory requires explicit whole_blade_first_touch_v2 rules")
+    if controller_factory is not None and not callable(controller_factory):
+        raise ValueError("controller_factory must be callable")
     if not np.isfinite(duration_s) or duration_s <= 0 or set(policies) != {"a1", "a2"}:
         raise ValueError("Positive duration and both symmetric policies required")
     if not library.reports["library"]["all_skills_pass_geometry"]:
@@ -108,7 +164,20 @@ def run_trial(scene, library, policies, duration_s, cfg=None, output=None):
     initial_contacts = duel_contact_records(scene, rules_version=rules_version)
     if np.any(model.body_gravcomp) or np.any(data.qfrc_applied) or np.any(data.xfrc_applied):
         raise ValueError("No external force, torque or body gravity compensation")
-    controllers = {name: SkillController(library) for name in policies}
+    factory = SkillController if controller_factory is None else controller_factory
+    controllers = {name: factory(library) for name in policies}
+    if controllers["a1"] is controllers["a2"]:
+        raise ValueError("Controller factory must create independent instances for both agents")
+    controller_hashes = (_controller_implementation_hashes(factory, controllers)
+                         if controller_factory is not None else None)
+    controller_failures = {}
+
+    def failed_controllers():
+        for owner, controller in controllers.items():
+            fault = getattr(controller, "failure", None)
+            if fault:
+                controller_failures.setdefault(owner, copy.deepcopy(fault))
+        return bool(controller_failures)
     gravity = mujoco.MjData(model)
     centers = {"a1": scene.config["virtual_targets"]["a2"]["center_world_m"],
                "a2": scene.config["virtual_targets"]["a1"]["center_world_m"]}
@@ -152,17 +221,33 @@ def run_trial(scene, library, policies, duration_s, cfg=None, output=None):
                 break
         else:
             scorer.update(states, previous_tip, tips, previous_time, now)
+        for owner, controller in controllers.items():
+            feedback = getattr(controller, "observe_own_state", None)
+            if callable(feedback):
+                mapping = scene.agents[owner]
+                feedback(data.qpos[mapping["qpos_ids"]].copy(), data.qvel[mapping["dof_ids"]].copy(), now)
+        if failed_controllers():
+            failure = "controller_failure"
+            break
         if step % round(decision/dt) == 0:
             # Snapshot both observations BEFORE either policy changes a clock.
             obs = {k: observation(scene, k, controllers, now) for k in policies}
             choices = {k: policies[k].decide(obs[k]) for k in policies}
             for k, choice in choices.items():
+                if failed_controllers():
+                    break
                 accepted = controllers[k].request(choice, now)
                 if choice:
                     decisions.append({"time_s": now, "agent": k, "action_id": int(choice), "accepted": accepted})
         states = {k: controllers[k].state(now) for k in policies}
+        if failed_controllers():
+            failure = "controller_failure"
+            break
         if step % round(period/dt) == 0:
             commands = {k: c.target(now) for k, c in controllers.items()}
+            if failed_controllers():
+                failure = "controller_failure"
+                break
             for k in policies:
                 hashes[k].update(np.asarray(commands[k], dtype="<f8").tobytes())
             position_control(scene, gravity, commands)
@@ -271,6 +356,10 @@ def run_trial(scene, library, policies, duration_s, cfg=None, output=None):
                       initial_blade_target_overlap=scorer.initial_overlap_events,
                       minimum_blade_target_clearance_m=scorer.minimum_clearance_m,
                       validation_continues_after_round_end=True)
+    if controller_factory is not None:
+        result.update(controller_diagnostics={k: _controller_diagnostics(c) for k, c in controllers.items()},
+                      controller_implementation_sha256=controller_hashes,
+                      controller_failures=controller_failures)
     if output is not None:
         folder = Path(output)
         folder.mkdir(parents=True, exist_ok=False)

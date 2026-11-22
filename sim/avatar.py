@@ -25,8 +25,11 @@ def shoulder_scene(root: Path, config: dict, env_bit: int, arm_bits: int, tool_b
     spec.meshdir = str(root/"meshes")
     settings = config["torso"]
     torso = spec.worldbody.add_body(name="torso",pos=settings["center_m"])
+    scale = settings["body_scale"]
 
-    def shape(name, kind, pos, size, color, **kwargs):
+    def shape(name, kind, pos, size, color, *, person=True, **kwargs):
+        if person:
+            pos, size = np.asarray(pos)*scale, np.asarray(size)*scale
         return torso.add_geom(name=name,type=kind,pos=pos,size=size,rgba=color,
                               density=0,contype=env_bit,conaffinity=arm_bits|tool_bit,
                               group=1,friction=[.4,.005,.0001],**kwargs)
@@ -39,7 +42,7 @@ def shoulder_scene(root: Path, config: dict, env_bit: int, arm_bits: int, tool_b
     shape("head",mujoco.mjtGeom.mjGEOM_ELLIPSOID,[0,0,.61],[.105,.115,.145],skin)
     # A small front-facing mark makes +X (the fencer's forward direction) clear.
     torso.add_geom(name="face_front",type=mujoco.mjtGeom.mjGEOM_ELLIPSOID,
-                   pos=[.099,0,.63],size=[.012,.055,.035],rgba=dark,
+                   pos=np.array([.099,0,.63])*scale,size=np.array([.012,.055,.035])*scale,rgba=dark,
                    density=0,contype=0,conaffinity=0,group=1)
     for sign,label in [(-1,"right"),(1,"left")]:
         shape(f"{label}_shoulder",mujoco.mjtGeom.mjGEOM_ELLIPSOID,
@@ -48,19 +51,31 @@ def shoulder_scene(root: Path, config: dict, env_bit: int, arm_bits: int, tool_b
         ("left_upper_arm",[0,.25,.29,.015,.29,-.025],.055),
         ("left_forearm",[.015,.29,-.025,.05,.29,-.29],.045),
     ]:
-        torso.add_geom(name=name,type=mujoco.mjtGeom.mjGEOM_CAPSULE,fromto=endpoints,
-                       size=[radius,0,0],rgba=suit,density=0,group=1,
+        torso.add_geom(name=name,type=mujoco.mjtGeom.mjGEOM_CAPSULE,fromto=np.array(endpoints)*scale,
+                       size=[radius*scale,0,0],rgba=suit,density=0,group=1,
                        contype=env_bit,conaffinity=arm_bits|tool_bit)
     shape("left_hand",mujoco.mjtGeom.mjGEOM_ELLIPSOID,[.05,.29,-.34],[.04,.045,.065],skin)
-    # A fixed pedestal supports the upper-body mannequin; no floating torso box.
-    shape("mannequin_stand",mujoco.mjtGeom.mjGEOM_CYLINDER,[0,0,-.68],[.055,.30,0],dark)
-    shape("mannequin_foot",mujoco.mjtGeom.mjGEOM_CYLINDER,[0,0,-1.01],[.30,.04,0],dark)
-    shoulder = np.array(settings["right_shoulder_mount_local_m"],dtype=float)
+    # Resize the person, not the arm or its mating plates. The pedestal is sized
+    # independently to stay on the ground and overlap the bottom of the hips.
+    base_z = float(settings["center_m"][2])
+    stand_low, stand_high = .08, base_z-.40*scale+.04
+    if stand_high<=stand_low:
+        raise ValueError("Torso height leaves no room for the ground-mounted stand")
+    shape("mannequin_stand",mujoco.mjtGeom.mjGEOM_CYLINDER,
+          [0,0,.5*(stand_low+stand_high)-base_z],
+          [settings["stand_shaft_radius_m"],.5*(stand_high-stand_low),0],dark,person=False)
+    shape("mannequin_foot",mujoco.mjtGeom.mjGEOM_CYLINDER,
+          [0,0,.04-base_z],[settings["stand_foot_radius_m"],.04,0],dark,person=False)
+    # Put the adapter *outside* the enlarged shoulder instead of letting the
+    # larger rounded shoulder swallow the fixed CAD cage and bearing hardware.
+    plate_thickness = settings["shoulder_adapter_thickness_m"]
+    shoulder = np.array(settings["right_shoulder_mount_local_m"],dtype=float)*scale
+    shoulder[1] -= plate_thickness
     shape("shoulder_adapter_plate",mujoco.mjtGeom.mjGEOM_BOX,
-          shoulder+[0,.006,0],[.13,.006,.13],[.16,.21,.26,1])
+          shoulder+[0,plate_thickness/2,0],[.13,plate_thickness/2,.13],[.16,.21,.26,1],person=False)
     torso.add_site(name="right_shoulder_mount",pos=shoulder,
                    quat=settings["quat_world_from_cad_wxyz"],size=[.003]*3,rgba=[.9,.4,.1,1])
-    torso.add_site(name="torso_target_center",pos=[0,0,.13],size=[.004]*3,rgba=[1,.2,.2,1])
+    torso.add_site(name="torso_target_center",pos=[0,0,.13*scale],size=[.004]*3,rgba=[1,.2,.2,1])
     rotation = np.empty(9)
     mujoco.mju_quat2Mat(rotation,np.array(settings["quat_world_from_cad_wxyz"]))
     translation = shoulder-rotation.reshape(3,3)@np.array(settings["source_base_contact_center_m"])

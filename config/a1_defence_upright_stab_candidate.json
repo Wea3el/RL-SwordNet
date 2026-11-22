@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "parry_right",
+  "description": "Authored near-vertical lateral barrier candidate against current Stab; not ASE expert data, universal defence or training admission",
+  "samples_per_segment": 17,
+  "solver_seed": 20261122,
+  "solver_max_iterations": 200,
+  "keyposes": [
+    {"name": "upright_at_guard_grip", "grip_local_m": [0.24057730479925327, -0.37398453728204883, 0.7221420992284419], "axis_local": [0, 0, 1], "duration_s": 3},
+    {"name": "upright_ready", "grip_local_m": [0.5, 0.18, 0.72], "axis_local": [0, 0, 1], "duration_s": 3},
+    {"name": "finite_ready_hold", "grip_local_m": [0.5, 0.18, 0.72], "axis_local": [0, 0, 1], "duration_s": 3},
+    {"name": "horizontal_glancing_sweep", "grip_local_m": [0.5, -0.04, 0.72], "axis_local": [0, 0, 1], "duration_s": 3},
+    {"name": "finite_protective_hold", "grip_local_m": [0.5, -0.04, 0.72], "axis_local": [0, 0, 1], "duration_s": 10},
+    {"name": "upright_return_to_guard_grip", "grip_local_m": [0.24057730479925327, -0.37398453728204883, 0.7221420992284419], "axis_local": [0, 0, 1], "duration_s": 3},
+    {"name": "task_return_to_guard", "grip_local_m": [0.24057730479925327, -0.37398453728204883, 0.7221420992284419], "axis_local": [0.8232213429674681, 0.19769448233027972, 0.5321874783748684], "duration_s": 3}
+  ]
+}
