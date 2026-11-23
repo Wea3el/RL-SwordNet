@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "policy_family": "A1",
+  "status": "shared_ready_direction_expansion_not_complete_training_library",
+  "admitted_to_training": false,
+  "legacy_actor_compatible": false,
+  "joint_names": ["J0", "J1", "J2", "J3", "J4", "J5", "J6"],
+  "angle_unit": "radian",
+  "joint_constraints": "config/joint_constraints_observed.json",
+  "reference_generator": "sim.motion_spline.C2JointSpline",
+  "initial_node": "ready",
+  "nodes": {
+    "ready": [3.285903341937249, 0.4100840210102702, 3.5544002177025575, 2.018633936123596, 2.0118222340641676, 0.4117993877991494, 0.7798822557606823],
+    "original_strike": [4.865015461756215, 0.6331030285784495, 5.098948559146688, 1.0762072835976044, 2.8731267853542817, 0.36179938779914944, 0.4531245139283783],
+    "original_glancing_intercept": [3.4857863370784403, 0.2088540647545175, 3.529988518858944, 2.0443951023931954, 1.7319491907377669, 0.3732550199966758, 0.7590194565617322],
+    "vertical_high": [4.8636067415244115, 0.44927626986940844, 5.098602366837258, 0.8086773480480072, 2.8739129106459895, 0.2781135172378105, 0.45267349250442435],
+    "vertical_low": [4.866162544624271, 0.8038587498601796, 5.099526628126097, 1.2909911724837215, 2.8726999257718946, 0.4058124747619011, 0.45351185533069865],
+    "low_intercept": [4.6616363224873885, 0.4125899058108245, 3.547297400598249, 1.2607519425241787, 1.8021350753234733, 1.17264479487117, 0.7028305695888378]
+  },
+  "actions": {
+    "attack_original": {
+      "start_node": "ready", "end_node": "ready",
+      "knot_time_s": [0.0, 3.0, 6.0],
+      "waypoint_nodes": ["ready", "original_strike", "ready"],
+      "evidence_scope": "Matched original attack/parry and bounded counter chain only",
+      "local_evidence": "outputs/a1_glancing_feedback_v1/report.json"
+    },
+    "parry_original": {
+      "start_node": "ready", "end_node": "ready",
+      "knot_time_s": [0.0, 1.0, 3.0, 4.5],
+      "waypoint_nodes": ["ready", "original_glancing_intercept", "original_glancing_intercept", "ready"],
+      "evidence_scope": "Original direction at measured start times only; not validated for vertical sweeps",
+      "local_evidence": "outputs/a1_glancing_feedback_v1/report.json",
+      "known_failure": "outputs/a1_glancing_timing_window_v1/late_near_contact/summary.json"
+    },
+    "sweep_down": {
+      "start_node": "ready", "end_node": "ready",
+      "knot_time_s": [0.0, 3.0, 4.0, 7.0],
+      "waypoint_nodes": ["ready", "vertical_high", "vertical_low", "ready"],
+      "evidence_scope": "12-second native attack-versus-hold control with actual downward target entry; matching defence pending",
+      "local_evidence": "outputs/a1_vertical_native_v1/down_10cm/summary.json",
+      "named_historical_pose_requirement_certified": false
+    },
+    "sweep_up": {
+      "start_node": "ready", "end_node": "ready",
+      "knot_time_s": [0.0, 3.0, 4.0, 7.0],
+      "waypoint_nodes": ["ready", "vertical_low", "vertical_high", "ready"],
+      "evidence_scope": "12-second native attack-versus-hold control and one matched low-parry case; no broad timing certificate",
+      "local_evidence": "outputs/a1_vertical_native_v1/up_10cm/summary.json",
+      "named_historical_pose_requirement_certified": false
+    },
+    "parry_low": {
+      "start_node": "ready", "end_node": "ready",
+      "knot_time_s": [0.0, 1.0, 4.5, 6.0],
+      "waypoint_nodes": ["ready", "low_intercept", "low_intercept", "ready"],
+      "evidence_scope": "Conditional one-timing upward-sweep defence; 12-second full window, recovery completed at 11.084 seconds; slower retiming fails to defend",
+      "local_evidence": "outputs/a1_vertical_parry_native_v1/up_low/comparison.json",
+      "retimed_variant_failure": "outputs/a1_low_parry_retime_v1/report.json",
+      "limitations": "Brittle diagnostic candidate only: long measured recovery and retiming failure; no counter/transition, mirrored, perturbation or cross-direction coverage yet",
+      "named_historical_pose_requirement_certified": false
+    }
+  },
+  "limitations": [
+    "This is a candidate graph, not the complete ten-guard/five-cut user requirement and not a trained A1 policy.",
+    "Source/evidence fields are references, not automatic admission certificates; read the retained native records and failures.",
+    "Original parry does not inherit defence coverage for the new vertical sweeps. The high-parry candidate failed and is deliberately not included. parry_low is retained only as a conditional diagnostic, not a reliable admitted skill.",
+    "Each action returns to the exact same ready node and must wait for measured settling; no teleport or clipped joint motion.",
+    "Physics, collision geometry, torque caps and joint bounds remain unchanged; broader timing, perturbation and free-choice coverage remains pending."
+  ]
+}

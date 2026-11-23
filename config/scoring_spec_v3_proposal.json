@@ -1,0 +1,127 @@
+{
+  "schema_version": 2,
+  "proposal_id": "compact_torso_first_touch_v3_proposal",
+  "status": "proposal_requires_user_confirmation_and_native_validation",
+  "runtime_activation_allowed": false,
+  "admitted_to_training": false,
+  "design_plan": "docs/plan2_zh.md",
+  "physical_slots": ["a1", "a2"],
+  "policy_families_are_independent_of_slot_names": true,
+  "base_distance_m": 1.75,
+  "round_start": {
+    "initial_pose": "shared_validated_ready_pose",
+    "both_families_wait_for_shared_physical_readiness": true,
+    "formal_match_clock_starts_after_readiness": true,
+    "warmup_counted_in_simulated_interaction_cost": true,
+    "warmup_timeout_s": null,
+    "warmup_timeout_status": "must_be_set_and_validated_before_integration; no_unbounded_wait",
+    "invalid_reset_is_not_a_policy_loss": true
+  },
+  "targets": {
+    "type": "union_of_virtual_spheres",
+    "meaning": "fixed practice scoring region, not a physical or anatomical torso",
+    "adds_collision_or_mass": false,
+    "head_scoring_in_initial_proposal": false,
+    "same_points_for_all_zones": true,
+    "a1": [
+      {"center_world_m": [0.32, 0.0, 0.90], "radius_m": 0.12},
+      {"center_world_m": [0.32, 0.0, 1.05], "radius_m": 0.12},
+      {"center_world_m": [0.32, 0.0, 1.20], "radius_m": 0.12}
+    ],
+    "a2": [
+      {"center_world_m": [1.43, 0.0, 0.90], "radius_m": 0.12},
+      {"center_world_m": [1.43, 0.0, 1.05], "radius_m": 0.12},
+      {"center_world_m": [1.43, 0.0, 1.20], "radius_m": 0.12}
+    ],
+    "entry_is_for_opponent_blade_only": true,
+    "deduplicate_union_seams_and_blade_sections": true,
+    "reset_must_have_no_opponent_target_overlap": true,
+    "own_blade_in_own_virtual_region": "no_new_foul_in_this_proposal; physical self_contact_rules_still_apply"
+  },
+  "hit": {
+    "geometry": "all_three_existing_native_finite_blade_cylinders",
+    "exclude_guard_grip_and_fixture_from_scoring": true,
+    "event": "first_strict_geometric_entry_into_opponent_union",
+    "pose_or_skill_name_gate": false,
+    "minimum_hit_speed_m_s": null,
+    "minimum_hit_force_n": null,
+    "touch_including_slow_contact_is_legal": true,
+    "record_hit_material_point_velocity_for_analysis": true
+  },
+  "time": {
+    "integrator": "RK4",
+    "physics_step_s": 0.001,
+    "control_period_s": 0.01,
+    "policy_observation_period_s": 0.02,
+    "official_round_timeout_s": 30.0,
+    "official_end": "first_valid_terminal_native_tick",
+    "double_touch": "both_hit_in_same_native_tick",
+    "simultaneity_depends_on_fixed_numeric_profile": true,
+    "cross_tick_hit_waiting_window_s": 0.0,
+    "tactical_afterblow_window_s": 0.0,
+    "later_diagnostic_events_can_override_official_result": false,
+    "skill_validation_horizon": "separate_full_attack_recovery_and_transition_window; unfinished_is_truncated_not_failed"
+  },
+  "settlement": {
+    "priority_same_native_tick": ["numerical_or_evidence_error", "qualified_foul", "target_entry"],
+    "rewards": {
+      "target_win": {"winner": 1.0, "loser": -1.0},
+      "single_foul": {"responsible": -1.0, "other": 1.0},
+      "double_or_ambiguous_foul": {"a1": -1.0, "a2": -1.0},
+      "double_touch": {"a1": 0.0, "a2": 0.0},
+      "valid_timeout": {"a1": 0.0, "a2": 0.0},
+      "numerical_or_evidence_error": null
+    },
+    "legal_weapon_contact_reward": 0.0,
+    "pose_selection_or_parry_label_reward": 0.0,
+    "new_per_step_living_or_action_count_reward": 0.0,
+    "foul_responsibility": "retain_approved_motion_foul_training_v1_convention",
+    "match_winner_and_training_reward_are_separate": true,
+    "error_handling": "abort_invalid_transition; retain_trace_and_count_attempted_interaction; never_silently_retry_as_draw"
+  },
+  "training_and_evaluation": {
+    "common_formal_match_rules_for_both_families": true,
+    "a1": "finite_validated_continuous_skills; choose_only_when_own_executor_allows",
+    "a2": "bounded_seven_joint_target_increment; no_direct_qpos_or_qvel_writes",
+    "shared_observation_design": "docs/a2_system_design_zh.md",
+    "shared_command_governor": "proposal_only_parameters_unselected_and_native_validation_required",
+    "discount_and_budget_unit": "physical_seconds",
+    "pretraining_counted_separately_and_in_total_cost": true,
+    "evaluation": "frozen_policies_and_normalizers; common_heldout_opponents; swapped_slots; all_attempts_reported"
+  },
+  "coverage_evaluation_proposal": {
+    "status": "design_only_not_implemented_or_admitted",
+    "connected_union_is_not_proof_of_multilocation_coverage": true,
+    "main_match": "unrestricted_union_equal_points_no_skill_label_rewards",
+    "reporting": {
+      "coordinate_frame": "defender_local_left_positive_y_world_up_z",
+      "height_boundaries_m": [0.975, 1.125],
+      "boundary_rule": "height_equality_goes_to_upper_bin_y_zero_goes_to_left",
+      "lateral_boundary_m": 0.0,
+      "bins": ["low_left", "low_right", "mid_left", "mid_right", "high_left", "high_right"],
+      "measure": "actual_first_entry_point_not_sphere_index_or_skill_label",
+      "simultaneous_multiple_locations": "report_multi_contact_without_duplicating_score_or_claiming_unique_bin_coverage"
+    },
+    "target_conditioned_diagnostic": {
+      "public_active_region_for_both": true,
+      "balanced_regions": true,
+      "active_region_and_mode_in_common_task_identity": true,
+      "detect_active_subregion_entry_independently_of_whole_union_entry": true,
+      "inactive_region": "no_score_no_extra_collision_original_fouls_unchanged",
+      "may_be_reported_as_unrestricted_match_success": false
+    },
+    "admission": "validate_dynamic_reachability_and_attack_defence_for_each_reported_bin_then_free_duel_diversity"
+  },
+  "unresolved_before_formal_training": [
+    "user_confirmation_of_target_extent_head_scope_touch_scoring_time_profile_and_timeout",
+    "native_multizone_continuous_scorer_and_same_tick_settlement_tests",
+    "a1_action_library_revalidation_under_selected_scoring_and_shared_control",
+    "a2_continuous_adapter_shared_observation_and_native_safety_tests",
+    "shared_start_readiness_thresholds_and_bounded_warmup_timeout",
+    "command_rate_tracking_leash_and_margin_parameters_not_hardware_calibrated",
+    "waiting_double_foul_shielding_and_numerical_error_exploit_checks",
+    "heldout_protocol_and_snapshot_identity_freeze",
+    "multilocation_bins_dynamic_reachability_and_active_subregion_scorer",
+    "separate_both_families_individual_capability_gates_and_unrestricted_diversity_checks"
+  ]
+}

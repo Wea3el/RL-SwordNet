@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "status": "interpreted_user_requirements_not_validated_fencing_library",
+  "frame": "+X forward toward opponent, +Y robot left, +Z up; virtual body landmarks, no torso geometry",
+  "interpretations": {
+    "plow_right": "User list repeated left of torso; interpreted as mirrored right of torso.",
+    "kron": "Grip above virtual head at center; axis is unconstrained because the user did not specify it. This is not certification of a historical Kron guard.",
+    "left_right": "Robot's own left/right, not the camera's.",
+    "speed": "User dynamic velocity >1 has no unit or tracked point; not silently converted to joint rad/s or tip m/s.",
+    "placement": "Metric positions below are explicit adjustable prototypes inferred from text, not expert measurements."
+  },
+  "virtual_body": {"torso_height_m": 0.95, "head_height_m": 1.10},
+  "poses": {
+    "long_point": {"grip_m": [0.50, 0, 0.90], "axis": [1, 0, 0], "description": "center, pointing forward horizontally"},
+    "roof_left": {"grip_m": [0.35, 0.25, 1.10], "axis": [0, 0, 1], "description": "high left of virtual head, pointing upward"},
+    "roof_right": {"grip_m": [0.35, -0.25, 1.10], "axis": [0, 0, 1], "description": "high right of virtual head, pointing upward"},
+    "fools_left": {"grip_m": [0.40, 0.25, 0.85], "axis": [0, 0, -1], "description": "low left of virtual torso, pointing downward"},
+    "fools_right": {"grip_m": [0.40, -0.25, 0.85], "axis": [0, 0, -1], "description": "low right of virtual torso, pointing downward"},
+    "plow_left": {"grip_m": [0.40, 0.25, 0.75], "axis": [1, 0, 0], "description": "low left of virtual torso, pointing forward"},
+    "plow_right": {"grip_m": [0.40, -0.25, 0.75], "axis": [1, 0, 0], "description": "low right of virtual torso, pointing forward"},
+    "ox_left": {"grip_m": [0.35, 0.25, 1.10], "axis": [1, 0, 0], "description": "high left of virtual head, pointing forward"},
+    "ox_right": {"grip_m": [0.35, -0.25, 1.10], "axis": [1, 0, 0], "description": "high right of virtual head, pointing forward"},
+    "kron": {"grip_m": [0.30, 0, 1.25], "axis": null, "description": "center above virtual head; blade orientation remains unspecified"}
+  },
+  "cuts": {
+    "down_left_to_right": ["ox_left", "long_point", "fools_right"],
+    "down_right_to_left": ["ox_right", "long_point", "fools_left"],
+    "up_right_to_left": ["fools_right", "long_point", "ox_left"],
+    "up_left_to_right": ["fools_left", "long_point", "ox_right"],
+    "straight_down": ["kron", "long_point"]
+  },
+  "solver": {"seed": 20261123, "first_frame_starts": 48, "max_iterations": 220, "position_tolerance_m": 0.002, "axis_tolerance_deg": 0.5, "tip_tolerance_m": 0.009, "joint_margin_rad": 0.005},
+  "preview_seconds_per_leg": 2.0,
+  "connection_samples_per_leg": 25,
+  "connection_forward_clearance_m": 0.0,
+  "admitted_to_training": false
+}

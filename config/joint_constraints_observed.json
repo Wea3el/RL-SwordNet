@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "source": "user screenshot codex-clipboard-86560154-36b2-4547-afd2-2b6cca760cd0.png",
+  "scope": "Joint-angle bounds only; no speed, torque, collision or dynamic certification.",
+  "joint_names": ["J0", "J1", "J2", "J3", "J4", "J5", "J6"],
+  "provided_bounds_deg": [[0, 360], [0, 180], [0, 360], [-20, 120], [0, 360], [15, 145], [-90, 90]],
+  "mapping": {
+    "confirmed": true,
+    "confirmation_source": "User confirmed same joint names, zero positions and positive directions as the current model.",
+    "formula": "hardware_deg = sign * q_rad * 180 / pi + offset_deg",
+    "sign": [1, 1, 1, 1, 1, 1, 1],
+    "offset_deg": [0, 0, 0, 0, 0, 0, 0]
+  }
+}

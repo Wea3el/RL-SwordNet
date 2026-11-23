@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "policy_family": "A1",
+  "status": "two_action_shared_ready_seed_not_complete_training_bank",
+  "admitted_to_training": false,
+  "joint_names": ["J0", "J1", "J2", "J3", "J4", "J5", "J6"],
+  "angle_unit": "radian",
+  "joint_constraints": "config/joint_constraints_observed.json",
+  "reference_generator": "sim.motion_spline.C2JointSpline",
+  "initial_node": "ready",
+  "nodes": {
+    "ready": [3.285903341937249, 0.4100840210102702, 3.5544002177025575, 2.018633936123596, 2.0118222340641676, 0.4117993877991494, 0.7798822557606823],
+    "strike": [4.865015461756215, 0.6331030285784495, 5.098948559146688, 1.0762072835976044, 2.8731267853542817, 0.36179938779914944, 0.4531245139283783],
+    "glancing_intercept": [3.4857863370784403, 0.2088540647545175, 3.529988518858944, 2.0443951023931954, 1.7319491907377669, 0.3732550199966758, 0.7590194565617322]
+  },
+  "actions": {
+    "attack": {
+      "start_node": "ready",
+      "end_node": "ready",
+      "knot_time_s": [0.0, 3.0, 6.0],
+      "waypoint_nodes": ["ready", "strike", "ready"],
+      "source_local_candidate": "outputs/a1_common_ready_attack_probe_v1/prior_exact_strike_branch_control.npz",
+      "source_sha256": "6bf0064e2c00daee56f6105fc06c41cd7ef4b971f4fb34f5fdbfd5845648d987"
+    },
+    "parry": {
+      "start_node": "ready",
+      "end_node": "ready",
+      "knot_time_s": [0.0, 1.0, 3.0, 4.5],
+      "waypoint_nodes": ["ready", "glancing_intercept", "glancing_intercept", "ready"],
+      "source_local_candidate": "outputs/a1_common_ready_glancing_parry_v1/mild_lateral.npz",
+      "source_sha256": "543c873f2024ea39490b4b918ad7ed8af2d309001eb98979d59b078fd226d993"
+    }
+  },
+  "limitations": [
+    "One authored attack direction and its matching parry only; not the requested complete named-pose library.",
+    "No trained chooser or automatic acceptance into the legacy five-action bank.",
+    "Use the unchanged model, constraints and physics profile from the evidence; altered conditions require revalidation.",
+    "Actual own-state entry, exit and settling gates are required; named waypoints must never be used as teleports."
+  ]
+}

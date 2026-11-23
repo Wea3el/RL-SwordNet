@@ -1,0 +1,3 @@
+# Offline Plan 2 geometry/rule/command audits; no learner or video dependency.
+-r requirements.txt
+scipy>=1.14,<2

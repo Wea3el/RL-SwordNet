@@ -1,0 +1,591 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-23",
+  "branch": "plan2",
+  "status": "design_and_offline_evidence_not_training_admission",
+  "admitted_to_training": false,
+  "deployed_new_scoring": false,
+  "deployed_a2": false,
+  "publication_checks": {
+    "date": "2026-11-23",
+    "local_full_unittest": {"run": 525, "successful": true, "skipped": 0},
+    "clean_export_full_unittest": {"run": 521, "successful": true, "skipped": 2, "skip_reason": "ASE source-dependent fixtures not available in clean export"},
+    "clean_export_quick_unittest": {"run": 50, "successful": true},
+    "clean_export_offline_commands": {
+      "event_contract": "70 existing tests and 18 synthetic probes passed",
+      "a2_command_contract": "20 offline tests passed; not deployed",
+      "static_reachability": "1536 forward evaluations completed",
+      "static_refinement": "20 extra forward evaluations, three height witnesses mirrored; no dynamic validation"
+    },
+    "core_document_local_links_checked": true,
+    "third_party_motion_binaries_and_checkpoints_in_commit": false,
+    "these_checks_admit_a1_or_a2_to_final_evaluation": false
+  },
+  "source_reports": {
+    "event_contract": {
+      "local_path": "outputs/rules_review_v1/event_contract/summary.json",
+      "sha256": "0b7bd2a6e2462b2dbfc15ab1da664072da58992b439c695bcdd0ef625e655340",
+      "full_report_committed": false
+    },
+    "target_shadow": {
+      "local_path": "outputs/rules_review_v1/target_geometry_v2/report.json",
+      "sha256": "2892991fe3ccf1f68f21e61dfdda5a03efd2f6d1d71f56fb429f2e3ddb3d6863",
+      "full_report_committed": false
+    },
+    "reachability": {
+      "local_path": "outputs/scoring_design_v1/reachability/report.json",
+      "sha256": "de97d017b7377e3ca719791d112311d53f599746f9136dd5a3d39823495f1e0b",
+      "full_report_committed": false
+    },
+    "refinement": {
+      "local_path": "outputs/scoring_design_v1/reachability_refinement/report.json",
+      "sha256": "7321c449d985b6052c6a7921f4ff30057eb96864ec2ecdd571071190e696b748",
+      "full_report_committed": false
+    },
+    "a2_command": {
+      "local_path": "outputs/scoring_design_v1/a2_command_contract/summary.json",
+      "sha256": "23ab4dac74aaca4ebbaa2e04ceb9887683cb28835f79d008af89aa49a93d1c1a",
+      "full_report_committed": false
+    }
+  },
+  "scope": "Curated scalar evidence, not a distribution of source motion arrays, native traces or trained policies.",
+  "event_contract": {
+    "rules_version": "whole_blade_first_touch_v2",
+    "deployed_contact_rule_version": "motion_foul_training_v1",
+    "scope": "Existing unit tests and synthetic scorer/settlement contract probes; not native robot dynamics, skill validation, self-play or new rule selection",
+    "production_rules_changed": false,
+    "synthetic_case_count": 18,
+    "synthetic_pass_count": 18,
+    "conclusions": [
+      "Current scorer has no minimum hit-speed gate: both tested speeds score under the same geometric rule.",
+      "Same physical .7ms entry separation can produce double-touch or first-hit win when timestep/bin alignment changes.",
+      "Same-tick foul overrides hit; mutual foul is both -1, not a zero-reward draw.",
+      "Invalid physical/evidence transitions raise without a reward; no new temporal window or rule was selected."
+    ],
+    "unit_test_count": 70,
+    "source_code_sha256": {
+      "tools/audit_rule_contract.py": "5f6e52de74bc71f77ea00105e0f16a4e80610ddf421cf5d7b9422792fe55c3d9",
+      "tests/test_fencing_rules.py": "58d0534e7026f0cbd3c5ddd571e86913a212324b2e5296fe939f5f88bde65790",
+      "tests/test_foul_attribution.py": "622555dc3d6e50485be158d0190d3914517d209159c5ffb5e3f378a3defd3104",
+      "tests/test_training_contacts.py": "e4addc6bc09daa42cc6f629da639ca0f03278d0769f43609fdf2e16de1be3f97",
+      "tests/test_training_contact_episodes.py": "e5d1b7de038842488ee719d18b9ba4b9a7ef4515c827b2f1bc61577ea7174176",
+      "sim/fencing_rules.py": "258235dfefae602b2670a5c6379704f2e6001d24ed33dfb17af0d864d7c8d0d8",
+      "sim/foul_attribution.py": "1fb1816ae8dbccd30c71474439ea1fba241451a81a8cd235d118d5f1b18b31e5",
+      "sim/training_contacts.py": "326a387ae99e26ed0a62454ac52933d171a136b088bd9b30078998275142a1e0"
+    }
+  },
+  "target_shadow": {
+    "method": "saved actual qpos -> mj_forward -> finite cylinder / sphere union clearance",
+    "limitations": [
+      "No mj_step or new physical interaction is computed.",
+      "Every saved frame is tested; unsampled within-frame motion is not reconstructed.",
+      "A positive overlap is a saved-state witness, not necessarily a legal scored hit.",
+      "A negative sampled result is NOT a continuous miss or successful defence certificate.",
+      "Candidate dimensions are arbitrary sensitivity probes, not anatomical recommendations.",
+      "Late occupied frames and new entry episodes are distinguished; occupancy is not repeated scoring.",
+      "No new match winner is assigned. Source settlements, faults and fouls are retained unchanged.",
+      "A first recorded entry per attacker can be a shadow entry after the other side ended the match; it is not called an official hit.",
+      "The replay does not rerun physical_observation or policy decisions for new targets; new closed-loop trials remain required."
+    ],
+    "trials": {
+      "original_attack_hold": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "ff532d2a5b58acb1e05980010c3378db5cf0456fd5c3378c0301ca4a5aa45b42",
+          "summary.json": "8b2260f33f5063ea23db9a7e16f2c6c4b0922f2d8fe5ffede0e32253da80177c"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 9.0,
+          "completed_time_s": 9.000000000000451,
+          "completion": null
+        },
+        "source_official_terminal_time_s": 3.5389999999997213,
+        "source_official_result": {
+          "status": "target_win",
+          "match_winner": "a1",
+          "rl_reward": {
+            "a1": 1.0,
+            "a2": -1.0
+          }
+        },
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": 3.5389999999997213,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": 3.3169999999997457,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": 3.2469999999997534,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": 3.3169999999997457,
+            "a2": null
+          }
+        }
+      },
+      "original_observed_parry": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "7cf3a3e287c7cc1e7d8aaecddeaffdab7eb4a62d3818d47e530011cd97dfad0d",
+          "summary.json": "3bef016a569298841c614eba924bf06335dcdb24213bb278afaf247372001abf"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 12.0,
+          "completed_time_s": 11.999999999998789,
+          "completion": {
+            "schema_version": "trial_completion_v1",
+            "termination_category": "complete",
+            "complete": true,
+            "is_truncation": false,
+            "completed_time_s": 11.999999999998789,
+            "requested_duration_s": 12.0,
+            "stop_reason": "horizon",
+            "physical_failures": [],
+            "evidence_failures": [],
+            "execution_failures": [],
+            "unfinished": {},
+            "latest_active_reference_end_s": null,
+            "reference_end_guarantees_actual_settling": false,
+            "allows_timeout_draw_if_no_scored_result": true
+          }
+        },
+        "source_official_terminal_time_s": null,
+        "source_official_result": null,
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": null,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": null,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": null,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": null,
+            "a2": null
+          }
+        }
+      },
+      "down_attack_hold": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "80e78f04ccd2cfa81ea36656a081792b59eb2b7ca8ab3a875d3928dcb87165a5",
+          "summary.json": "088cb249d9c33ad0718856ba3c45a456289f5630523d09cc8e9e2adf7e01cb1e"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 12.0,
+          "completed_time_s": 11.999999999998789,
+          "completion": {
+            "schema_version": "trial_completion_v1",
+            "termination_category": "complete",
+            "complete": true,
+            "is_truncation": false,
+            "completed_time_s": 11.999999999998789,
+            "requested_duration_s": 12.0,
+            "stop_reason": "horizon",
+            "physical_failures": [],
+            "evidence_failures": [],
+            "execution_failures": [],
+            "unfinished": {},
+            "latest_active_reference_end_s": null,
+            "reference_end_guarantees_actual_settling": false,
+            "allows_timeout_draw_if_no_scored_result": true
+          }
+        },
+        "source_official_terminal_time_s": 4.261999999999758,
+        "source_official_result": {
+          "status": "target_win",
+          "match_winner": "a1",
+          "rl_reward": {
+            "a1": 1.0,
+            "a2": -1.0
+          }
+        },
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": 4.261999999999758,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": 3.3439999999997427,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": 3.2909999999997486,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": 3.3439999999997427,
+            "a2": null
+          }
+        }
+      },
+      "up_attack_hold": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "bf8b1a9fafad1ddb78a635fa4a8a3a25f6097592579fe023344fdc779af1124b",
+          "summary.json": "b582dc45c01becd32a0c069f4d2e0e8bbd7228269d678a0c4f5a56b28af927a1"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 12.0,
+          "completed_time_s": 11.999999999998789,
+          "completion": {
+            "schema_version": "trial_completion_v1",
+            "termination_category": "complete",
+            "complete": true,
+            "is_truncation": false,
+            "completed_time_s": 11.999999999998789,
+            "requested_duration_s": 12.0,
+            "stop_reason": "horizon",
+            "physical_failures": [],
+            "evidence_failures": [],
+            "execution_failures": [],
+            "unfinished": {},
+            "latest_active_reference_end_s": null,
+            "reference_end_guarantees_actual_settling": false,
+            "allows_timeout_draw_if_no_scored_result": true
+          }
+        },
+        "source_official_terminal_time_s": 4.411999999999808,
+        "source_official_result": {
+          "status": "target_win",
+          "match_winner": "a1",
+          "rl_reward": {
+            "a1": 1.0,
+            "a2": -1.0
+          }
+        },
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": 4.411999999999808,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": 3.431999999999733,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": 3.3089999999997466,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": 3.431999999999733,
+            "a2": null
+          }
+        }
+      },
+      "up_low_parry": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "521a8c329d0deca2a751f477618fc201a8eee1ea4ef2779a8daba9243a527266",
+          "summary.json": "edf923fc4015546ae3771c646721f51ae097537f6cdb56bdb3c8b17765694c0b"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 12.0,
+          "completed_time_s": 11.999999999998789,
+          "completion": {
+            "schema_version": "trial_completion_v1",
+            "termination_category": "complete",
+            "complete": true,
+            "is_truncation": false,
+            "completed_time_s": 11.999999999998789,
+            "requested_duration_s": 12.0,
+            "stop_reason": "horizon",
+            "physical_failures": [],
+            "evidence_failures": [],
+            "execution_failures": [],
+            "unfinished": {},
+            "latest_active_reference_end_s": null,
+            "reference_end_guarantees_actual_settling": false,
+            "allows_timeout_draw_if_no_scored_result": true
+          }
+        },
+        "source_official_terminal_time_s": null,
+        "source_official_result": null,
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": null,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": 3.431999999999733,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": 3.3089999999997466,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": 3.431999999999733,
+            "a2": null
+          }
+        }
+      },
+      "down_high_parry_failed": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "ca24f3018ae06d29ec83f2cb923b041247ee229ae930a13bcdd2045cbbd54a68",
+          "summary.json": "ecf980a478899246a8366b8c74ebe257536296b02ea8d3155add4377b59b9611"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 12.0,
+          "completed_time_s": 11.999999999998789,
+          "completion": {
+            "schema_version": "trial_completion_v1",
+            "termination_category": "complete",
+            "complete": true,
+            "is_truncation": false,
+            "completed_time_s": 11.999999999998789,
+            "requested_duration_s": 12.0,
+            "stop_reason": "horizon",
+            "physical_failures": [],
+            "evidence_failures": [],
+            "execution_failures": [],
+            "unfinished": {},
+            "latest_active_reference_end_s": null,
+            "reference_end_guarantees_actual_settling": false,
+            "allows_timeout_draw_if_no_scored_result": true
+          }
+        },
+        "source_official_terminal_time_s": 4.259999999999757,
+        "source_official_result": {
+          "status": "target_win",
+          "match_winner": "a1",
+          "rl_reward": {
+            "a1": 1.0,
+            "a2": -1.0
+          }
+        },
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": 4.259999999999757,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": 3.3719999999997397,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": 3.3089999999997466,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": 3.3719999999997397,
+            "a2": null
+          }
+        }
+      },
+      "parry_counter_response": {
+        "source_input_sha256": {
+          "scene.xml": "b315335c6995da56c90ba259748a37fcb282c66d3d19f44aaa6364552ac31172",
+          "trace.npz": "0289376cdd0af9a9544e40a5780e3b26eb0bfb0b0f276b94b215dbeb12a0104a",
+          "summary.json": "782548758a5195b9964b42731cfe03d0210bff8f991d6f24fe23ccd72e32ae7f"
+        },
+        "source_complete_native_record": true,
+        "source_summary": {
+          "status": "completed",
+          "native_execution_pass": true,
+          "evidence_complete": true,
+          "failure": null,
+          "requested_duration_s": 14.0,
+          "completed_time_s": 13.99999999999768,
+          "completion": {
+            "schema_version": "trial_completion_v1",
+            "termination_category": "complete",
+            "complete": true,
+            "is_truncation": false,
+            "completed_time_s": 13.99999999999768,
+            "requested_duration_s": 14.0,
+            "stop_reason": "horizon",
+            "physical_failures": [],
+            "evidence_failures": [],
+            "execution_failures": [],
+            "unfinished": {},
+            "latest_active_reference_end_s": null,
+            "reference_end_guarantees_actual_settling": false,
+            "allows_timeout_draw_if_no_scored_result": true
+          }
+        },
+        "source_official_terminal_time_s": null,
+        "source_official_result": null,
+        "shadow_probe_first_saved_inside_s": {
+          "original_ball": {
+            "a1": null,
+            "a2": null
+          },
+          "compact_torso_probe": {
+            "a1": null,
+            "a2": null
+          },
+          "wide_torso_probe": {
+            "a1": null,
+            "a2": null
+          },
+          "compact_plus_head_probe": {
+            "a1": null,
+            "a2": null
+          }
+        }
+      }
+    },
+    "warning": "Geometric sampled overlaps only; no new winners assigned and no continuous no-hit certificate. Archived native scenes have machine-local absolute mesh paths; traces not distributed."
+  },
+  "static_random_reachability": {
+    "seed": 20261123,
+    "unique_joint_vectors": 768,
+    "total_mj_forward_sample_evaluations": 1536,
+    "minimum_requested_boundary_margin_rad": 0.05,
+    "admitted_to_training": false,
+    "limitations": [
+      "Only static geometry under existing collision masks; excluded adjacent proxies are not checked.",
+      "No mj_step, forces, speed, timing, path from ready, recovery or dynamic hold tested.",
+      "No A1 curves used for the samples: only a shared initial q vector and confirmed joint ranges.",
+      "Uniform/global and ready-local samples are neither exhaustive nor an estimate of trained A2 behavior.",
+      "A clean static witness is not dynamically reachable certification; no witness is not global impossibility.",
+      "Target candidates are arbitrary sensitivity probes, not anatomical recommendations or a finalized rule.",
+      "Target/proxy intersection is tested exactly for current primitives; line-occlusion screening uses conservative bounds only."
+    ],
+    "per_slot": {
+      "a1": {
+        "no_disallowed_overlap_samples": 345,
+        "disallowed_overlap_samples": 423,
+        "out_of_joint_range_samples": 0
+      },
+      "a2": {
+        "no_disallowed_overlap_samples": 345,
+        "disallowed_overlap_samples": 423,
+        "out_of_joint_range_samples": 0
+      }
+    }
+  },
+  "static_refinement": {
+    "method": "bounded target-directed static L-BFGS-B, nearest finite-blade surface Jacobian and proxy overlap penalty",
+    "total_forward_calls": 20,
+    "preceding_random_forward_calls": 1536,
+    "combined_forward_calls": 1556,
+    "admitted_to_training": false,
+    "limitations": [
+      "No A1 node other than the shared initial ready, no A1 trajectory or action label is used.",
+      "Targets are arbitrary compact sensitivity regions, not confirmed anatomy or scoring rules.",
+      "A witness proves only a joint configuration with >5mm geometric entry and no disallowed proxy overlap under current masks.",
+      "No path from ready, velocities, controller, contact dynamics or stable hold is established.",
+      "Mirroring checks the same joint state, not a second policy or independently trained A2.",
+      "The static search penalty does not modify the production model, forces, scores or collision masks.",
+      "Optimizer failure or missing witnesses never proves global impossibility."
+    ],
+    "witnesses": [
+      {
+        "target_height_m": 0.9,
+        "penetration_m": 0.030448882722478754,
+        "min_joint_boundary_margin_rad": 0.060361273272685034,
+        "a1_native_contact_count": 0,
+        "a2_mirror_native_contact_count": 0
+      },
+      {
+        "target_height_m": 1.05,
+        "penetration_m": 0.009426930936335204,
+        "min_joint_boundary_margin_rad": 0.04999999999999999,
+        "a1_native_contact_count": 0,
+        "a2_mirror_native_contact_count": 0
+      },
+      {
+        "target_height_m": 1.2,
+        "penetration_m": 0.018505595304378758,
+        "min_joint_boundary_margin_rad": 0.04999999999999999,
+        "a1_native_contact_count": 0,
+        "a2_mirror_native_contact_count": 0
+      }
+    ]
+  },
+  "a2_command": {
+    "status": "candidate_not_deployed",
+    "scope": "Offline pure command mapping and unit tests only",
+    "production_integration": false,
+    "native_physics_tested": false,
+    "admitted_to_training": false,
+    "tests": {
+      "run": 20,
+      "successful": true,
+      "failures": [],
+      "errors": [],
+      "skipped": []
+    },
+    "limitations": [
+      "Only reference rate/interior and directional accumulation are constrained; actual speed, torque, contact, safety and stability are not proved.",
+      "A1 must use the same component if adopted; current A1 physical action certificates would require revalidation.",
+      "The governor may change task trajectories; no learned policy, scorer or deployed controller is modified.",
+      "Raw policy action/log probability must remain separate from the many-to-one accepted target; do not rewrite sampled actions as governed values.",
+      "Each agent owns its own accepted reference state; this pure function stores no hidden command accumulator."
+    ],
+    "audit_passed": true,
+    "demonstration": {
+      "parameters_status": "illustrative audit values, not approved or calibrated motor limits",
+      "parameters": {
+        "control_period_s": 0.01,
+        "decision_period_s": 0.02,
+        "duration_s": 1.0,
+        "reference_speed_rad_s": 2.0,
+        "tracking_leash_rad": 0.1,
+        "command_margin_deg": 1.0
+      },
+      "physical_model": "q held constant numerically; no MuJoCo or contact dynamics",
+      "naive_target_delta_after_1s_rad": 1.999999999999976,
+      "bounded_target_delta_after_1s_rad": 0.10000000000000009,
+      "reverse_next_target_delta_from_actual_rad": 0.08000000000000007,
+      "zero_action_holds_exactly": true
+    }
+  },
+  "reproduction": {
+    "from_clean_checkout": [
+      "unit_tests_in_README",
+      "event_contract_audit",
+      "a2_command_audit",
+      "static_reachability_then_refinement"
+    ],
+    "requires_local_unpublished_artifacts": [
+      "seven_native_records_for_target_shadow_recompute",
+      "historical_native_videos_and_trajectory_replays"
+    ],
+    "dependencies": "requirements-plan2.txt; historical learner tests additionally requirements-a1.txt",
+    "source_unchanged_at_original_audits": true,
+    "note": "Later documentation/config additions have a new Git identity; original hashes identify the original audit inputs."
+  }
+}
