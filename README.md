@@ -16,6 +16,7 @@ The current prerequisite is full-window **physical attack/parry validation**. Op
 - [共享技能有效性验证与连续反击阻塞项](docs/skill_validation_zh.md)
 - [完整 ASE 直刺和上拨挡的双机测试与适配结果](docs/ase_duel_zh.md)
 - [中文方案：范围、算法、实验和截至 12 月 3 日的计划](docs/plan1_zh.md)
+- [Longsword pose library: ten guards, nine cuts, geometry screen only](docs/hema_poses.md) (`python -m sim.hema_skills`), a separate A1 candidate library, not physically validated.
 - [Skill library setup, format, and source notice](motion_skills/plan1/README.md)
 - [Pinned source manifest](motion_skills/plan1/manifest.json)
 
