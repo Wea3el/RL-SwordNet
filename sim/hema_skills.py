@@ -436,12 +436,56 @@ def _view(library, names, dwell_s=1.5):
                     time.sleep(.02)
 
 
+def render_library(library, output, size=480, frames_per_cut=5):
+    """Write PNG strips of every stationary pose and every cut; kinematic, no physics."""
+    from PIL import Image, ImageDraw
+    model = library.single_assembly.model
+    model.vis.global_.offwidth = model.vis.global_.offheight = max(size, 1024)
+    data = mujoco.MjData(model)
+    renderer = mujoco.Renderer(model, size, size)
+    option = mujoco.MjvOption(); option.geomgroup[3] = 0
+    camera = mujoco.MjvCamera(); camera.type = mujoco.mjtCamera.mjCAMERA_FREE
+    camera.lookat[:] = [.3, 0., 1.1]; camera.distance, camera.azimuth, camera.elevation = 3.2, 130, -12
+
+    def shot(q, label):
+        data.qpos[:] = q
+        mujoco.mj_forward(model, data)
+        renderer.update_scene(data, camera, option)
+        image = Image.fromarray(renderer.render())
+        ImageDraw.Draw(image).text((10, 10), label, fill=(255, 255, 0))
+        return image
+
+    def strip(items, path):
+        sheet = Image.new("RGB", (size*len(items), size))
+        for i, (q, label) in enumerate(items):
+            sheet.paste(shot(q, label), (i*size, 0))
+        sheet.save(path)
+
+    output = Path(output)
+    output.mkdir(parents=True, exist_ok=True)
+    names = list(library.holds)
+    written = []
+    for row in range(0, len(names), 5):
+        path = output/f"poses_row{row//5+1}.png"
+        strip([(library.poses[n], n) for n in names[row:row+5]], path)
+        written.append(path)
+    for name, cut in library.cuts.items():
+        end_hold = next(s for s in cut.segments if s["name"].startswith("hold_"))
+        rows = np.linspace(0, end_hold["start_row"], frames_per_cut).round().astype(int)
+        path = output/f"cut_{name}.png"
+        strip([(cut.qpos[r], f"{name}  t={cut.time_s[r]:.2f}s") for r in rows], path)
+        written.append(path)
+    renderer.close()
+    return written
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=ROOT/"outputs/hema_poses")
     parser.add_argument("--config", type=Path, default=None, help="JSON file whose top-level keys override DEFAULT_CONFIG")
     parser.add_argument("--path-space", choices=("joint", "task"), default=None, help="override cut_path_space")
     parser.add_argument("--view", nargs="*", metavar="NAME", help="play the named poses/cuts (default: all) in a kinematic viewer")
+    parser.add_argument("--render", action="store_true", help="write PNG strips of every pose and cut into OUTPUT/renders")
     args = parser.parse_args()
     overrides = json.loads(args.config.read_text(encoding="utf-8")) if args.config else {}
     if args.path_space:
@@ -459,6 +503,9 @@ def main():
         print(f"  cut  {report['action_id']:2d} {name:44s} geometry={'pass' if report['candidate_passes_cut_geometry'] else 'FAIL'} peak_tip={report['peak_tip_speed_m_s']:.2f} m/s"
               + (f" at_long_point={passage:.2f} m/s" if passage is not None else "") + f" speed_req={'met' if report['tip_speed_requirement_met'] else 'NOT met'} duration={report['duration_s']:.2f} s")
     print(f"  transitions failing geometry: {len(lib['failed_transitions'])} of {lib['transition_count']}")
+    if args.render:
+        written = render_library(library, args.output/"renders")
+        print(f"  rendered {len(written)} PNG strips into {(args.output/'renders').resolve()}")
     print(f"Artifacts: {args.output.resolve()}")
     if args.view is not None:
         _view(library, args.view or list(library.holds)+list(library.cuts))

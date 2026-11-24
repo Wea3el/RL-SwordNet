@@ -22,6 +22,33 @@ The current prerequisite is full-window **physical attack/parry validation**. Op
 
 This branch provides a bounded single-arm baseline, earlier source conversion/matching tests, and versioned two-arm native-contact skill diagnostics. **The references are not hardware-ready trajectories or trained policies.** Full-CAD collision validation, measured hardware limits, contact-safe continuous transitions, a complete training environment/rewards, PPO training and self-play remain pending. Third-party motion binaries and generated trajectories are not redistributed in Git.
 
+## Longsword pose states (separate A1 library)
+
+Ten stationary guards (action ids 0 to 9) and nine cuts (ids 10 to 18) defined in `sim/hema_skills.py`, documented in [docs/hema_poses.md](docs/hema_poses.md). Geometry screen only; nothing here is physically validated.
+
+```bash
+python -m sim.hema_skills                                   # solve + screen, writes outputs/hema_poses/summary.json
+python -m sim.hema_skills --render                          # also writes PNG strips of every pose and cut to outputs/hema_poses/renders
+python -m sim.hema_skills --view                            # play every pose and cut in the MuJoCo viewer (kinematic, no physics)
+python -m sim.hema_skills --view roof_left straight_down    # play only the named states
+python -m sim.hema_skills --path-space task                 # straight-line task-space cuts; all fail the collision screen, kept as evidence
+python -m sim.hema_skills --config overrides.json           # JSON keys override DEFAULT_CONFIG (pose targets, cut chains, timing)
+python -m unittest discover -s tests -p "test_hema_skills.py" -v
+```
+
+To use the states from Python:
+
+```python
+from sim.hema_skills import build_hema_library
+library = build_hema_library()
+library.poses["roof_left"]                 # exact joint vector (7,) of a stationary state
+library.holds["roof_left"].sample(t)       # zero-velocity hold as a SkillPath
+library.cuts["straight_down"].sample(t)    # joint targets t seconds into a cut; ends at the exact end pose
+library.transitions[("roof_left", "ox_left")]   # 1.5 s joint-space move between any two states
+library.action_ids                         # name -> 0..18
+library.reports["library"]                 # pass/fail summary of the geometry screen
+```
+
 ## Shared skill validation before RL
 
 Historical v1 diagnostic:

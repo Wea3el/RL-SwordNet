@@ -75,15 +75,40 @@ All 90 ordered pose pairs have a 1.5 s joint-space quintic transition with exact
 
 The next gate is the same as for every other candidate library: paired physical attack-versus-guard and guard-versus-attack runs in the dual-arm scene before any pose or cut enters an A1 training action space.
 
-## Reproduce and view
+## How to run the states
+
+All commands run from the repository root with `requirements.txt` installed (MuJoCo 3.4, NumPy, Pillow).
 
 ```bash
-python -m sim.hema_skills --output outputs/hema_poses              # joint-space cuts (default)
-python -m sim.hema_skills --path-space task --output outputs/hema_poses_task
-python -m sim.hema_skills --view                                   # kinematic playback of every pose and cut
-python -m sim.hema_skills --view roof_left downward_cut_left_to_right
-python -m sim.hema_skills --config my_overrides.json               # JSON keys override DEFAULT_CONFIG
+python -m sim.hema_skills                                   # solve + screen; writes outputs/hema_poses/summary.json
+python -m sim.hema_skills --render                          # also writes PNG strips to outputs/hema_poses/renders
+python -m sim.hema_skills --view                            # play every pose and cut in the MuJoCo viewer
+python -m sim.hema_skills --view roof_left straight_down    # play only the named states, looping
+python -m sim.hema_skills --path-space task --output outputs/hema_poses_task   # straight-line cuts; all fail, kept as evidence
+python -m sim.hema_skills --config my_overrides.json        # JSON keys override DEFAULT_CONFIG
 python -m unittest discover -s tests -p "test_hema_skills.py" -v
 ```
 
-`summary.json` records every target, the reached grip/axis/tip, the solved joint vectors, per-cut tip paths and speeds, and all screen results, including failures. The viewer plays joint targets kinematically without physics.
+- `summary.json` records every target, the reached grip/axis/tip, the solved joint vectors, per-cut tip paths and speeds, and all screen results including failures.
+- `--render` writes `poses_row1.png`, `poses_row2.png` (five poses each) and `cut_<name>.png` (five frames from start to end of each cut), all from one fixed three-quarter camera.
+- `--view` and `--render` play joint targets kinematically. Physics does not advance, so they show geometry, not tracking or contact.
+- A `--config` JSON may replace `poses`, `cuts`, `cut_path_space`, timing values or the IK seed. Unknown pose names in a cut, non-unit blade axes and non-positive durations are rejected with an explicit error.
+
+### Using the states from code
+
+```python
+from sim.hema_skills import build_hema_library, POSE_ORDER, CUT_ORDER
+
+library = build_hema_library()              # ~4 s; solves on the actual arm every time, nothing is cached
+q = library.poses["roof_left"]              # exact (7,) joint vector of a stationary state
+hold = library.holds["roof_left"]           # SkillPath: hold.sample(t) == q for every t
+cut = library.cuts["straight_down"]         # SkillPath: cut.sample(t) are joint targets t seconds after start
+cut.duration_s                              # includes the 0.3 s end hold; cut.sample(t >= duration) == end pose
+cut.phase_at(t)                             # segment name, e.g. "kron_to_long_point", "hold_long_point", or "ready"
+move = library.transitions[("fool_right", "ox_left")]   # 1.5 s joint-space move between any two states
+library.action_ids                          # {"roof_left": 0, ..., "kron": 9, "downward_cut_left_to_right": 10, ..., "straight_down": 18}
+library.reports["cuts"]["straight_down"]    # geometry screen, tip speeds, long point passage
+library.reports["library"]                  # all_poses_pass_geometry, all_cuts_pass_geometry, failed_* lists
+```
+
+Every `SkillPath` here is the same class the shared library uses, so `sample(elapsed)` returns joint targets for the native position actuators and never writes `qpos` directly. Chaining is exact: a cut's last row equals its end pose, which equals the first row of any transition or cut starting there.
