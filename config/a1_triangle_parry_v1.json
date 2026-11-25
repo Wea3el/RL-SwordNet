@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "open_loop_physical_feasibility_probes_not_policy",
+  "source": "outputs/a1_triangle_refine_v3",
+  "attack": "cut_up_upper_from_right__from_right__to_right",
+  "attack_time_scale": 2.0,
+  "attack_start_s": 0.75,
+  "duration_s": 12.0,
+  "scoring": "config/scoring_triangle_v1_candidate.json",
+  "geometry_derived_poses": {
+    "cross_late": [3.2931185005097374, 0.36849700825437215, 3.549753812563235, 2.0388641815535125, 1.9047517376272787, 0.42563562249072784, 0.7795433286084243],
+    "cross_early": [3.295619228129041, 0.319352385822707, 3.575921607414433, 1.9612460787094945, 2.048472447408559, 0.3065018544689276, 0.7783107192123467]
+  },
+  "cases": {
+    "cross_early_nominal": {"pose": "cross_early", "start_s": 2.2, "approach_s": 0.3, "release_s": 8.0, "return_s": 1.0},
+    "cross_late_nominal": {"pose": "cross_late", "start_s": 2.7, "approach_s": 0.3, "release_s": 8.0, "return_s": 1.0},
+    "cross_early_late_start": {"pose": "cross_early", "start_s": 3.3, "approach_s": 0.3, "release_s": 8.0, "return_s": 1.0},
+    "cross_early_early_release": {"pose": "cross_early", "start_s": 1.0, "approach_s": 0.3, "release_s": 1.8, "return_s": 0.7},
+    "wrong_side_guard": {"guard": "right", "start_s": 1.0, "approach_s": 0.7, "release_s": 8.0, "return_s": 1.0},
+    "high_guard": {"guard": "high", "start_s": 1.0, "approach_s": 0.7, "release_s": 8.0, "return_s": 1.0}
+  },
+  "minimum_post_program_observation_s": 2.0,
+  "future_attack_time_is_policy_observation": false,
+  "timing_note": "Offline open-loop test of physical feasibility; not a reactive policy. Late/wrong/early cases are probes, not forced losing labels.",
+  "admitted_to_training": false
+}

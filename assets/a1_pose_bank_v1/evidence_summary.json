@@ -1,0 +1,305 @@
+{
+  "schema_version": 1,
+  "counts": {
+    "attack_families": 6,
+    "nominal_defence_materials": 6,
+    "catalog_edges": 34,
+    "named_nodes": 13,
+    "unique_q": 12,
+    "policy_outputs": 35,
+    "transition_edges": 18,
+    "closed_defence_edges": 4,
+    "sequence_bound_defence_edges": 6
+  },
+  "materials": [
+    {
+      "material": "cut_down_left_to_right",
+      "kind": "attack",
+      "proof_sha256": "6e7038c6471913053026ea1ae838622617760b95df145806f17097266e126beb",
+      "native_file_fingerprints": {
+        "summary.json": "a1228c7ad8f468cb6757fffb326f6fff89ca4175f22abd5ca6bf09b08f1d9e4a",
+        "scene.xml": "88d3ff8ec41338f7c1a721df5c812c112fa9ad4c0f9916f2e63c4e7edd404b91",
+        "trace.npz": "d60b65203d583ed6a73cd218a6f5bb127af35965159849229a60eca4ade6d799",
+        "references.npz": "103134c198ff23db9481adb2f5cf0093bffdc0c0ae4b50b458c3e5c18577561e",
+        "contacts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "native_triangle_audit",
+      "qualification_scope": "successful waiting-control attack",
+      "actual_entries": [
+        {
+          "agent": "a1",
+          "region": "left",
+          "time_s": 2.8988898281853426
+        }
+      ]
+    },
+    {
+      "material": "cut_up_right_to_left",
+      "kind": "attack",
+      "proof_sha256": "1639663f3cb5a9e90ce3cab7ea2ed34062456bfd16949741f5fa00846b1cfc3f",
+      "native_file_fingerprints": {
+        "summary.json": "5d27737f052c4afb04fe426d9c40b8e8ada8853385e722a3197d268eaf573428",
+        "scene.xml": "42c1a702598d0d8b4dc058cb1347327fe883575ab92bbf633f4a5a357cb371ee",
+        "trace.npz": "c9529a4792cae63c70b1b9a0c847bf1b35ce919401aaa83e07b99c130006504e",
+        "references.npz": "33d8b7bcee10e2dcdcfcb856c748236cd53267ec1d0b67aac7b49213f0532e66",
+        "contacts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "native_triangle_audit",
+      "qualification_scope": "successful waiting-control attack",
+      "actual_entries": [
+        {
+          "agent": "a1",
+          "region": "left",
+          "time_s": 2.5881981296947347
+        }
+      ]
+    },
+    {
+      "material": "cut_down_right_to_left",
+      "kind": "attack",
+      "proof_sha256": "94e22a9c90d7afbf166770f5394cced22807d0b06f9f2eaad747c922825820e3",
+      "native_file_fingerprints": {
+        "summary.json": "41ac9a4e7aa76df9fbfabdf6a3dd1a136f6e32578aa0f015529082f5c05fd56a",
+        "scene.xml": "bf572d9bb8e382e09b01a16d34fb4526ba94d85d543c72a34961c2d0cfade8aa",
+        "trace.npz": "1f41fee2fa42013822c4ebee0828a812a7ebef4610f398fb549cd0075dc8e034",
+        "references.npz": "8446fe0eb9a9738b3b80eacd69671cbaae60bafab74b44d4baa4f3baa734f392",
+        "contacts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "successful waiting-control attack",
+      "actual_entries": [
+        {
+          "agent": "a1",
+          "region": "right",
+          "time_s": 2.070331533244694
+        }
+      ]
+    },
+    {
+      "material": "cut_up_left_to_right",
+      "kind": "attack",
+      "proof_sha256": "f3ea08169a7630a0c7026db67a1cf26a4f9ac5a53db8087205657664d85d6d2f",
+      "native_file_fingerprints": {
+        "summary.json": "0df452ba00f37547fe5a315237046a6e389adb4e188464b47d3917b697158ac6",
+        "scene.xml": "38e7d2f407abe03de2d723852de9a5a4cac3058bcb99bc3af3dae9cf1c7de2dd",
+        "trace.npz": "5b41302ce3a9ccb55d9fb45d8d7709172a9b02f8a9602c70ea3e57e9437c0f87",
+        "references.npz": "45573dcc62d9ea31879a1942b897c35f0a6309aed29ef8b60a4982e1bef3fbb9",
+        "contacts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "failed",
+      "qualification_scope": "successful waiting-control attack",
+      "actual_entries": [
+        {
+          "agent": "a1",
+          "region": "right",
+          "time_s": 3.2997072282449613
+        }
+      ]
+    },
+    {
+      "material": "cut_down_center",
+      "kind": "attack",
+      "proof_sha256": "523c93701816a9b3f278306c32815ea6c446e8cff1e3544c24e8de0fb73a5a64",
+      "native_file_fingerprints": {
+        "summary.json": "39836ec7668bffc0bb24223586b23a2dbb997757bd2f0c3c633f7cd63afd0568",
+        "scene.xml": "bf74f06f2f6dae9f9a553dd1d5af3bc85b9be7ea48a6090d881661dd0dfc3284",
+        "trace.npz": "bfbed7a5bca26f15f58bafc23bbd6806b999f79582abffb0cc484478e94726f4",
+        "references.npz": "c32ddeb1416dc3425f0a28c03d16158d375632108a6fd6c54d6695833662a0ef",
+        "contacts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "original_archive_directory": "outputs/manual_recovery_v1/early01/baseline/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "successful waiting-control attack",
+      "actual_entries": [
+        {
+          "agent": "a1",
+          "region": "upper",
+          "time_s": 4.1819671128277776
+        }
+      ]
+    },
+    {
+      "material": "thrust_center",
+      "kind": "attack",
+      "proof_sha256": "89430cc5827407d3b233e1aaaec3d9afac2fc89ff10def9b3071fa7cb5cb91a5",
+      "native_file_fingerprints": {
+        "summary.json": "9b30462de689b0a405b11e295632c33091b1a11dcefcacd3be2ab263033bfbcf",
+        "scene.xml": "401e9f85ca45ef8ff55004c593c06d30d07ddcd4f61242da34ddd0a3ae17da50",
+        "trace.npz": "62caf80ae56ed71482b80aec110757f087db24e8489742d69b8035398c2bc1a0",
+        "references.npz": "23e937bf49422a07bc4b3e182c0b886247c9d4d6e8568b9011b817884f9a57b2",
+        "contacts.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "successful waiting-control attack",
+      "actual_entries": [
+        {
+          "agent": "a1",
+          "region": "right",
+          "time_s": 2.7813654667155725
+        }
+      ]
+    },
+    {
+      "material": "parry_high_center",
+      "kind": "defence",
+      "proof_sha256": "523c93701816a9b3f278306c32815ea6c446e8cff1e3544c24e8de0fb73a5a64",
+      "native_file_fingerprints": {
+        "summary.json": "e03bdce9bfd8d6fa48b4f879a60a8732d24365b79b0e7fea1257824a47b1cd73",
+        "trace.npz": "23b5b777301c1f8fbe71854bfc62397a1f335fc4f25e7882dd040f30a3942e0a",
+        "scene.xml": "bf74f06f2f6dae9f9a553dd1d5af3bc85b9be7ea48a6090d881661dd0dfc3284"
+      },
+      "original_archive_directory": "outputs/manual_recovery_v1/late01/defended/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "matched nominal attack and complete defence/recovery",
+      "first_pre_hit_contact_s": 3.231999999999755,
+      "pre_hit_impulse_ns": 5.988585800987354,
+      "all_regions_checked": true,
+      "validated_attack_family": "cut_down_center",
+      "validated_attack_start_s": 0.75,
+      "validated_defence_start_s": 0.75
+    },
+    {
+      "material": "parry_right_thrust",
+      "kind": "defence",
+      "proof_sha256": "89430cc5827407d3b233e1aaaec3d9afac2fc89ff10def9b3071fa7cb5cb91a5",
+      "native_file_fingerprints": {
+        "summary.json": "0a3754ea39f833e904b5abdb513d3556fe05c75cb3074de559880388b68fc671",
+        "trace.npz": "1c207eb3c0cd1220ef26ae0d6414cd3015de40b2005d1471ab729a07097a34fe",
+        "scene.xml": "401e9f85ca45ef8ff55004c593c06d30d07ddcd4f61242da34ddd0a3ae17da50"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "matched nominal attack and complete defence/recovery",
+      "first_pre_hit_contact_s": 1.9849999999998922,
+      "pre_hit_impulse_ns": 5.482848938052873,
+      "all_regions_checked": true,
+      "validated_attack_family": "thrust_center",
+      "validated_attack_start_s": 0.75,
+      "validated_defence_start_s": 0.75
+    },
+    {
+      "material": "parry_right_descending",
+      "kind": "defence",
+      "proof_sha256": "94e22a9c90d7afbf166770f5394cced22807d0b06f9f2eaad747c922825820e3",
+      "native_file_fingerprints": {
+        "summary.json": "c4055b6d744bd131289daaaf11b545b4f2226f3aa946fbcb55086f7ae892b356",
+        "trace.npz": "bb2f64fdfba54f0b3a5d48cd1504350cc6303e00ee9b07c06f7930de00abb553",
+        "scene.xml": "bf572d9bb8e382e09b01a16d34fb4526ba94d85d543c72a34961c2d0cfade8aa"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "matched nominal attack and complete defence/recovery",
+      "first_pre_hit_contact_s": 1.5209999999999433,
+      "pre_hit_impulse_ns": 3.592992104210763,
+      "all_regions_checked": true,
+      "validated_attack_family": "cut_down_right_to_left",
+      "validated_attack_start_s": 0.75,
+      "validated_defence_start_s": 0.75
+    },
+    {
+      "material": "parry_right_rising",
+      "kind": "defence",
+      "proof_sha256": "878e78284e46df493f264d329a6b6a23fe6a21be7676f119ba9bc46a1eb82a71",
+      "native_file_fingerprints": {
+        "summary.json": "415ca723770b2f3fc7fd18ba2b2d9c395b06ecfb2836ef3520449e28b0f58437",
+        "trace.npz": "f6de9e50113abcc50cb6768020762ee49aeb3de831aa2e1f74b0604ffae1de67",
+        "scene.xml": "38e7d2f407abe03de2d723852de9a5a4cac3058bcb99bc3af3dae9cf1c7de2dd"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "matched nominal attack and complete defence/recovery",
+      "first_pre_hit_contact_s": 2.224999999999866,
+      "pre_hit_impulse_ns": 6.250081116663004,
+      "all_regions_checked": true,
+      "validated_attack_family": "cut_up_left_to_right",
+      "validated_attack_start_s": 0.75,
+      "validated_defence_start_s": 0.75
+    },
+    {
+      "material": "parry_left_descending",
+      "kind": "defence",
+      "proof_sha256": "f64ab8be08766b8932811dd05b758318ae67780135fc2bd9b2e380f94f69bfb9",
+      "native_file_fingerprints": {
+        "summary.json": "c7e97a906115fb163c1e1b20891c0b0353fe6a6ef427ba3cfd931cd81e0c6f8a",
+        "trace.npz": "dc25552f48af1a6f252b33590b7399691639bb298bdd80f156836bae36b340cb",
+        "scene.xml": "141a8307b11a5eb2b64f564d5057abdda763b173559ef5075836d75ad8891071"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "matched nominal attack and complete defence/recovery",
+      "first_pre_hit_contact_s": 2.1359999999998758,
+      "pre_hit_impulse_ns": 4.168488394555491,
+      "all_regions_checked": true,
+      "validated_attack_family": "cut_down_left_to_right",
+      "validated_attack_start_s": 0.75,
+      "validated_defence_start_s": 1.45
+    },
+    {
+      "material": "parry_left_rising",
+      "kind": "defence",
+      "proof_sha256": "577dd44997629628a1dcde1aca7084a75cbced894c508f435567e13a2125f5f1",
+      "native_file_fingerprints": {
+        "summary.json": "04992506ee2249446b1ef02f1241da3653da36083dfb2594ac55d514f1f6f950",
+        "trace.npz": "7fe616d17924a25106d408031dd8c53249d2210fccb10fe4562cdff7967ee9a4",
+        "scene.xml": "efd614cce2d4f8a67a8e834cde18c81c49a0184007191dd81dccd20cabd9315a"
+      },
+      "original_archive_directory": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native",
+      "full_window_s": 16.0,
+      "physical_material_validated": true,
+      "admitted_to_training": false,
+      "proof_status": "qualified",
+      "qualification_scope": "matched nominal attack and complete defence/recovery",
+      "first_pre_hit_contact_s": 2.1379999999998756,
+      "pre_hit_impulse_ns": 2.6794703421893398,
+      "all_regions_checked": true,
+      "validated_attack_family": "cut_up_right_to_left",
+      "validated_attack_start_s": 0.75,
+      "validated_defence_start_s": 0.75
+    }
+  ],
+  "static_named_node_pairs": {
+    "clear": 169,
+    "total": 169
+  },
+  "scope": "Six attack threats and six nominal matched defences; 18 transitions remain candidate-level. Stage edges inherit only their tested sequence, not arbitrary switches.",
+  "raw_native_traces_included": false,
+  "admitted_to_training": false
+}

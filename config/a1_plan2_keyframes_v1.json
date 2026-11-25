@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "status": "static_pose_requests_not_a_skill_library",
+  "scoring_proposal": "config/scoring_spec_v3_proposal.json",
+  "seed_graph": "config/a1_direction_candidates_v1.json",
+  "target_reference": "defender_local_frame_left_positive_y_up_positive_z",
+  "attack_tip_inset_toward_attacker_m": 0.055,
+  "attack_tip_lateral_offset_m": 0.06,
+  "attack_heights_m": {"low": 0.90, "mid": 1.05, "high": 1.20},
+  "attack_blade_axis": "preserve_original_strike_axis_as_initial_seed_only",
+  "interception_requests": {
+    "intercept_left": {"grip_m": [0.50, 0.08, 0.55], "axis": [0.0, 0.25, 0.9682458365518543]},
+    "intercept_right": {"grip_m": [0.50, -0.08, 0.55], "axis": [0.0, -0.25, 0.9682458365518543]},
+    "intercept_center_high": {"grip_m": [0.50, 0.0, 0.75], "axis": [0.0, 0.0, 1.0]}
+  },
+  "solver": {"seed": 20261123, "first_frame_starts": 12, "max_iterations": 160, "position_tolerance_m": 0.003, "axis_tolerance_deg": 0.75, "tip_tolerance_m": 0.008, "joint_margin_rad": 0.01},
+  "source": "Task-space authored requests plus existing authored robot seed poses; not new ASE imitation-learning output.",
+  "continuous_path_tested": false,
+  "native_dynamics_tested": false,
+  "attack_or_defence_validated": false,
+  "admitted_to_training": false
+}

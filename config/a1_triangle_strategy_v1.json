@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "proposal_id": "a1_triangle_strategy_v1_candidate",
+  "status": "design_only_requires_geometry_native_control_and_paired_validation",
+  "runtime_activation_allowed": false,
+  "admitted_to_training": false,
+  "design_document": "docs/a1_triangle_redesign_zh.md",
+  "geometry_source": "config/scoring_triangle_v1_candidate.json",
+  "geometry_numbers_are_not_duplicated_here": true,
+  "region_ids": ["left", "right", "upper"],
+  "coordinates": {
+    "target_region_frame": "defender_local_positive_y_is_left",
+    "own_guard_frame": "self_local_positive_y_is_left",
+    "world_z_is_up": true,
+    "slot_swap": "rotate_about_world_z_by_180_degrees_only",
+    "attacker_left_is_not_defender_left": true
+  },
+  "common_scoring": {
+    "inherits_foul_convention": "motion_foul_training_v1",
+    "native_tick_priority": ["numerical_or_evidence_error", "qualified_foul", "legal_active_region_entry"],
+    "formal_end": "first_valid_terminal_native_tick",
+    "legal_blade_geometry": "all_existing_finite_scoring_blade_sections",
+    "skill_name_gate": false,
+    "minimum_hit_speed": null,
+    "minimum_hit_force": null,
+    "rewards": {
+      "single_legal_hit": {"winner": 1.0, "loser": -1.0},
+      "same_tick_double_touch": [0.0, 0.0],
+      "single_foul": {"responsible": -1.0, "other": 1.0},
+      "double_or_ambiguous_foul": [-1.0, -1.0],
+      "valid_timeout": [0.0, 0.0],
+      "numerical_or_evidence_error": null
+    },
+    "region_specific_score_weights": false,
+    "parry_label_reward": 0.0,
+    "weapon_contact_reward": 0.0,
+    "action_count_reward": 0.0,
+    "coverage_bonus": 0.0,
+    "dense_distance_reward": 0.0,
+    "diagnostics_do_not_override_formal_result": true
+  },
+  "tasks": {
+    "region_targeted": {
+      "status": "candidate_not_integrated",
+      "mode_in_observation_and_task_identity": true,
+      "goal_sampling": {"left": 0.3333333333333333, "right": 0.3333333333333333, "upper": 0.3333333333333333},
+      "same_public_active_region_for_both_sides": true,
+      "goal_fixed_for_entire_episode": true,
+      "only_active_region_scores": true,
+      "inactive_region_entry": "record_only_no_score_no_extra_penalty_no_termination",
+      "independent_active_region_entry_tracking": true,
+      "inactive_then_active_entry_must_be_detected": true,
+      "physical_contacts_and_fouls_unchanged": true,
+      "counts_as_spontaneous_unrestricted_diversity": false
+    },
+    "unrestricted": {
+      "status": "candidate_not_integrated",
+      "all_regions_active": true,
+      "equal_region_points": true,
+      "policy_selects_target_without_external_goal": true,
+      "main_selfplay_and_final_match_mode": true
+    }
+  },
+  "curriculum": {
+    "status": "design_only_schedule_unselected",
+    "same_task_distribution_and_goal_information_for_both_families": true,
+    "early": "balanced_region_capability_training_plus_explicitly_labeled_unrestricted_tasks",
+    "later": "increase_unrestricted_fraction_after_capability_gates",
+    "task_mix_weights": null,
+    "freeze_schedule_before_budgeted_training": true,
+    "a2_control_pretraining": "no_expert_or_a1_action_trajectories; report_and_count_extra_interaction",
+    "budget_unit": "simulated_physical_seconds_including_warmup_and_failures",
+    "discount_unit": "physical_seconds",
+    "official_finite_horizon_timeout": "terminal_zero_reward_no_bootstrap",
+    "rollout_batch_cut_before_task_end": "bootstrap_from_actual_next_state",
+    "final_evaluation_mode": "unrestricted",
+    "conditioned_and_unrestricted_metrics_must_be_separate": true
+  },
+  "a1": {
+    "representation": "finite_validated_continuous_skills_with_explicit_entry_and_exit_graph",
+    "runtime_implemented": false,
+    "old_certificates_inherited": false,
+    "original_pose_requirements_reference": "config/a1_pose_requirements_v1.json",
+    "four_guards_complete_or_replace_original_requirements": false,
+    "common_ready": {"use": "shared_round_start_and_explicit_recovery_only", "mandatory_after_every_skill": false},
+    "guard_intents": [
+      {"id": "guard_center", "intent": "central_ready_coverage_and_multiple_branch_entries", "admitted": false},
+      {"id": "guard_left", "intent": "self_local_left_coverage_and_side_entry", "admitted": false},
+      {"id": "guard_right", "intent": "self_local_right_coverage_and_side_entry", "admitted": false},
+      {"id": "guard_high", "intent": "upper_coverage_and_high_entry", "admitted": false}
+    ],
+    "guard_name_is_defence_certificate": false,
+    "candidate_attack_families": [
+      {"id": "directed_touch", "target_variants": ["left", "right", "upper"], "admitted": false},
+      {"id": "lower_lateral_cut", "direction_variants": ["left_to_right", "right_to_left"], "admitted": false},
+      {"id": "diagonal_cut", "route_variants": ["left_to_upper", "upper_to_left", "right_to_upper", "upper_to_right"], "admitted": false}
+    ],
+    "candidate_interceptions": [
+      {"id": "intercept_left", "intent": "intercept_validated_lateral_incoming_corridors", "admitted": false},
+      {"id": "intercept_right", "intent": "intercept_validated_opposite_lateral_incoming_corridors", "admitted": false},
+      {"id": "intercept_upper", "intent": "intercept_validated_upper_incoming_corridors", "admitted": false}
+    ],
+    "interception_target_mapping": "measured_many_to_many_threat_guard_timing_skill_matrix_not_region_name_lookup",
+    "phases": ["prepare", "commit", "follow_through", "recover", "validated_exit"],
+    "required_skill_metadata": [
+      "source_and_retargeting_provenance",
+      "validated_entry_guard_and_position_velocity_tolerances",
+      "continuous_joint_reference",
+      "physical_attack_corridor_and_actual_target_entries",
+      "validated_threats_and_trigger_windows",
+      "nominal_and_bounded_max_duration",
+      "validated_abort_points_and_destinations",
+      "validated_exit_guard_and_position_velocity_tolerances",
+      "common_controller_identity",
+      "full_window_native_evidence"
+    ],
+    "transition_graph_candidate": {
+      "ready": ["validated_guard_transition"],
+      "validated_guard_exit": ["validated_guard_transition", "validated_attack_entry", "validated_interception_entry"],
+      "prepare": ["continue", "explicitly_validated_abort_edge_only"],
+      "commit": ["continue_only"],
+      "follow_through": ["continue", "explicitly_validated_exit_edge_only"],
+      "recover": ["continue", "explicitly_validated_exit_edge_only"],
+      "validated_exit": ["decision_if_entry_tolerances_and_graph_allow"]
+    },
+    "per_frame_pose_jumps_allowed": false,
+    "unvalidated_abort_allowed": false,
+    "mask_uses": ["own_executor_phase", "own_entry_tolerances", "admitted_transition_graph"],
+    "mask_must_not_use": ["opponent_future_trajectory", "opponent_skill_id", "opponent_policy_identity"],
+    "path_selection": ["multiple_ik_candidates", "full_joint_travel", "unnecessary_j0_motion", "clearance", "tracking", "blade_continuity"],
+    "force_single_axis_and_first_feasible_ik": false,
+    "angle_modulo_or_clipping_repairs_allowed": false,
+    "all_listed_variants_guaranteed_reachable": false
+  },
+  "candidate_pool_to_training_bank": {
+    "all_generated_variants_automatically_admitted": false,
+    "selection": "compact_natively_validated_coverage_graph; prune_redundant_paths_keep_required_attack_defence_and_exit_options",
+    "freeze_action_ids_masks_and_identity_before_training": true,
+    "old_actor_reuse_after_action_changes": false
+  },
+  "selfplay": {
+    "separate_historical_opponent_pool_per_policy_family": true,
+    "opponent_weights_fixed_for_each_complete_round": true,
+    "snapshot_updates_only_between_rounds": true,
+    "simple_guard_attack_wait_probes_are_not_selfplay": true,
+    "heldout_probe_conditions_excluded_from_training": true,
+    "formal_evaluation_freezes_weights_and_normalizers": true
+  },
+  "shared_observation": {
+    "same_completed_physics_snapshot_for_both": true,
+    "same_history_and_local_frame_conventions": true,
+    "base_fields": ["both_joint_positions", "both_joint_velocities", "both_grip_positions_and_velocities", "both_tip_positions_and_velocities", "relative_bases", "target_geometry", "task_mode", "public_active_regions", "remaining_time"],
+    "own_executor_state_a1": ["skill_phase", "admitted_mask", "reference_error", "governor_limits"],
+    "own_executor_state_a2": ["accepted_reference", "previous_action", "reference_error", "governor_limits"],
+    "prohibited_opponent_fields": ["skill_id", "future_reference", "next_action", "training_family"],
+    "decisions_from_same_snapshot_then_joint_submission": true
+  },
+  "a2_fairness": {
+    "action": "seven_joint_bounded_reference_increments",
+    "a1_motion_library_as_action_template": false,
+    "direct_qpos_qvel_writes": false,
+    "same_physics_controller_limits_governor_scoring_and_reset": true,
+    "scorer_accepts_arbitrary_legal_blade_paths": true,
+    "zero_action_and_stalled_command_state_tests_required": true
+  },
+  "admission_gates": [
+    "triangle_geometry_static_and_full_path_reachability_in_both_slots",
+    "independent_region_continuous_entry_and_inactive_then_active_counterexamples",
+    "same_tick_hit_foul_and_error_contracts",
+    "common_governor_and_native_contact_execution",
+    "each_region_effective_attack_and_validated_defensible_threat",
+    "at_least_three_actual_incoming_directions_and_valid_reaction_windows",
+    "all_admitted_entry_abort_exit_edges_continuous_and_physical",
+    "early_late_wrong_side_and_contact_then_late_hit_counterexamples",
+    "full_recovery_and_next_choice_diagnostics_separate_from_first_touch_score",
+    "waiting_repeated_attack_single_guard_shielding_double_foul_and_error_exploits",
+    "bounded_short_training_data_and_identity_checks",
+    "each_family_independent_attack_defence_and_recovery_capability",
+    "frozen_common_budget_seeds_swapped_slots_and_heldout_evaluation"
+  ],
+  "evaluation": {
+    "conditioned_region_capability_matrix": true,
+    "unrestricted_actual_first_entry_distribution": true,
+    "responses_to_changed_opponent_guard_and_timing": true,
+    "report_hit_wins_foul_wins_double_hits_double_fouls_timeouts_errors_separately": true,
+    "report_complete_original_speed_video_not_only_success_clips": true,
+    "diversity_requires_legal_success_and_adaptation_not_entropy_alone": true,
+    "a2_advantage_is_hypothesis_not_precondition": true
+  }
+}

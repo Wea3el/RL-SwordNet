@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "status": "documented_plan_not_deployed_training_config",
+  "policy_family": "A1_finite_named_edges",
+  "source_catalog": "assets/a1_pose_bank_v1/catalog.json",
+  "trained_policy_included": false,
+  "legacy_five_action_actor_compatible": false,
+  "force_attack_defence_alternation": false,
+  "action_name_bonus": 0.0,
+  "switch_bonus": 0.0,
+  "blade_contact_bonus": 0.0,
+  "terminal_rewards": {
+    "legal_hit": {"winner": 1.0, "loser": -1.0},
+    "unilateral_foul": {"responsible": -1.0, "other": 1.0},
+    "joint_or_unclear_foul": {"a1": -1.0, "a2": -1.0},
+    "simultaneous_legal_hit": {"a1": 0.0, "a2": 0.0},
+    "timeout": {"a1": 0.0, "a2": 0.0},
+    "numerical_or_evidence_fault": "error_not_draw"
+  },
+  "training_distribution_plan": [
+    "openings_with_real_attack_opportunities",
+    "validated_defendable_incoming_threats",
+    "left_right_upper_region_coverage",
+    "legal_preparation_and_continuous_recovery_no_midround_reset",
+    "frozen_historical_opponents_held_fixed_for_each_round",
+    "alternating_physical_slots"
+  ],
+  "release_gates_before_final_crossplay": [
+    "new_bank_and_actor_identity_match",
+    "shared_online_three_region_referee_and_fouls_verified",
+    "real_attack_performance_separate_from_defence_performance",
+    "no_major_direction_or_slot_collapse_hidden_by_average",
+    "continuous_recovery_and_switching",
+    "reported_fouls_timeouts_and_repeated_action_diagnostics",
+    "frozen_policy_and_heldout_evaluation"
+  ],
+  "known_counterexample": "left_down_then_immediate_reverse_up_can_defeat_current_defender",
+  "all_combinations_defendable_required": false,
+  "arbitrary_A2_attack_coverage_claimed": false
+}

@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "source": "user screenshot codex-clipboard-86560154-36b2-4547-afd2-2b6cca760cd0.png",
+  "scope": "Joint-angle bounds only; no speed, torque, collision or dynamic certification.",
+  "joint_names": ["J0", "J1", "J2", "J3", "J4", "J5", "J6"],
+  "provided_bounds_deg": [[0, 360], [0, 180], [0, 360], [-20, 120], [0, 360], [15, 145], [-90, 90]],
+  "mapping": {
+    "confirmed": true,
+    "confirmation_source": "2026-11-25 user clarified J3 hardware zero means a straight elbow, superseding the earlier all-joints CAD-zero assumption. Other joint zero positions and all positive directions remain as previously confirmed.",
+    "formula": "hardware_deg = sign * q_rad * 180 / pi + offset_deg",
+    "sign": [1, 1, 1, 1, 1, 1, 1],
+    "offset_deg": [0, 0, 0, 12.491944940769413, 0, 0, 0]
+  },
+  "mapping_revision": "j3_straight_hardware_zero_v2",
+  "j3_zero_definition": {
+    "hardware_zero": "Upper-arm and forearm longitudinal axes aligned (straight elbow).",
+    "cad_q_at_hardware_zero_deg": -12.491944940769413,
+    "method": "Signed angle from J2 axis to J4 axis about J3 axis in the unrounded CAD model; this is a CAD kinematic calibration, not a measured encoder calibration.",
+    "cad_source_sha256": {"robot.xml": "71e3f1591dba7f7fae24ccd51c5518087900c4da9e68d98c0b928ef1bf0f2f24"},
+    "hardware_bounds_deg_unchanged": [-20, 120],
+    "model_bounds_deg": [-32.49194494076941, 107.50805505923059],
+    "internal_coordinate_convention": "Existing CAD q in radians is retained; do not shift old pose arrays or apply the offset twice.",
+    "historical_mapping": "config/joint_constraints_cad_zero_v1_historical.json",
+    "historical_mapping_sha256": "2f7260298d6bbe0741c0f0e8c80a53a96747f397307c4adeb727f31fcffc88ea",
+    "old_skills_and_certificates_require_revalidation": true
+  }
+}

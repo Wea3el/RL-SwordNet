@@ -18,6 +18,7 @@ import numpy as np
 
 from .a1_runtime import apply_runtime_profile, assert_runtime_profile, load_runtime_profile
 from .assembly import ROOT, _finite_json
+from .blade_geometry import blade_geometry_identity
 from .duel_scene import duel_contact_records
 from .fencing_rules import FirstTouchScorer, blade_sections_from_scene
 from .joint_constraints import enforce_joint_trajectory, load_joint_constraints, model_joint_ranges_rad
@@ -94,14 +95,23 @@ def run_constrained_trial(programs, output, *, duration_s, metadata=None, progre
         constraints=constraints)
     apply_runtime_profile(scene, profile)
     model, data = scene.model, scene.data
+    blade_identities = {slot: blade_geometry_identity(model, slot+'_') for slot in SLOTS}
+    if blade_identities['a1']['sha256'] != blade_identities['a2']['sha256']:
+        raise ValueError('Both agents must use identical local blade collision geometry')
+    actual_geometry = blade_identities['a1']['sha256']
+    metadata = copy.deepcopy(metadata or {})
+    if metadata.get('collision_geometry_sha256', actual_geometry) != actual_geometry:
+        raise ValueError('Requested blade identity differs from actual native geometry')
+    metadata['collision_geometry_sha256'] = actual_geometry
     output.mkdir(parents=True)
     (output/'scene.xml').write_text(scene.spec.to_xml())
     files = ('sim/constrained_trial.py', 'sim/limited_duel.py', 'sim/limited_model.py',
              'sim/motion_spline.py', 'sim/joint_constraints.py', 'sim/training_contacts.py',
              'sim/foul_attribution.py', 'sim/fencing_rules.py', 'sim/manual_duel.py',
              'sim/duel_scene.py', 'sim/assembly.py', 'sim/floor.py', 'sim/model.py',
-             'sim/shinai.py', 'sim/a1_runtime.py', 'config/assembly.json',
-             'config/joint_constraints_observed.json', 'config/a1_runtime_rk4_candidate.json')
+             'sim/shinai.py', 'sim/blade_geometry.py', 'sim/a1_runtime.py', 'config/assembly.json',
+             'assets/shinai_profile.json', 'config/joint_constraints_observed.json',
+             'config/a1_runtime_rk4_candidate.json')
     hashes = {p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in files}
     arrays = {}
     for slot, program in programs.items():
@@ -111,7 +121,7 @@ def run_constrained_trial(programs, output, *, duration_s, metadata=None, progre
     np.savez_compressed(output/'references.npz', **arrays)
     result = {'status': 'running', 'scope': 'scheduled native diagnostic, not learned A1/A2 or training admission',
         'runtime_config': cfg, 'initialization': 'one explicit legal reset; no approach from CAD zero certified',
-        'qpos_resets_after_initialization': 0, 'metadata': copy.deepcopy(metadata or {}),
+        'qpos_resets_after_initialization': 0, 'metadata': metadata,
         'requested_duration_s': float(duration_s), 'source_sha256': hashes,
         'model_source_sha256': scene.source_hashes,
         'program_start_s': {s:p.start_s for s,p in programs.items()},

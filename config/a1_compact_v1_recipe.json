@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "purpose": "Small first A1 bank: 3 attacks, 3 defences, wait/continue. Candidate construction, not training admission.",
+  "ready_source": "outputs/a1_triangle_screen_v2/report.json",
+  "ready_guard": "center",
+  "bridge_reference_speed_rad_s": 1.0,
+  "bridge_rest_s": 0.15,
+  "scoring": "config/scoring_triangle_v1_candidate.json",
+  "skills": [
+    {"id": 1, "name": "attack_left", "kind": "attack", "region": "left", "source_type": "scheduled", "source": "outputs/a1_left_defence_completion/v2/baseline", "slot": "a1"},
+    {"id": 2, "name": "attack_right", "kind": "attack", "region": "right", "source_type": "scheduled", "source": "outputs/compact_bank_v1_mirror/right_a1_v2/native", "slot": "a1"},
+    {"id": 3, "name": "attack_upper", "kind": "attack", "region": "upper", "source_type": "graph", "source": "outputs/a1_reactive_completion/upper_short_nominal_v3/baseline", "slot": "a1", "source_action": "attack"},
+    {"id": 4, "name": "defence_left", "kind": "defence", "region": "left", "source_type": "scheduled", "source": "outputs/compact_bank_v1_defence/short_left_release4p2/defended", "slot": "a2"},
+    {"id": 5, "name": "defence_right", "kind": "defence", "region": "right", "source_type": "scheduled", "source": "outputs/a1_right_defence_completion/run_v2/center_loop/defended_short", "slot": "a2"},
+    {"id": 6, "name": "defence_upper", "kind": "defence", "region": "upper", "source_type": "graph", "source": "outputs/a1_reactive_completion/upper_short_nominal_v3/defended", "slot": "a2", "source_action": "parry_upper"}
+  ],
+  "scope_notes": [
+    "Local left/right coverage and physical-slot swapping are independent requirements. Do not negate raw joint angles to manufacture mirrors.",
+    "This small first bank does not claim all ten historical guards or five requested cut families are complete or cancelled.",
+    "Region metadata is for offline evaluation only, never an opponent action label or a scoring gate.",
+    "Attack and defence source proofs must be repeated after any bridge, retiming, hold change or common-controller change."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "technical_conclusion": "Selected numeric robot curves are authored task-space/IK/C2 candidates, not copied upstream ASE motion samples.",
+  "basis": "Left pair uses five new Cartesian targets; compact endpoint paths use explicit target optimization; right arcs and vertical cut use generated Cartesian grip/axis paths. Historical seed poses and generic IK helpers are not a copied motion sequence.",
+  "source_paths_and_hashes": {
+    "left_cut_pair": {
+      "outputs/pose_set_v1/attacks/fresh_branch_left_v2d.py": "0692dcf5eeed129093c00d39ec367461b9a9040c8d08fa6372fc9147165c5afa",
+      "outputs/pose_set_v1/attacks/soft_margin_left_v2e.py": "2be9bae7d33460bbac37cdbb1dbfdf811af800df4633e5d9a72dd8094eb7c404",
+      "outputs/pose_set_v1/attacks/controlled_withdraw_left_v2f.py": "733de786081cbd0ba8c43c6bfeb33a94c32340bde14a0b9da6f5d55038c2e702"
+    },
+    "right_cut_pair": {
+      "tools/compact_bank_pose_search.py": "d4dfd22445318e6264beb72d04cdd87e88980dcde97694357f2801669a26920e",
+      "sim/multiguard_geometry.py": "6c5d3495573123476eb2ed251c1be02c7e546c4191bfa2d6681921226c278947",
+      "outputs/pose_set_v1/right_retracted_v3.py": "817cd8cc2db60272723d07deeec7d86a89da21f787e2dc05392917700a106ef5"
+    },
+    "center_cut_and_thrust": {
+      "config/a1_triangle_motion_v1.json": "be6980a4a2627229a4c6d3208b51ea8bd2b183ed14c3a060afc339989b91a21b",
+      "tools/compact_bank_pose_search.py": "d4dfd22445318e6264beb72d04cdd87e88980dcde97694357f2801669a26920e",
+      "sim/multiguard_geometry.py": "6c5d3495573123476eb2ed251c1be02c7e546c4191bfa2d6681921226c278947"
+    },
+    "solver_helpers_only_not_motion_input": {
+      "plan1_skills/matching.py": "997a8f0e558e649b213c516fd708e7840af7fb5a0907bc3a0f558c25664b3511"
+    },
+    "excluded_upstream_motion_notice": {
+      "motion_skills/plan1/SOURCES.md": "6a020f5363fdc52f9a45291a06b0c2fc3ef50c6a9fb970d846a71292a1a97c62"
+    }
+  },
+  "excluded": [
+    "motion_skills raw/derived motion arrays",
+    "outputs ASE download/retarget caches",
+    "raw native traces",
+    "videos"
+  ],
+  "limitation": "Technical provenance review, not a grant of third-party motion rights; retain the existing upstream notice. No original or derived ASE motion file is distributed in this package."
+}

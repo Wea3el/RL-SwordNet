@@ -16,6 +16,7 @@ import numpy as np
 
 from .a1_runtime import RuntimeProfile, apply_runtime_profile, assert_runtime_profile, load_runtime_profile
 from .assembly import ROOT, _finite_json
+from .blade_geometry import blade_geometry_identity
 from .duel_scene import duel_contact_records
 from .feedback_policy import SkillGraphExecutor, TimedRequests
 from .fencing_rules import FirstTouchScorer, blade_sections_from_scene
@@ -70,12 +71,21 @@ def run_feedback_trial(executors, policies, output, *, duration_s, metadata=None
     scene = build_limited_duel(cfg['base_distance_m'], initial_qpos={s:e.initial_q for s,e in executors.items()})
     apply_runtime_profile(scene, profile)
     model, data = scene.model, scene.data
+    blade_identities = {slot: blade_geometry_identity(model, slot+'_') for slot in SLOTS}
+    if blade_identities['a1']['sha256'] != blade_identities['a2']['sha256']:
+        raise ValueError('Both agents must use identical local blade collision geometry')
+    actual_geometry = blade_identities['a1']['sha256']
+    metadata = copy.deepcopy(metadata or {})
+    if metadata.get('collision_geometry_sha256', actual_geometry) != actual_geometry:
+        raise ValueError('Requested blade identity differs from actual native geometry')
+    metadata['collision_geometry_sha256'] = actual_geometry
     output.mkdir(parents=True)
     (output/'scene.xml').write_text(scene.spec.to_xml())
     files = ('sim/feedback_trial.py','sim/feedback_policy.py','sim/trial_completion.py','sim/constrained_trial.py',
         'sim/limited_duel.py','sim/limited_model.py','sim/motion_spline.py','sim/joint_constraints.py',
         'sim/training_contacts.py','sim/foul_attribution.py','sim/fencing_rules.py','sim/manual_duel.py',
         'sim/duel_scene.py','sim/assembly.py','sim/floor.py','sim/model.py','sim/shinai.py',
+        'sim/blade_geometry.py','assets/shinai_profile.json',
         'sim/a1_runtime.py','config/assembly.json','config/joint_constraints_observed.json',
         'config/a1_runtime_rk4_candidate.json')
     hashes = {p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in files}
@@ -90,7 +100,7 @@ def run_feedback_trial(executors, policies, output, *, duration_s, metadata=None
                 arrays[f'{s}__{name}__{field}'] = getattr(action.curve,field)
     np.savez_compressed(output/'graph_references.npz',**arrays)
     result = {'status':'running', 'scope':'online physical observation diagnostic, not trained policy or self-play',
-        'runtime_config':cfg,'requested_duration_s':float(duration_s), 'metadata':copy.deepcopy(metadata or {}),
+        'runtime_config':cfg,'requested_duration_s':float(duration_s), 'metadata':metadata,
         'numerical_profile_source_sha256':profile.source_sha256,
         'numerical_profile_source':json.loads(profile.source_bytes),
         'source_sha256':hashes,'model_source_sha256':scene.source_hashes,'graph':graph_description,

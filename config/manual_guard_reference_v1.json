@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "status": "approximate_user_guard_reference_only",
+  "source_image": "codex-clipboard-c2efbc59-da2d-415e-bd4e-3814b58217ad.png",
+  "source_kind": "manually_transcribed_rounded_display_not_exact_pose_export",
+  "joint_names": ["J0", "J1", "J2", "J3", "J4", "J5", "J6"],
+  "display_coordinate_system": "hardware_zero_radians_J3_zero_means_straight",
+  "display_rad": [1.79, 0.11, 2.39, 1.03, 2.89, 0.296, -0.283],
+  "display_half_last_digit_rad": [0.005, 0.005, 0.005, 0.005, 0.005, 0.0005, 0.0005],
+  "mapping_offset_deg": [0, 0, 0, 12.491944940769413, 0, 0, 0],
+  "user_style_reference": "upright sword, natural shoulder/elbow positioning and grip; not a validated parry",
+  "facing_variant": {
+    "base_yaw_delta_rad": 3.141592653589793,
+    "reason": "Screenshot pose extends away from the opponent in the current duel frame. Test an explicit J0 half-turn, preserving J1-J6; no hidden model rotation or angle wrapping.",
+    "status": "candidate_requires_own_native_and_visual_check"
+  },
+  "exact_user_pose_file_received": false,
+  "admitted_to_training": false,
+  "defence_certified": false
+}

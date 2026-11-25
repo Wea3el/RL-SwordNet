@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "proposal_id": "triangle_first_touch_v1_candidate",
+  "status": "candidate_requires_geometry_dynamics_and_game_validation",
+  "runtime_activation_allowed": false,
+  "admitted_to_training": false,
+  "supersedes_for_experiments_only": "config/scoring_spec_v3_proposal.json",
+  "base_distance": 1.75,
+  "coordinate_frame": "defender_local; +x is forward toward opponent, +y is defender left, +z is world up",
+  "regions": {
+    "left": {"center": [0.32, 0.20, 0.93], "radius": 0.10},
+    "right": {"center": [0.32, -0.20, 0.93], "radius": 0.10},
+    "upper": {"center": [0.32, 0.0, 1.22], "radius": 0.10}
+  },
+  "geometry_meaning": "Three disjoint finite virtual practice regions, not point targets or a physical torso; no added collision or mass.",
+  "inherited_contract": "config/scoring_spec_v3_proposal.json",
+  "inheritance_note": "Keep whole finite blade, neutral blade/guard contact, approved fouls, first terminal native tick, clocks and shared control requirements. Replace the old overlapping target union and its reporting bins only in candidate experiments. This file does not activate a live scorer.",
+  "same_points_for_all_regions": true,
+  "unrestricted_match": {
+    "active_regions": ["left", "right", "upper"],
+    "hit_reward": {"winner": 1.0, "loser": -1.0},
+    "region_coverage_bonus": 0.0,
+    "pose_label_or_weapon_contact_bonus": 0.0
+  },
+  "region_targeted_training": {
+    "public_active_region": true,
+    "same_goal_and_mode_observation_for_both": true,
+    "sampling": "one occurrence of every region in each seeded shuffled block",
+    "inactive_region_entry": "record event, no points, no termination; independently monitor active-region entry",
+    "is_unrestricted_match_evidence": false,
+    "reward_for_valid_active_hit": {"winner": 1.0, "loser": -1.0},
+    "fouls_still_apply_everywhere": true
+  },
+  "required_validation": [
+    "both_slot_native_reachability_and_no_initial_overlap_for_each_region",
+    "same_tick_swept_multiregion_entries_and_foul_precedence",
+    "real_attack_and_full_window_parry_counterexamples_for_every_claimed_region",
+    "shared_observation_control_time_budget_and_snapshot_identity",
+    "no_single_spam_attack_or_permanent_guard_dominates_all_heldout_conditions"
+  ]
+}

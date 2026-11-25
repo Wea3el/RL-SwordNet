@@ -20,9 +20,12 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from sim.joint_constraints import load_joint_constraints, model_joint_ranges_rad
+
 STATUS = "candidate_not_deployed"
-DEMO_BOUNDS_DEG = ((0.,360.), (0.,180.), (0.,360.), (-20.,120.),
-                   (0.,360.), (15.,145.), (-90.,90.))
+# Public compatibility name: these are CAD-coordinate bounds, after applying
+# the confirmed hardware zero/sign map, not the raw hardware-angle table.
+DEMO_BOUNDS_DEG = tuple(map(tuple, np.rad2deg(model_joint_ranges_rad(load_joint_constraints()))))
 
 
 def _real(value, shape, name):
@@ -122,7 +125,8 @@ def jsonable(value):
 
 
 def demonstration():
-    bounds = np.deg2rad(np.asarray(DEMO_BOUNDS_DEG))
+    constraints = load_joint_constraints()
+    bounds = model_joint_ranges_rad(constraints)
     actual = bounds.mean(axis=1)
     reference, naive = actual.copy(), actual.copy()
     action = np.zeros(7); action[0] = 1.
@@ -150,6 +154,9 @@ def demonstration():
         control_period_s=control, max_reference_speed_rad_s=speed,
         tracking_leash_rad=leash, joint_margin_rad=margin)
     return {"parameters_status":"illustrative audit values, not approved or calibrated motor limits",
+        "joint_coordinate_system":"CAD q radians; bounds converted from the current hardware zero/sign map",
+        "joint_bounds_cad_rad":bounds.tolist(),
+        "hardware_offset_deg":list(constraints.offset_deg),
         "parameters":{"control_period_s":control,"decision_period_s":decision,"duration_s":duration,
             "reference_speed_rad_s":speed,"tracking_leash_rad":leash,"command_margin_deg":1.},
         "physical_model":"q held constant numerically; no MuJoCo or contact dynamics",

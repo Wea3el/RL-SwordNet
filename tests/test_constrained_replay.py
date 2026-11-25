@@ -6,10 +6,90 @@ from unittest.mock import patch
 
 import numpy as np
 
-from sim.constrained_replay import frame_schedule, load_recorded_states, probe_video, render_trial
+from sim.constrained_replay import (frame_schedule, load_recorded_states, probe_video,
+                                    render_trial, load_triangle_overlay, replay_camera, replay_footer)
 
 
 class ConstrainedReplayTests(unittest.TestCase):
+    def test_aborted_trial_never_claims_full_recovery(self):
+        summary = {'status': 'failed', 'completed_time_s': 5.904, 'requested_duration_s': 10.25}
+        for triangle, qualified in ((False, False), (True, False), (True, True)):
+            caption = replay_footer(summary, triangle=triangle, qualified=qualified)
+            self.assertIn('5.904/10.250', caption)
+            self.assertIn('recovery incomplete', caption)
+            self.assertNotIn('full recovery is shown', caption)
+            self.assertNotIn('Qualified exact pair', caption)
+
+    def test_completed_and_failed_captions_remain_distinct(self):
+        self.assertIn('full recovery', replay_footer({'status': 'completed'}, triangle=True))
+        self.assertIn('Qualified exact pair', replay_footer({'status': 'completed'}, qualified=True))
+        self.assertIn('Failed/incomplete', replay_footer({'status': 'failed'}))
+
+    def test_excerpt_never_claims_to_show_complete_recovery(self):
+        for qualified in (False, True):
+            caption = replay_footer({'status': 'completed'}, triangle=True,
+                                    qualified=qualified, full_window=False)
+            self.assertIn('Excerpt only', caption)
+            self.assertNotIn('full recovery is shown', caption)
+            self.assertNotIn('Qualified exact pair', caption)
+
+    def test_contact_view_uses_loaded_blade_contact_not_visual_guess(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'contacts.json'
+            path.write_text(json.dumps([
+                {'time_s': 1., 'contacts': [{'category': 'cross_blade_blade', 'normal_force_n': 0.}]},
+                {'time_s': 2., 'contacts': [{'category': 'cross_blade_blade', 'normal_force_n': 1.,
+                                          'position_world_m': [1., .1, .8]}]}]))
+            view = replay_camera(directory, 'contact')
+            self.assertEqual(view['lookat'], [1., .1, .8])
+            self.assertEqual(view['recorded_contact_time_s'], 2.)
+            self.assertEqual(len(view['contacts_sha256']), 64)
+            path.write_text('[]')
+            with self.assertRaises(ValueError):
+                replay_camera(directory, 'contact')
+
+    def test_camera_selection_is_display_only_and_rejects_unknown(self):
+        self.assertEqual(replay_camera('not_read', 'overview')['distance'], 3.6)
+        with self.assertRaises(ValueError):
+            replay_camera('not_read', 'invented')
+
+    def test_qualified_caption_requires_matched_exact_defended_evidence(self):
+        hashes = {'summary.json': 's', 'trace.npz': 't', 'scene.xml': 'm'}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'comparison.json'
+            comparison = {'status': 'qualified', 'successful_physical_defence': True,
+                          'matching_checks': {'same': True},
+                          'defended_triangle_audit': {'native_trace_source_sha256': hashes}}
+            path.write_text(json.dumps(comparison))
+            overlay, _, _, qualified = load_triangle_overlay(hashes, defence_comparison=path)
+            self.assertTrue(qualified)
+            self.assertEqual(overlay, comparison['defended_triangle_audit'])
+            with self.assertRaisesRegex(ValueError, 'different native evidence'):
+                load_triangle_overlay(dict(hashes, **{'scene.xml': 'other'}), defence_comparison=path)
+            comparison['matching_checks']['same'] = False
+            path.write_text(json.dumps(comparison))
+            with self.assertRaisesRegex(ValueError, 'matched qualified'):
+                load_triangle_overlay(hashes, defence_comparison=path)
+
+    def test_failed_defence_and_ambiguous_overlay_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)/'comparison.json'
+            path.write_text(json.dumps({'status': 'failed', 'successful_physical_defence': False}))
+            with self.assertRaises(ValueError):
+                load_triangle_overlay({}, defence_comparison=path)
+            with self.assertRaises(ValueError):
+                load_triangle_overlay({}, triangle_audit=path, defence_comparison=path)
+
+    def test_triangle_overlay_cannot_borrow_another_trial_audit(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base=Path(directory); trial=base/'trial';trial.mkdir()
+            for name in ('summary.json','scene.xml','trace.npz'):
+                (trial/name).write_bytes(b'placeholder')
+            audit=base/'triangle.json'
+            audit.write_text(json.dumps({'native_trace_source_sha256':{'summary.json':'wrong','trace.npz':'wrong'}}))
+            with self.assertRaisesRegex(ValueError,'different native evidence'):
+                render_trial(trial,base/'video',triangle_audit=audit)
+
     def test_real_time_nearest_actual_sample_no_target_interpolation(self):
         times = np.arange(7501)/1000
         requested, indices = frame_schedule(times, fps=30)

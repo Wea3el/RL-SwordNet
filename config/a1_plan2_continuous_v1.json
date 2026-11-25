@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "source_keyframes": "outputs/a1_plan2_keyframes_v2/report.json",
+  "scoring_proposal": "config/scoring_spec_v3_proposal.json",
+  "source_seed_graph": "config/a1_direction_candidates_v1.json",
+  "sample_period_s": 0.01,
+  "thrust": {
+    "contact_names": ["contact_low_left", "contact_low_right", "contact_mid_left", "contact_mid_right"],
+    "pre_offset_m": [-0.22, 0.0, 0.0],
+    "follow_offset_m": [0.045, 0.0, 0.0],
+    "times_s": [0.0, 3.0, 4.2, 4.7, 6.5, 9.5]
+  },
+  "sweeps": {
+    "sweep_low_left_to_right": {"height": "low", "world_y_sequence_m": [0.24, 0.06, -0.06, -0.24], "intended_attacker_local_direction": [0.0, -1.0, 0.0]},
+    "sweep_mid_right_to_left": {"height": "mid", "world_y_sequence_m": [-0.24, -0.06, 0.06, 0.24], "intended_attacker_local_direction": [0.0, 1.0, 0.0]}
+  },
+  "sweep_times_s": [0.0, 3.0, 3.7, 4.2, 4.9, 6.5, 9.5],
+  "interception_names": ["intercept_left", "intercept_right", "intercept_center_high"],
+  "interception_times_s": [0.0, 3.0, 3.6, 6.6],
+  "solver": {"max_iterations": 160, "position_tolerance_m": 0.003, "axis_tolerance_deg": 0.75, "tip_tolerance_m": 0.008, "joint_margin_rad": 0.01},
+  "admitted_to_training": false,
+  "scope": "Continuous references and sampled two-slot geometry; no successful defence or learned policy claim."
+}

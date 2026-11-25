@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 
 from tools.audit_a2_command_contract import bounded_command_step, demonstration, DEMO_BOUNDS_DEG, STATUS
+from sim.joint_constraints import load_joint_constraints, model_joint_ranges_rad
 
 
 class A2CommandContractTests(unittest.TestCase):
@@ -24,6 +25,13 @@ class A2CommandContractTests(unittest.TestCase):
         self.assertAlmostEqual(result['bounded_target_delta_after_1s_rad'],.1,places=12)
         self.assertEqual(len(result['history']),100)
         self.assertEqual(result['history'][-1]['decision_index'],49)
+
+    def test_demonstration_uses_corrected_shared_cad_bounds(self):
+        bounds=model_joint_ranges_rad(load_joint_constraints())
+        np.testing.assert_allclose(self.bounds,bounds,atol=1e-15)
+        np.testing.assert_array_equal(demonstration()['joint_bounds_cad_rad'],bounds)
+        self.assertLess(self.bounds[3,0],np.deg2rad(-20.))
+        self.assertLess(self.bounds[3,1],np.deg2rad(120.))
 
     def test_reverse_command_retreats_at_rate_limit(self):
         reference = self.q+.1

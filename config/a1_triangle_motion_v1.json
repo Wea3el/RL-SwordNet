@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "status": "reference_candidates_not_admitted_skills",
+  "scoring": "config/scoring_triangle_v1_candidate.json",
+  "seed_graph": "config/a1_direction_candidates_v1.json",
+  "source": "Robot-task-space authored candidate paths; not trained ASE motions and not certified historical fencing techniques.",
+  "guards": {
+    "center": {"source_node": "ready"},
+    "left": {"grip": [0.50, 0.08, 0.55], "axis": [0.0, 0.25, 0.9682458365518543]},
+    "right": {"grip": [0.50, -0.08, 0.55], "axis": [0.0, -0.25, 0.9682458365518543]},
+    "high": {"grip": [0.50, 0.0, 0.75], "axis": [0.0, 0.0, 1.0]}
+  },
+  "attack_templates": {
+    "thrust_left": {"region": "left", "shape": "thrust"},
+    "thrust_right": {"region": "right", "shape": "thrust"},
+    "thrust_upper": {"region": "upper", "shape": "thrust"},
+    "cut_left_to_right": {"region": "right", "shape": "lateral", "attacker_direction": [0.0, -1.0, 0.0]},
+    "cut_right_to_left": {"region": "left", "shape": "lateral", "attacker_direction": [0.0, 1.0, 0.0]},
+    "cut_down_left": {"region": "left", "shape": "diagonal", "attacker_direction": [0.0, 1.0, -1.0]},
+    "cut_down_right": {"region": "right", "shape": "diagonal", "attacker_direction": [0.0, -1.0, -1.0]},
+    "cut_up_upper_from_left": {"region": "upper", "shape": "diagonal", "attacker_direction": [0.0, -1.0, 1.0]},
+    "cut_up_upper_from_right": {"region": "upper", "shape": "diagonal", "attacker_direction": [0.0, 1.0, 1.0]},
+    "cut_straight_down_upper": {"region": "upper", "shape": "diagonal", "attacker_direction": [0.0, 0.0, -1.0]}
+  },
+  "solver": {
+    "seed": 20261123,
+    "random_starts": 10,
+    "max_nfev": 140,
+    "joint_margin_rad": 0.01,
+    "tip_tolerance_m": 0.012,
+    "minimum_forward_axis": 0.35,
+    "joint_regularization": 0.002,
+    "axis_cone_weight_m": 0.20,
+    "position_weight": 1.0,
+    "j0_travel_weight": 1.6
+  },
+  "sample_period_s": 0.025,
+  "reference_speed_limit_rad_s": 2.0,
+  "reference_speed_note": "Conservative numerical reference retiming only; not proof of hardware motor or actual dynamic velocity limits.",
+  "admitted_to_training": false,
+  "native_dynamics_tested": false,
+  "defence_validated": false
+}

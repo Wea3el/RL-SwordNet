@@ -89,6 +89,41 @@ def model_joint_ranges_rad(constraints):
     return ranges
 
 
+def _joint_values(value, label):
+    raw = np.asarray(value, dtype=object)
+    if raw.ndim < 1 or raw.shape[-1] != 7 or raw.size == 0:
+        raise ValueError(f"{label} must contain one or more seven-joint vectors")
+    return _numbers(value, raw.shape, label)
+
+
+def hardware_to_model_rad(values_deg, constraints):
+    """Convert confirmed hardware angles to existing CAD q; never clip/wrap.
+
+    Conversion alone is not a range or trajectory-feasibility check.
+    """
+    if not constraints.confirmed:
+        raise ValueError("cannot convert using an unconfirmed mapping")
+    values = _joint_values(values_deg, "hardware_deg")
+    with np.errstate(over="ignore", invalid="ignore"):
+        q = np.deg2rad((values - np.asarray(constraints.offset_deg)) /
+                      np.asarray(constraints.sign))
+    if not np.isfinite(q).all():
+        raise ValueError("converted model angles are not finite")
+    return q
+
+
+def model_to_hardware_deg(q_rad, constraints):
+    """Convert CAD q to confirmed hardware angles without changing the pose."""
+    if not constraints.confirmed:
+        raise ValueError("cannot convert using an unconfirmed mapping")
+    q = _joint_values(q_rad, "q_rad")
+    with np.errstate(over="ignore", invalid="ignore"):
+        values = np.rad2deg(q) * np.asarray(constraints.sign) + np.asarray(constraints.offset_deg)
+    if not np.isfinite(values).all():
+        raise ValueError("converted hardware angles are not finite")
+    return values
+
+
 def audit_joint_trajectory(q_rad, constraints, *, diagnostic_identity=False):
     """Check every supplied sample, preserving unwrapped multi-turn coordinates.
 

@@ -18,6 +18,8 @@ import mujoco
 import numpy as np
 
 from .shinai import load_profile, revolved_mesh
+from .blade_geometry import (DEFAULT_MAX_RADIAL_EXCESS_M, blade_cylinder_sections,
+                             blade_geometry_metadata)
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG = ROOT / "config/assembly.json"
@@ -118,6 +120,11 @@ def _hash_sources(config):
         if actual != expected:
             raise ValueError(f"{relative}: source changed; remeasure the mount before rebuilding")
         hashes[relative] = actual
+    # These now define the physical blade envelope as well as its silhouette.
+    # Freeze the active implementation/profile in every newly built scene's
+    # identity without rewriting previously saved scenes or evidence.
+    for relative in ('sim/blade_geometry.py','sim/assembly.py','assets/shinai_profile.json'):
+        hashes[relative]=hashlib.sha256((ROOT/relative).read_bytes()).hexdigest()
     return hashes
 
 
@@ -249,16 +256,14 @@ def _build_tool(spec, config):
     _collision(blade, "shinai_guard_collision", mujoco.mjtGeom.mjGEOM_CYLINDER,
                pos=[0,0,.5*(near+far)], size=[dimensions["guard_radius_m"],.5*(far-near),0],
                contype=TOOL_BIT, conaffinity=ENV_BIT|ARM_BITS)
-    # Flat-ended adjacent cylinders cover each complete axial interval. Capsules
-    # shortened by one radius at each end would touch only at their poles and
-    # leave an artificial narrow neck at every segment boundary.
-    blade_end = dimensions["tip_from_grip_m"]
-    blade_start = np.flatnonzero(np.isclose(points[:,0],far,rtol=0,atol=1e-10))[-1]
-    blade_points = points[blade_start:]
-    for i, (a,b) in enumerate(zip(np.linspace(far,blade_end,4)[:-1], np.linspace(far,blade_end,4)[1:])):
-        radius = _interval_radius(blade_points,a,b)
+    # Profile-corner-aware subdivision bounds the radial envelope, unlike the
+    # old three maximum-radius cylinders. Shared flat end planes prevent gaps.
+    error_budget=config['collision'].get('blade_max_radial_excess_m',DEFAULT_MAX_RADIAL_EXCESS_M)
+    sections=blade_cylinder_sections(profile,error_budget)
+    config['collision']['blade_profile_contract']=blade_geometry_metadata(profile,error_budget)
+    for i, section in enumerate(sections):
         _collision(blade, f"shinai_blade_collision_{i}", mujoco.mjtGeom.mjGEOM_CYLINDER,
-                   pos=[0,0,.5*(a+b)], size=[radius,.5*(b-a),0],
+                   pos=[0,0,section.center_m], size=[section.radius_m,section.half_length_m,0],
                    contype=TOOL_BIT, conaffinity=ENV_BIT|ARM_BITS)
 
 

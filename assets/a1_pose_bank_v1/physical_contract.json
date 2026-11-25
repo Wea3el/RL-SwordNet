@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "runtime_config": {
+    "schema_version": 1,
+    "base_distance_m": 1.75,
+    "physics_timestep_s": 0.001,
+    "control_period_s": 0.01,
+    "decision_period_s": 0.02,
+    "scoring_tip_radius_m": 0.01,
+    "illegal_contact_force_threshold_n": 0.5,
+    "penetration_limit_m": 0.005,
+    "hypothetical_limit_force_ceiling_nm": 0.1,
+    "diagnostic_actual_speed_rad_s": 2.0,
+    "diagnostic_tracking_error_rad": 0.5,
+    "minimum_blade_force_n": 0.1,
+    "minimum_blade_impulse_ns": 0.02,
+    "initial_hold_s": 0.75,
+    "final_hold_s": 0.75,
+    "profile": "pose_and_game_feasibility_motor_speed_and_tracking_are_diagnostics_not_certification",
+    "scoring": "native finite blade cylinders enter the unchanged virtual target; no skill/phase gate; first-touch round with same-physics-step double touch; shadow entries continue for whole-skill validation",
+    "rules_version": "whole_blade_first_touch_v2",
+    "explicit_integrator": "RK4",
+    "numerical_profile": "shared_rk4_1ms_candidate",
+    "numerical_profile_sha256": "2632a42f1cedadd2688a01d903ca2f6e096089e17ba6419900c90097ba5b563d"
+  },
+  "joint_constraints": {
+    "source": "user screenshot codex-clipboard-86560154-36b2-4547-afd2-2b6cca760cd0.png",
+    "mapping_confirmed": true,
+    "confirmation_source": "2026-11-25 user clarified J3 hardware zero means a straight elbow, superseding the earlier all-joints CAD-zero assumption. Other joint zero positions and all positive directions remain as previously confirmed.",
+    "joint_names": [
+      "J0",
+      "J1",
+      "J2",
+      "J3",
+      "J4",
+      "J5",
+      "J6"
+    ],
+    "provided_bounds_deg": [
+      [
+        0.0,
+        360.0
+      ],
+      [
+        0.0,
+        180.0
+      ],
+      [
+        0.0,
+        360.0
+      ],
+      [
+        -20.0,
+        120.0
+      ],
+      [
+        0.0,
+        360.0
+      ],
+      [
+        15.0,
+        145.0
+      ],
+      [
+        -90.0,
+        90.0
+      ]
+    ],
+    "model_ranges_rad": [
+      [
+        0.0,
+        6.283185307179586
+      ],
+      [
+        0.0,
+        3.141592653589793
+      ],
+      [
+        0.0,
+        6.283185307179586
+      ],
+      [
+        -0.5670914195931402,
+        1.8763695331989212
+      ],
+      [
+        0.0,
+        6.283185307179586
+      ],
+      [
+        0.2617993877991494,
+        2.530727415391778
+      ],
+      [
+        -1.5707963267948966,
+        1.5707963267948966
+      ]
+    ],
+    "sign": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "offset_deg": [
+      0.0,
+      0.0,
+      0.0,
+      12.491944940769413,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "automatic_angle_wrapping": false,
+    "scope": "Angles only; no collision, speed, torque, hold, motion or game certification."
+  },
+  "model_source_sha256": {
+    "robot.xml": "71e3f1591dba7f7fae24ccd51c5518087900c4da9e68d98c0b928ef1bf0f2f24",
+    "scene.xml": "be8507bc148da1829144d80a51a5dac4474577a8adf5a8dd8328166a55cd2a78",
+    "meshes/End_effector_Block.stl": "fdfec52add1da009897cb1d6d5cee667674b3e28f3d780bc4b84e554541fdb09",
+    "sim/blade_geometry.py": "53ac97e28334befc5f699f9b63967eb01593e0cd456279852e63b00a9712488b",
+    "sim/assembly.py": "2919785b5066b775e3a3d9d7c71f7ec0fac4444a6fda8ad34b0f31f27969c904",
+    "assets/shinai_profile.json": "f5650cb66745cb6eb2d4dba48f6ea8aed8e4bea7d7b00e99ca93ac5469c0d78b"
+  },
+  "torque_caps_nm": [
+    5,
+    80,
+    15,
+    20,
+    3,
+    3,
+    2
+  ],
+  "command_contract": "Current direct spline target -> shared position servo; no A2 lag governor deployed",
+  "admitted_to_training": false
+}

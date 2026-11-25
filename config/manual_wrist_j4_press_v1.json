@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "candidate_id": "j4_positive_downward_press_v1",
+  "status": "offline_candidate_not_for_training",
+  "base_recipe": "config/manual_coordinated_center_tracking_v2.json",
+  "wrist_offsets_rad": [
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+    [0.18, 0.0, 0.0],
+    [0.30, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0]
+  ]
+}

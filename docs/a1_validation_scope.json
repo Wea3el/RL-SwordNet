@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "status": "index_of_local_evidence_not_new_native_validation",
+  "raw_native_traces_included": false,
+  "trained_policy": false,
+  "full_graph_admission": false,
+  "nominal_six_pair_index": "../assets/a1_pose_bank_v1/evidence_summary.json",
+  "records": [
+    {
+      "source_file": "outputs/pose_set_v1/right_intercept/newbank_timing_scope_v2.json",
+      "source_sha256": "5f9c1fedff5d319a399bd38ae98ad03ff6c30d05fedafb0938d504aa70f11e89",
+      "source_status": "six_discrete_timing_points_and_unexecuted_swap_plans_read_only_audit",
+      "checks_count": 0,
+      "all_recorded_checks_true": null,
+      "scope": null,
+      "description": "Right downward/rising cuts: attacker start 0.75 s, defender start 0.65/0.75/0.85 s, six discrete points in original slot. This historical index predates the separately completed swaps below."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/right_intercept/swap_preparation_v1/down/qualification_scope.json",
+      "source_sha256": "de24a9661ca4b362add596f1a3992cbe4d5244fcc1b8798dc30f83da27b8ef41",
+      "source_status": "qualified",
+      "checks_count": 50,
+      "all_recorded_checks_true": true,
+      "scope": "Only new r140 bank right-down, A2 attacker/A1 defender, exact same-ready .75/.75 s full16s pair. No up, swapped timing band, stage combination, general reaction or training admission follows.",
+      "description": "Right downward cut, swapped physical slots, start 0.75/0.75 s, complete 16 s; nominal timing only."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/right_intercept/swap_preparation_v1/up/qualification_scope.json",
+      "source_sha256": "b8b7bc3cf11a8dc1d5c5f1d2162e8d32c985095fdeb04f9dfcb9e2d8bec0955e",
+      "source_status": "qualified",
+      "checks_count": 50,
+      "all_recorded_checks_true": true,
+      "scope": "Only new r140 bank right-up hold4800, A2 attacker/A1 defender, exact same-ready .75/.75 s full16s pair. No other attack, swapped timing band, stage combination, general reaction or training admission follows.",
+      "description": "Right rising cut hold4800, swapped physical slots, start 0.75/0.75 s, complete 16 s; nominal timing only."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/stage_return_repeat_v1/left24/comparison.json",
+      "source_sha256": "3f711e9384cc623e2116c431568c4441109888b7a0b8f23845766d5b702eb26e",
+      "source_status": "two_round_stage_return_qualified",
+      "checks_count": 116,
+      "all_recorded_checks_true": true,
+      "scope": "Exactly two fixed-clock left attacks and stage returns with explicit attacker rearm through side. Not cross-side switching, observed reaction, learned policy, arbitrary attack defense or training admission.",
+      "description": "Left downward cut twice with explicit attacker rearm, staged parry and return, no reset, complete 24 s; not an immediate reverse combo."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/center_chain/candidate01/review.json",
+      "source_sha256": "60a0ef29825cc64ed9b8a8d4edb73935a55ed747b4ef8ede13cf5894fb62452f",
+      "source_status": "two_round_path_pass",
+      "checks_count": 9,
+      "all_recorded_checks_true": true,
+      "scope": "One repeated center attack and matching defence with an explicit newly tested recovery; not all-direction or policy evidence.",
+      "description": "Two repeated central downward-cut rounds with explicit recovery; not arbitrary attack directions."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/thrust_chain/v1/review.json",
+      "source_sha256": "866217769c5730dbca555617f20781306c5787719dc06b98d18f1576e97a84cd",
+      "source_status": "two_round_path_pass",
+      "checks_count": 20,
+      "all_recorded_checks_true": true,
+      "scope": "Two fixed-start thrust/parry rounds from continuous actual state; other skills, slots and observation-driven reactions remain untested in this chain",
+      "description": "Two prescribed thrust/parry rounds, no reset, complete 19.2 s; not arbitrary other skills or observed reactions."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/right_intercept/fast_links_v1/observed_center_stages_plan_v1/native_pair_v2/comparison.json",
+      "source_sha256": "2eb1eca45b60e24ca8e3dd08df0889e2723855c383484cf1fb350801238c9785",
+      "source_status": "qualified",
+      "checks_count": 0,
+      "all_recorded_checks_true": null,
+      "scope": "One frozen a1 right-down attack at .76s; public-tip ThreatParry onset, exact intercept_unload, then return_center only on measured availability. Full16s/three-region evidence. Not repeats, timing interval, swaps, perception robustness, trained policy or A2 continuous capability.",
+      "description": "Right downward cut at 0.760 s; public-tip cue at 0.840 s, unload completed 4.490 s, return requested after actual availability, center-ready 6.700 s; complete 16 s."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/fast_reverse_probe_v2/left/comparison.json",
+      "source_sha256": "c4996ac68646cc8025b0c7b58b83990af5b6f06ebbec7366e355586a5f230797",
+      "source_status": "physical_defence_failed",
+      "checks_count": 111,
+      "all_recorded_checks_true": true,
+      "scope": "Two exact material choices with eager measured gates, including full return. Favourable fixed-choice capability probe, NOT autonomous reaction, trained policy, self-play, swap or A2 continuous evidence.",
+      "description": "Known clean physical loss: first left downward cut blocked, immediate reverse rising cut scores at 7.498198 s while current recovery is too slow. Not evidence that every possible defence choice fails."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/unloaded_up_probe_framework_v2/left/comparison.json",
+      "source_sha256": "9528ed45b50f033afe9ddc0620e0c3dc00e818bdcd9fd6b39791b17e44d62fe6",
+      "source_status": "physical_defence_failed",
+      "checks_count": 107,
+      "all_recorded_checks_true": true,
+      "scope": "Two exact material choices with eager measured gates, including direct unload-to-up and recovery. Favourable fixed-choice capability probe, NOT autonomous reaction, trained policy, self-play, swap or A2 continuous evidence.",
+      "description": "Rejected replacement: blade contact from 6.571 s precedes the former hit, but incoming blade still scores at 7.651129 s. Do not promote a blade contact into defence success."
+    },
+    {
+      "source_file": "outputs/pose_set_v1/shared_command_compatibility_v2/report.json",
+      "source_sha256": "a6cf6765d01b7358ef1bf98ab303ad86429eff556e0a2ce01acc3b2b7c795f32",
+      "source_status": "precision_command_compatibility_not_physics_or_admission",
+      "checks_count": 0,
+      "all_recorded_checks_true": null,
+      "scope": null,
+      "description": "Offline counterfactual command compatibility only. A 0.1 rad lag leash rewrites some commands; neither it nor another leash is deployed/selected here. No new physics run."
+    }
+  ],
+  "limitations": [
+    "Specific successful cases do not establish a probability of defence against arbitrary A2 attacks.",
+    "Checks and reports refer to their frozen sources, not automatically to later code or a new online trainer.",
+    "The raw reports/traces remain under the original local paths; fingerprints alone are not full replay evidence.",
+    "Full-window diagnostic losses remain losses, even where the first contact is a weapon block."
+  ]
+}

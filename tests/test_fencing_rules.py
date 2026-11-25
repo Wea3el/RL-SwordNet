@@ -13,7 +13,8 @@ import numpy as np
 from sim.fencing_rules import (BLADE_START_SITE, RULES_VERSION, BladeSection,
                                FirstTouchScorer, blade_sections_from_scene,
                                point_cylinder_distance, _first_strictly_negative,
-                               _UnresolvedSweep)
+                               _UnresolvedSweep, _point_cylinder_distances,
+                               _motion_bound_arrays)
 
 
 def section(x, *, radius=.1, z0=-1., z1=1., y=0., name="blade"):
@@ -50,6 +51,95 @@ class FiniteCylinderGeometryTests(unittest.TestCase):
         start[:] = 9
         np.testing.assert_array_equal(blade.start, [0, 0, 0])
         self.assertFalse(blade.start.flags.writeable)
+
+
+def scalar_distances(point, starts, ends, radii):
+    pairs = [point_cylinder_distance(point, BladeSection(a, b, r))
+             for a, b, r in zip(starts, ends, radii)]
+    return np.asarray([p[0] for p in pairs]), np.asarray([p[1] for p in pairs])
+
+
+class BatchGeometryEquivalenceTests(unittest.TestCase):
+    def test_random_cylinders_match_retained_scalar_formula(self):
+        rng = np.random.default_rng(20261125)
+        starts = rng.normal(size=(250, 3))
+        ends = starts+rng.normal(size=(250, 3))
+        radii = rng.uniform(.001, .2, 250)
+        for point in rng.normal(size=(12, 3)):
+            expected_d, expected_p = scalar_distances(point, starts, ends, radii)
+            actual_d, actual_p = _point_cylinder_distances(point, starts, ends, radii)
+            np.testing.assert_allclose(actual_d, expected_d, rtol=2e-14, atol=2e-14)
+            np.testing.assert_allclose(actual_p, expected_p, rtol=2e-14, atol=2e-14)
+
+    def test_axis_cap_corner_zero_radial_and_equal_witness_rows(self):
+        starts = np.tile([0., 0., 0.], (4, 1))
+        ends = np.tile([0., 0., 1.], (4, 1))
+        radii = np.full(4, .1)
+        for point in ([0., 0., .5], [0., 0., 1.4], [.4, 0., 1.4], [.1, 0., .5]):
+            d, p = _point_cylinder_distances(point, starts, ends, radii)
+            expected_d, expected_p = scalar_distances(point, starts, ends, radii)
+            np.testing.assert_allclose(d, expected_d, atol=1e-15)
+            np.testing.assert_allclose(p, expected_p, atol=1e-15)
+            self.assertEqual(int(np.argmin(d)), 0)
+        bad_ends = ends.copy(); bad_ends[2] = starts[2]
+        with self.assertRaises(ValueError):
+            _point_cylinder_distances([0, 0, 0], starts, bad_ends, radii)
+        with np.errstate(over='ignore', invalid='ignore'), self.assertRaises(ValueError):
+            _point_cylinder_distances([0, 0, 0], np.zeros((1, 3)),
+                                     np.full((1, 3), 1e308), np.array([.01]))
+
+    def test_equal_distance_sweep_keeps_first_section_as_witness(self):
+        def duplicate_frame(x):
+            return {'a1': (section(x, name='first'), section(x, name='second')),
+                    'a2': (section(4., name='other'),)}
+        scorer = FirstTouchScorer({'a1': [0, 0, 0], 'a2': [0, 0, 0]}, .2)
+        hits = scorer.update(duplicate_frame(1.), duplicate_frame(0.), 0., .002)
+        self.assertEqual(len(hits), 1)
+        self.assertEqual(hits[0]['blade_section'], 'first')
+
+    def test_batch_lipschitz_bound_matches_scalar_and_rejects_axis_collapse(self):
+        rng = np.random.default_rng(8)
+        for _ in range(20):
+            a = rng.normal(size=(105, 3)); b = a+rng.normal(size=(105, 3))
+            c = a+rng.normal(scale=.01, size=(105, 3)); d = b+rng.normal(scale=.01, size=(105, 3))
+            radii = rng.uniform(.005, .03, 105)
+            bounds = []
+            for sa, ea, sb, eb, radius in zip(a, b, c, d, radii):
+                axis = ea-sa; delta = (eb-sb)-axis; dd = float(delta@delta)
+                f = float(np.clip(-(axis@delta)/dd, 0., 1.)) if dd else 0.
+                minimum = float(np.linalg.norm(axis+f*delta))
+                bounds.append(max(np.linalg.norm(sb-sa), np.linalg.norm(eb-ea))
+                              + radius*np.linalg.norm(delta)/minimum)
+            self.assertAlmostEqual(_motion_bound_arrays(a, b, c, d, radii), max(bounds), places=13)
+        with self.assertRaisesRegex(_UnresolvedSweep, 'interpolated_blade_axis_degenerate'):
+            _motion_bound_arrays(np.array([[0., 0., 0.]]), np.array([[0., 0., 1.]]),
+                                 np.array([[0., 0., 1.]]), np.array([[0., 0., 0.]]), np.array([.01]))
+
+    def test_complete_random_sweeps_keep_scalar_events_and_round_outcome(self):
+        rng = np.random.default_rng(2026)
+        for trial in range(12):
+            count = 3+trial
+            y = rng.uniform(-.35, .35, count)
+            radii = rng.uniform(.006, .03, count)
+            def snapshot(x):
+                return {'a1': tuple(BladeSection([x, yi, -.2], [x, yi, .2], r, f'b{i}')
+                                    for i, (yi, r) in enumerate(zip(y, radii))),
+                        'a2': (section(4., name='other'),)}
+            before, after = snapshot(-.7), snapshot(.7)
+            fast = FirstTouchScorer({'a1': [0, 0, 0], 'a2': [0, 0, 0]}, .12)
+            reference = FirstTouchScorer({'a1': [0, 0, 0], 'a2': [0, 0, 0]}, .12)
+            got = fast.update(before, after, 0., .002)
+            with patch('sim.fencing_rules._point_cylinder_distances', side_effect=scalar_distances):
+                expected = reference.update(before, after, 0., .002)
+            self.assertEqual(fast.failure, reference.failure)
+            self.assertEqual(fast.round_result['status'], reference.round_result['status'])
+            self.assertEqual(fast.round_result['winner'], reference.round_result['winner'])
+            self.assertEqual(len(got), len(expected))
+            for actual, scalar in zip(got, expected):
+                self.assertEqual(actual['blade_section'], scalar['blade_section'])
+                self.assertAlmostEqual(actual['time_s'], scalar['time_s'], places=11)
+                np.testing.assert_allclose(actual['blade_closest_point_world_m'],
+                                           scalar['blade_closest_point_world_m'], atol=1e-10)
 
 
 class PhysicalFirstTouchTests(unittest.TestCase):
@@ -266,6 +356,55 @@ class NativeBoundaryFixtureTests(unittest.TestCase):
 
 
 class NativeAdapterTests(unittest.TestCase):
+    @staticmethod
+    def synthetic_scene(indices, *, kind="cylinder"):
+        import mujoco
+        from types import SimpleNamespace
+
+        sections = ''.join(
+            f'<geom name="a1_shinai_blade_collision_{i}" type="{kind}" '
+            f'size=".01 .1" pos="0 0 {i*.2+.1}" mass=".01"/>' for i in indices)
+        legacy = ''.join(
+            f'<geom name="a2_shinai_blade_collision_{i}" type="cylinder" '
+            f'size=".01 .1" pos="0 0 {i*.2+.1}"/>' for i in range(3))
+        model = mujoco.MjModel.from_xml_string(
+            '<mujoco><worldbody><body pos="1 0 0"><joint type="slide" axis="1 0 0"/>'
+            + sections + '</body><body pos="5 0 0">' + legacy + '</body></worldbody></mujoco>')
+        data = mujoco.MjData(model)
+        mujoco.mj_forward(model, data)
+        return SimpleNamespace(model=model, data=data,
+                               agents={s: {"prefix": s+"_"} for s in ("a1", "a2")})
+
+    def test_historical_three_section_xml_remains_supported(self):
+        scene = self.synthetic_scene([0, 1, 2])
+        frames = blade_sections_from_scene(scene)
+        self.assertEqual([s.name for s in frames['a1']],
+                         [f'a1_shinai_blade_collision_{i}' for i in range(3)])
+        self.assertEqual(len(frames['a2']), 3)
+
+    def test_every_profile_section_is_read_in_numeric_not_xml_or_lexical_order(self):
+        scene = self.synthetic_scene([0, 1, 10, 11, 2, 3, 4, 5, 6, 7, 8, 9])
+        before = blade_sections_from_scene(scene)
+        self.assertEqual([s.name for s in before['a1']],
+                         [f'a1_shinai_blade_collision_{i}' for i in range(12)])
+        # Only segment 11 can reach this sphere. Reading a fixed first three
+        # segments would silently turn this physical whole-blade hit into a miss.
+        import mujoco
+        scene.data.qpos[0] = -1.
+        mujoco.mj_forward(scene.model, scene.data)
+        after = blade_sections_from_scene(scene)
+        scorer = FirstTouchScorer({'a1': [0., 0., 2.3], 'a2': [0., 0., 0.]}, .03)
+        hits = scorer.update(before, after, 0., .002)
+        self.assertIsNone(scorer.failure)
+        self.assertEqual(len(hits), 1)
+        self.assertEqual(hits[0]['blade_section'], 'a1_shinai_blade_collision_11')
+
+    def test_malformed_profile_topology_fails_closed(self):
+        for scene in (self.synthetic_scene([0, 2]),
+                      self.synthetic_scene([0, 1, 2], kind='capsule')):
+            with self.subTest(scene=scene), self.assertRaises(ValueError):
+                blade_sections_from_scene(scene)
+
     def test_real_flat_cylinders_span_guard_far_to_tip_and_native_radii(self):
         import mujoco
         from sim.duel_scene import build_duel_scene
@@ -275,7 +414,7 @@ class NativeAdapterTests(unittest.TestCase):
         self.assertEqual(BLADE_START_SITE, "shinai_guard_far")
         for owner, mapping in scene.agents.items():
             sections = snapshots[owner]
-            self.assertEqual(len(sections), 3)
+            self.assertGreaterEqual(len(sections), 3)
             np.testing.assert_allclose(sections[0].start,
                                        scene.data.site_xpos[mapping["sites"]["shinai_guard_far"]], atol=1e-12)
             np.testing.assert_allclose(sections[-1].end,

@@ -7,7 +7,8 @@ import unittest
 import numpy as np
 
 from sim.joint_constraints import (DEFAULT_PATH, audit_joint_trajectory,
-    enforce_joint_trajectory, load_joint_constraints, model_joint_ranges_rad)
+    enforce_joint_trajectory, load_joint_constraints, model_joint_ranges_rad,
+    hardware_to_model_rad, model_to_hardware_deg)
 
 
 class JointConstraintsTests(unittest.TestCase):
@@ -21,11 +22,12 @@ class JointConstraintsTests(unittest.TestCase):
                           (0, 360), (15, 145), (-90, 90)))
         self.assertTrue(self.constraints.confirmed)
         self.assertEqual(self.constraints.sign, (1,) * 7)
-        self.assertEqual(self.constraints.offset_deg, (0,) * 7)
+        np.testing.assert_allclose(self.constraints.offset_deg,
+            [0, 0, 0, 12.491944940769413, 0, 0, 0], rtol=0, atol=1e-12)
 
     def test_inclusive_limits_and_every_sample(self):
         values = np.array(self.constraints.bounds_deg).T
-        result = enforce_joint_trajectory(np.deg2rad(values), self.constraints)
+        result = enforce_joint_trajectory(hardware_to_model_rad(values, self.constraints), self.constraints)
         self.assertTrue(result["within_limits"])
         self.assertEqual(result["sample_count"], 2)
         np.testing.assert_allclose(result["values_deg"], values, atol=1e-12)
@@ -34,7 +36,7 @@ class JointConstraintsTests(unittest.TestCase):
     def test_reports_all_violations_without_clipping(self):
         values = np.tile(self.middle, (3, 1))
         values[0, 1], values[2, 5] = -1, 146
-        q = np.deg2rad(values)
+        q = hardware_to_model_rad(values, self.constraints)
         before = q.copy()
         result = audit_joint_trajectory(q, self.constraints)
         self.assertEqual([(x["sample_index"], x["joint"]) for x in result["violations"]],
@@ -68,7 +70,7 @@ class JointConstraintsTests(unittest.TestCase):
     def test_multi_turn_jump_is_not_hidden_by_per_sample_modulo(self):
         values = np.tile(self.middle, (2, 1))
         values[1, 0] += 360
-        result = audit_joint_trajectory(np.deg2rad(values), self.constraints)
+        result = audit_joint_trajectory(hardware_to_model_rad(values, self.constraints), self.constraints)
         self.assertEqual(result["violations"][0]["joint"], "J0")
         self.assertAlmostEqual(result["raw_max_deg"][0], 540)
         self.assertAlmostEqual(result["violations"][0]["excess_deg"], 180)
@@ -93,6 +95,31 @@ class JointConstraintsTests(unittest.TestCase):
                 path.write_text(json.dumps(dict(document, **changes)))
                 with self.assertRaises(ValueError):
                     load_joint_constraints(path)
+
+    def test_straight_j3_zero_and_corrected_bounds_roundtrip_without_clipping(self):
+        hardware = np.tile(self.middle, (3, 1))
+        hardware[:, 3] = [-20., 0., 120.]
+        q = hardware_to_model_rad(hardware, self.constraints)
+        np.testing.assert_allclose(np.rad2deg(q[:, 3]),
+            [-32.49194494076941, -12.491944940769413, 107.50805505923059], atol=1e-12)
+        np.testing.assert_allclose(model_to_hardware_deg(q, self.constraints), hardware, atol=1e-12)
+        np.testing.assert_allclose(q[[0, 2], 3], model_joint_ranges_rad(self.constraints)[3], atol=1e-15)
+        self.assertTrue(enforce_joint_trajectory(q, self.constraints)['within_limits'])
+        old_high_pose = q[1].copy(); old_high_pose[3] = np.deg2rad(115.)
+        with self.assertRaises(ValueError): enforce_joint_trajectory(old_high_pose, self.constraints)
+
+    def test_coordinate_conversion_validates_mapping_shape_and_finiteness(self):
+        unknown = replace(self.constraints, confirmed=False, sign=None, offset_deg=None)
+        for convert in (hardware_to_model_rad, model_to_hardware_deg):
+            with self.assertRaises(ValueError): convert(self.middle, unknown)
+            for value in ([], [1]*6, [True]*7, [np.nan]*7, [np.inf]*7, ['1']*7):
+                with self.subTest(function=convert.__name__, value=value), self.assertRaises(ValueError):
+                    convert(value, self.constraints)
+
+    def test_historical_zero_map_remains_explicitly_available_not_current(self):
+        old = load_joint_constraints(DEFAULT_PATH.with_name('joint_constraints_cad_zero_v1_historical.json'))
+        self.assertEqual(old.offset_deg, (0.,)*7)
+        self.assertNotEqual(old.offset_deg, self.constraints.offset_deg)
 
 
 if __name__ == "__main__":

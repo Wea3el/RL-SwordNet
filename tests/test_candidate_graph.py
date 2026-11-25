@@ -1,3 +1,8 @@
+"""Numerical loader/executor interfaces only, never physical action evidence.
+
+Positive fixtures are authored here inside the current confirmed limits.
+Historical robot-motion configs remain unchanged and are rejection controls.
+"""
 import copy
 import hashlib
 import json
@@ -13,8 +18,30 @@ from sim.candidate_graph import load_candidate_graph
 
 class CandidateGraphTests(unittest.TestCase):
     def setUp(self):
-        self.path = ROOT / 'config/a1_shared_ready_glancing_seed.json'
-        self.cfg = json.loads(self.path.read_text())
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.path = Path(self.temp.name) / 'synthetic_interface_fixture.json'
+        self.cfg = {
+            'schema_version': 1, 'policy_family': 'A1',
+            'status': 'synthetic_interface_test_not_physical_evidence',
+            'admitted_to_training': False, 'legacy_actor_compatible': False,
+            'joint_names': [f'J{i}' for i in range(7)], 'angle_unit': 'radian',
+            'joint_constraints': 'config/joint_constraints_observed.json',
+            'reference_generator': 'sim.motion_spline.C2JointSpline',
+            'initial_node': 'ready',
+            'nodes': {
+                'ready': [1., .5, 1., .5, 1., .5, 0.],
+                'strike': [1.2, .6, 1.1, .6, 1., .6, .1],
+                'glancing_intercept': [.9, .55, 1.1, .4, 1.1, .6, -.1]},
+            'actions': {
+                'attack': {'start_node': 'ready', 'end_node': 'ready',
+                           'knot_time_s': [0., 3., 6.],
+                           'waypoint_nodes': ['ready', 'strike', 'ready']},
+                'parry': {'start_node': 'ready', 'end_node': 'ready',
+                          'knot_time_s': [0., 1., 3., 4.5],
+                          'waypoint_nodes': ['ready', 'glancing_intercept',
+                                             'glancing_intercept', 'ready']}}}
+        self.path.write_text(json.dumps(self.cfg), encoding='utf-8')
 
     def load_changed(self, change):
         cfg = copy.deepcopy(self.cfg)
@@ -45,18 +72,11 @@ class CandidateGraphTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.load_changed(lambda c: c.update(admitted_to_training=True))
 
-    def test_direction_candidates_keep_closed_ready_paths_without_old_actor_compatibility(self):
-        path = ROOT / 'config/a1_direction_candidates_v1.json'
-        cfg = json.loads(path.read_text())
-        self.assertIs(cfg['legacy_actor_compatible'], False)
-        self.assertIs(cfg['admitted_to_training'], False)
-        executor = load_candidate_graph(path).new_executor()
-        self.assertEqual(set(executor.actions),
-                         {'attack_original', 'parry_original', 'sweep_down', 'sweep_up', 'parry_low'})
-        for action in executor.actions.values():
-            self.assertEqual((action.start_node, action.end_node), ('ready', 'ready'))
-            np.testing.assert_array_equal(action.curve.sample(0.), executor.initial_q)
-            np.testing.assert_array_equal(action.curve.sample(action.curve.duration_s), executor.initial_q)
+    def test_historical_configs_rejected_by_current_J3_mapping(self):
+        for name in ('a1_shared_ready_glancing_seed.json', 'a1_direction_candidates_v1.json'):
+            path = ROOT / 'config' / name
+            with self.subTest(config=name), self.assertRaisesRegex(ValueError, r'J3.*128\.151'):
+                load_candidate_graph(path)
 
     def test_joint_order_and_units_cannot_be_guessed(self):
         for change in (lambda c: c.update(angle_unit='degree'),

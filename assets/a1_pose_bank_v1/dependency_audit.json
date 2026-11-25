@@ -1,0 +1,1568 @@
+{
+  "schema_version": 1,
+  "inspected_json_documents": [
+    "six_attack_materials_v3.json",
+    "six_defence_materials_v2.json",
+    "integrated_catalog_candidate_v4.json",
+    "integrated_catalog_structure_v4.json",
+    "integrated_static_matrix_v4.json",
+    "outputs/pose_set_v1/six_attack_materials_v3.json",
+    "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+    "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+    "outputs/pose_set_v1/six_defence_materials_v2.json",
+    "outputs/pose_set_v1/transitions/report.json",
+    "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+    "outputs/pose_set_v1/descending_defence_stages_v1.json",
+    "outputs/pose_set_v1/right_intercept/fast_links_v1/parry_right_from_center_material_v1.json",
+    "outputs/pose_set_v1/observed_right_descending_stages_v1.json",
+    "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/triangle_audit.json",
+    "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/triangle_audit.json",
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+    "outputs/manual_recovery_v1/late01/comparison.json",
+    "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/comparison.json",
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json"
+  ],
+  "discovered_path_count": 191,
+  "absolute_path_count": 30,
+  "missing_paths": [],
+  "paths": [
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_left_to_right.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_left_to_right.baseline_native",
+      "original_path": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_left_to_right.proof",
+      "original_path": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/triangle_audit.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_up_right_to_left.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_up_right_to_left.baseline_native",
+      "original_path": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_up_right_to_left.proof",
+      "original_path": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/triangle_audit.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_right_to_left.source_bank",
+      "original_path": "outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_right_to_left.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_right_to_left.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_up_left_to_right.source_bank",
+      "original_path": "outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_up_left_to_right.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_up_left_to_right.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_center.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_center.baseline_native",
+      "original_path": "outputs/manual_recovery_v1/early01/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.cut_down_center.proof",
+      "original_path": "outputs/manual_recovery_v1/late01/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.thrust_center.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.thrust_center.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_attack_materials_v3.json",
+      "field": ".actions.thrust_center.proof",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_high_center.proof",
+      "original_path": "outputs/manual_recovery_v1/late01/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_high_center.baseline_native",
+      "original_path": "outputs/manual_recovery_v1/early01/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_high_center.native",
+      "original_path": "outputs/manual_recovery_v1/late01/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_thrust.proof",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_thrust.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_thrust.native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_descending.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_descending.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_descending.native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_rising.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_rising.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_right_rising.native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_left_descending.proof",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_left_descending.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_left_descending.native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_left_rising.proof",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_left_rising.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_reverse/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "six_defence_materials_v2.json",
+      "field": ".actions.parry_left_rising.native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_left_to_right.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_left_to_right.baseline_native",
+      "original_path": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_left_to_right.proof",
+      "original_path": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/triangle_audit.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_up_right_to_left.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_up_right_to_left.baseline_native",
+      "original_path": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_up_right_to_left.proof",
+      "original_path": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/triangle_audit.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_right_to_left.source_bank",
+      "original_path": "outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_right_to_left.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_right_to_left.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_up_left_to_right.source_bank",
+      "original_path": "outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_up_left_to_right.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_up_left_to_right.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_center.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_center.baseline_native",
+      "original_path": "outputs/manual_recovery_v1/early01/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.cut_down_center.proof",
+      "original_path": "outputs/manual_recovery_v1/late01/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.thrust_center.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.thrust_center.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.thrust_center.proof",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_high_center.proof",
+      "original_path": "outputs/manual_recovery_v1/late01/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_high_center.baseline_native",
+      "original_path": "outputs/manual_recovery_v1/early01/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_high_center.native",
+      "original_path": "outputs/manual_recovery_v1/late01/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_thrust.proof",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_thrust.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_thrust.native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_rising.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_rising.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_rising.native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_left_rising.proof",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_left_rising.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_reverse/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_left_rising.native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_left_descending_intercept_unload.proof",
+      "original_path": "outputs/pose_set_v1/left_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_left_descending_return_ready.proof",
+      "original_path": "outputs/pose_set_v1/left_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_descending_intercept_unload.proof",
+      "original_path": "outputs/pose_set_v1/right_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_descending_return_ready.proof",
+      "original_path": "outputs/pose_set_v1/right_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_from_center_intercept_unload.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/observed_center_stages_plan_v1/native_pair_v2/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".actions.parry_right_return_center.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/observed_center_stages_plan_v1/native_pair_v2/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_down_left_to_right[0].path",
+      "original_path": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_down_left_to_right[1].path",
+      "original_path": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_up_right_to_left[0].path",
+      "original_path": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_up_right_to_left[1].path",
+      "original_path": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_down_right_to_left[0].path",
+      "original_path": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_down_right_to_left[1].path",
+      "original_path": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_up_left_to_right[0].path",
+      "original_path": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_up_left_to_right[1].path",
+      "original_path": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.cut_down_center[0].path",
+      "original_path": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.thrust_center[0].path",
+      "original_path": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_high_center[0].path",
+      "original_path": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_thrust[0].path",
+      "original_path": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_descending[0].path",
+      "original_path": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_rising[0].path",
+      "original_path": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_left_descending[0].path",
+      "original_path": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_left_rising[0].path",
+      "original_path": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_right_high_inward_v1[0].path",
+      "original_path": "outputs/pose_set_v1/transitions/report.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.right_high_inward_v1_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/transitions/report.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.center_point_v1_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/transitions/report.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_center_point_v1[0].path",
+      "original_path": "outputs/pose_set_v1/transitions/report.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_parry_left_ready[0].path",
+      "original_path": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_left_ready_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_parry_right_ready[0].path",
+      "original_path": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_ready_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_parry_thrust_ready[0].path",
+      "original_path": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_thrust_ready_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_right_high_retracted_140mm_v3[0].path",
+      "original_path": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.right_high_retracted_140mm_v3_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_left_low_outer_v1[0].path",
+      "original_path": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.left_low_outer_v1_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_fresh_left_high_v2f[0].path",
+      "original_path": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.withdrawn_right_low_v2f_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.upright_side_ready_to_withdrawn_right_low_v2f[0].path",
+      "original_path": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.fresh_left_high_v2f_to_upright_side_ready[0].path",
+      "original_path": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_left_descending_intercept_unload[0].path",
+      "original_path": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_left_descending_return_ready[0].path",
+      "original_path": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_descending_intercept_unload[0].path",
+      "original_path": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_descending_return_ready[0].path",
+      "original_path": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_from_center[0].path",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/parry_right_from_center_material_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_from_center_intercept_unload[0].path",
+      "original_path": "outputs/pose_set_v1/observed_right_descending_stages_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "integrated_catalog_candidate_v4.json",
+      "field": ".action_provenance.parry_right_return_center[0].path",
+      "original_path": "outputs/pose_set_v1/observed_right_descending_stages_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_left_to_right.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_left_to_right.baseline_native",
+      "original_path": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_left_to_right.proof",
+      "original_path": "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/triangle_audit.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_up_right_to_left.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_up_right_to_left.baseline_native",
+      "original_path": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_up_right_to_left.proof",
+      "original_path": "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/triangle_audit.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_right_to_left.source_bank",
+      "original_path": "outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_right_to_left.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_right_to_left.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_up_left_to_right.source_bank",
+      "original_path": "outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_up_left_to_right.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_up_left_to_right.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_center.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_center.baseline_native",
+      "original_path": "outputs/manual_recovery_v1/early01/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.cut_down_center.proof",
+      "original_path": "outputs/manual_recovery_v1/late01/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.thrust_center.source_bank",
+      "original_path": "outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.thrust_center.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_attack_materials_v3.json",
+      "field": ".actions.thrust_center.proof",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/attacks/left_pair_v2f_geometry/left_pair_v2f.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/new_guard_transfers_v2/report.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/left_v2f_connected_candidate.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/new_low_guard_transfers_v1/report.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_retracted_bank_v3/r140_f1125_s2p0.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/new_right_connected_candidate_v1.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/config/manual_recovery_side_ready_late_v1.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_high_center.proof",
+      "original_path": "outputs/manual_recovery_v1/late01/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_high_center.baseline_native",
+      "original_path": "outputs/manual_recovery_v1/early01/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_high_center.native",
+      "original_path": "outputs/manual_recovery_v1/late01/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_thrust.proof",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_thrust.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_thrust.native",
+      "original_path": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_descending.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_descending.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_descending.native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_rising.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_rising.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_right_rising.native",
+      "original_path": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_left_descending.proof",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_left_descending.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_left_descending.native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_left_rising.proof",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_left_rising.baseline_native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_reverse/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/six_defence_materials_v2.json",
+      "field": ".actions.parry_left_rising.native",
+      "original_path": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/transitions/report.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "outputs/a1_profile_v2/bank07_current_candidates/report.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/transitions/report.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "outputs/pose_set_v1/transition_screen.py",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/new_guard_transfers_v2/report.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/long_left_transfers_v1.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defence_navigation_candidate_v1.json",
+      "field": ".source_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/attacks/six_family_candidates_v1.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "field": ".actions.parry_left_descending_intercept_unload.proof",
+      "original_path": "outputs/pose_set_v1/left_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "field": ".actions.parry_left_descending_return_ready.proof",
+      "original_path": "outputs/pose_set_v1/left_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "field": ".actions.parry_right_descending_intercept_unload.proof",
+      "original_path": "outputs/pose_set_v1/right_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/descending_defence_stages_v1.json",
+      "field": ".actions.parry_right_descending_return_ready.proof",
+      "original_path": "outputs/pose_set_v1/right_stage_return_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/fast_links_v1/parry_right_from_center_material_v1.json",
+      "field": ".actions.parry_right_from_center.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/restore_press_v1/native_pair_v1/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/fast_links_v1/parry_right_from_center_material_v1.json",
+      "field": ".actions.parry_right_from_center.scope_summary",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/restore_press_v1/native_pair_v1/scope_summary.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/fast_links_v1/parry_right_from_center_material_v1.json",
+      "field": ".actions.parry_right_from_center.baseline_native",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/center_barrier_fresh_pair_v1/down/baseline/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/fast_links_v1/parry_right_from_center_material_v1.json",
+      "field": ".actions.parry_right_from_center.native",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/restore_press_v1/native_pair_v1/defended/native",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/observed_right_descending_stages_v1.json",
+      "field": ".actions.parry_right_from_center_intercept_unload.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/observed_center_stages_plan_v1/native_pair_v2/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/observed_right_descending_stages_v1.json",
+      "field": ".actions.parry_right_return_center.proof",
+      "original_path": "outputs/pose_set_v1/right_intercept/fast_links_v1/observed_center_stages_plan_v1/native_pair_v2/comparison.json",
+      "is_absolute": false,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_down",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "field": ".baseline_audit_reuse.cache",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_down/cached_baseline_validation.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_down/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "field": ".baseline_audit_reuse.cache",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up/cached_baseline_validation.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up/defended/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/manual_recovery_v1/late01/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/manual_recovery_v1/early01",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/thrust_near_ready_v2",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "field": ".baseline_audit_reuse.cache",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up/cached_baseline_validation.json",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/baseline/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json",
+      "field": ".baseline_root",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_reverse",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_reverse/baseline/native",
+      "is_absolute": true,
+      "exists": true
+    },
+    {
+      "document": "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/comparison.json",
+      "field": ".saved_native_sha256.<key>",
+      "original_path": "/home/ubuntu/桌面/RL project/RL-SwordNet/outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native",
+      "is_absolute": true,
+      "exists": true
+    }
+  ],
+  "raw_native_archive": {
+    "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/summary.json": {
+      "sha256": "a1228c7ad8f468cb6757fffb326f6fff89ca4175f22abd5ca6bf09b08f1d9e4a",
+      "bytes": 9298
+    },
+    "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/scene.xml": {
+      "sha256": "88d3ff8ec41338f7c1a721df5c812c112fa9ad4c0f9916f2e63c4e7edd404b91",
+      "bytes": 611994
+    },
+    "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/trace.npz": {
+      "sha256": "d60b65203d583ed6a73cd218a6f5bb127af35965159849229a60eca4ade6d799",
+      "bytes": 2703740
+    },
+    "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/references.npz": {
+      "sha256": "103134c198ff23db9481adb2f5cf0093bffdc0c0ae4b50b458c3e5c18577561e",
+      "bytes": 2651
+    },
+    "outputs/pose_set_v1/attacks/native_lr_down_v2f_neutral_v2/contacts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/summary.json": {
+      "sha256": "5d27737f052c4afb04fe426d9c40b8e8ada8853385e722a3197d268eaf573428",
+      "bytes": 9297
+    },
+    "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/scene.xml": {
+      "sha256": "42c1a702598d0d8b4dc058cb1347327fe883575ab92bbf633f4a5a357cb371ee",
+      "bytes": 612000
+    },
+    "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/trace.npz": {
+      "sha256": "c9529a4792cae63c70b1b9a0c847bf1b35ce919401aaa83e07b99c130006504e",
+      "bytes": 2716945
+    },
+    "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/references.npz": {
+      "sha256": "33d8b7bcee10e2dcdcfcb856c748236cd53267ec1d0b67aac7b49213f0532e66",
+      "bytes": 2658
+    },
+    "outputs/pose_set_v1/attacks/native_rl_up_v2f_neutral_v1/contacts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native/summary.json": {
+      "sha256": "41ac9a4e7aa76df9fbfabdf6a3dd1a136f6e32578aa0f015529082f5c05fd56a",
+      "bytes": 12666
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native/scene.xml": {
+      "sha256": "bf572d9bb8e382e09b01a16d34fb4526ba94d85d543c72a34961c2d0cfade8aa",
+      "bytes": 611992
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native/trace.npz": {
+      "sha256": "1f41fee2fa42013822c4ebee0828a812a7ebef4610f398fb549cd0075dc8e034",
+      "bytes": 2948160
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native/references.npz": {
+      "sha256": "8446fe0eb9a9738b3b80eacd69671cbaae60bafab74b44d4baa4f3baa734f392",
+      "bytes": 6490
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/baseline/native/contacts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native/summary.json": {
+      "sha256": "0df452ba00f37547fe5a315237046a6e389adb4e188464b47d3917b697158ac6",
+      "bytes": 12655
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native/scene.xml": {
+      "sha256": "38e7d2f407abe03de2d723852de9a5a4cac3058bcb99bc3af3dae9cf1c7de2dd",
+      "bytes": 611990
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native/trace.npz": {
+      "sha256": "5b41302ce3a9ccb55d9fb45d8d7709172a9b02f8a9602c70ea3e57e9437c0f87",
+      "bytes": 2779631
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native/references.npz": {
+      "sha256": "45573dcc62d9ea31879a1942b897c35f0a6309aed29ef8b60a4982e1bef3fbb9",
+      "bytes": 6465
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up/baseline/native/contacts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "outputs/manual_recovery_v1/early01/baseline/native/summary.json": {
+      "sha256": "39836ec7668bffc0bb24223586b23a2dbb997757bd2f0c3c633f7cd63afd0568",
+      "bytes": 12684
+    },
+    "outputs/manual_recovery_v1/early01/baseline/native/scene.xml": {
+      "sha256": "bf74f06f2f6dae9f9a553dd1d5af3bc85b9be7ea48a6090d881661dd0dfc3284",
+      "bytes": 611997
+    },
+    "outputs/manual_recovery_v1/early01/baseline/native/trace.npz": {
+      "sha256": "bfbed7a5bca26f15f58bafc23bbd6806b999f79582abffb0cc484478e94726f4",
+      "bytes": 3664854
+    },
+    "outputs/manual_recovery_v1/early01/baseline/native/references.npz": {
+      "sha256": "c32ddeb1416dc3425f0a28c03d16158d375632108a6fd6c54d6695833662a0ef",
+      "bytes": 7631
+    },
+    "outputs/manual_recovery_v1/early01/baseline/native/contacts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native/summary.json": {
+      "sha256": "9b30462de689b0a405b11e295632c33091b1a11dcefcacd3be2ab263033bfbcf",
+      "bytes": 11828
+    },
+    "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native/scene.xml": {
+      "sha256": "401e9f85ca45ef8ff55004c593c06d30d07ddcd4f61242da34ddd0a3ae17da50",
+      "bytes": 611997
+    },
+    "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native/trace.npz": {
+      "sha256": "62caf80ae56ed71482b80aec110757f087db24e8489742d69b8035398c2bc1a0",
+      "bytes": 2823895
+    },
+    "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native/references.npz": {
+      "sha256": "23e937bf49422a07bc4b3e182c0b886247c9d4d6e8568b9011b817884f9a57b2",
+      "bytes": 2452
+    },
+    "outputs/pose_set_v1/defences/thrust_near_ready_v2/baseline/native/contacts.json": {
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    },
+    "outputs/manual_recovery_v1/late01/defended/native/summary.json": {
+      "sha256": "e03bdce9bfd8d6fa48b4f879a60a8732d24365b79b0e7fea1257824a47b1cd73",
+      "bytes": 178896
+    },
+    "outputs/manual_recovery_v1/late01/defended/native/trace.npz": {
+      "sha256": "23b5b777301c1f8fbe71854bfc62397a1f335fc4f25e7882dd040f30a3942e0a",
+      "bytes": 4218606
+    },
+    "outputs/manual_recovery_v1/late01/defended/native/scene.xml": {
+      "sha256": "bf74f06f2f6dae9f9a553dd1d5af3bc85b9be7ea48a6090d881661dd0dfc3284",
+      "bytes": 611997
+    },
+    "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native/summary.json": {
+      "sha256": "0a3754ea39f833e904b5abdb513d3556fe05c75cb3074de559880388b68fc671",
+      "bytes": 232037
+    },
+    "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native/trace.npz": {
+      "sha256": "1c207eb3c0cd1220ef26ae0d6414cd3015de40b2005d1471ab729a07097a34fe",
+      "bytes": 3765659
+    },
+    "outputs/pose_set_v1/defences/thrust_forward_90mm_v3/defended/native/scene.xml": {
+      "sha256": "401e9f85ca45ef8ff55004c593c06d30d07ddcd4f61242da34ddd0a3ae17da50",
+      "bytes": 611997
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native/summary.json": {
+      "sha256": "c4055b6d744bd131289daaaf11b545b4f2226f3aa946fbcb55086f7ae892b356",
+      "bytes": 149149
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native/trace.npz": {
+      "sha256": "bb2f64fdfba54f0b3a5d48cd1504350cc6303e00ee9b07c06f7930de00abb553",
+      "bytes": 3688053
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_down/defended/native/scene.xml": {
+      "sha256": "bf572d9bb8e382e09b01a16d34fb4526ba94d85d543c72a34961c2d0cfade8aa",
+      "bytes": 611992
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native/summary.json": {
+      "sha256": "415ca723770b2f3fc7fd18ba2b2d9c395b06ecfb2836ef3520449e28b0f58437",
+      "bytes": 348553
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native/trace.npz": {
+      "sha256": "f6de9e50113abcc50cb6768020762ee49aeb3de831aa2e1f74b0604ffae1de67",
+      "bytes": 3819899
+    },
+    "outputs/pose_set_v1/right_intercept/retracted_v3_up_candidates/up_J0hold4800/defended/native/scene.xml": {
+      "sha256": "38e7d2f407abe03de2d723852de9a5a4cac3058bcb99bc3af3dae9cf1c7de2dd",
+      "bytes": 611990
+    },
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native/summary.json": {
+      "sha256": "c7e97a906115fb163c1e1b20891c0b0353fe6a6ef427ba3cfd931cd81e0c6f8a",
+      "bytes": 159362
+    },
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native/trace.npz": {
+      "sha256": "dc25552f48af1a6f252b33590b7399691639bb298bdd80f156836bae36b340cb",
+      "bytes": 3691811
+    },
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_delay70_native/defended/native/scene.xml": {
+      "sha256": "141a8307b11a5eb2b64f564d5057abdda763b173559ef5075836d75ad8891071",
+      "bytes": 611992
+    },
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native/summary.json": {
+      "sha256": "04992506ee2249446b1ef02f1241da3653da36083dfb2594ac55d514f1f6f950",
+      "bytes": 364809
+    },
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native/trace.npz": {
+      "sha256": "7fe616d17924a25106d408031dd8c53249d2210fccb10fe4562cdff7967ee9a4",
+      "bytes": 4114305
+    },
+    "outputs/pose_set_v1/defences/left_mirror_sidehold_v1/branch13_up_hold030_native/defended/native/scene.xml": {
+      "sha256": "efd614cce2d4f8a67a8e834cde18c81c49a0184007191dd81dccd20cabd9315a",
+      "bytes": 611998
+    }
+  },
+  "raw_native_archive_bytes": 49809093,
+  "runtime_catalog_outputs_dependencies": 0,
+  "raw_replay_self_contained": false,
+  "note": "Path inventory is for selected catalog/provenance/proof documents, not all historical experiments. Original archive paths are audit metadata only."
+}

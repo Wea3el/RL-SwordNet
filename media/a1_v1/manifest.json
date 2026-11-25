@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "not_trained_policy": true,
+  "videos": {
+    "left_two_rounds": {
+      "status": "completed",
+      "label": "Two-round left parry + actual ready return | fixed diagnostic, not trained",
+      "source_sha256": {
+        "scene.xml": "141a8307b11a5eb2b64f564d5057abdda763b173559ef5075836d75ad8891071",
+        "trace.npz": "a9166b67c618ece13d6abac42db4513e3403e803777d8263511b756337429f70",
+        "summary.json": "8066a924c125bc2b6ebe1ab416c6f8894fce6519154dc870ab2529bd2ed62fa1"
+      },
+      "source_start_s": 0,
+      "source_end_s": 24.00000000000635,
+      "video_duration_s": 24.05,
+      "fps": 20,
+      "frame_count": 481,
+      "full_recording_requested": true,
+      "not_trained_policy": true,
+      "qualified_exact_pair_only": true,
+      "triangle_audit_sha256": "92d808902971ec23197b7f2f5d467ff9518acc3f33d28730fc94691b66de7e95",
+      "sampling": "nearest recorded actual qpos; no interpolation, target playback or mj_step",
+      "source_unchanged": true,
+      "source_folder": "outputs/pose_set_v1/stage_return_repeat_v1/left24/video_v1",
+      "source_manifest_sha256": "8a7c679092e6092b5e46654858853e0fba4d321ecc8aeac0841b3bd9a5b207a7",
+      "file": "left_two_rounds.mp4",
+      "video_sha256": "4f581d1fb18b6174d7e844385050a4ae6607659dae7735d54bc17938deada67d",
+      "note": "24 s full physical record at 20 fps including endpoint; fixed prescribed trial, not trained action selection."
+    },
+    "right_observed_stages": {
+      "status": "completed",
+      "label": "Observed parry + early return | 0-10s excerpt of qualified 16s trial | not trained",
+      "source_sha256": {
+        "scene.xml": "00262acd7259e0159ca787bd2d6b10a2f296514399afecc6e8751b24d93d5a89",
+        "trace.npz": "f1a0ad029f2797a946efbddf727597ebb0e2047b5fdf1c0544d88cd4a5cc6870",
+        "summary.json": "09c5768e35a7732cdb9d0bcbef65dd369663e3b5eb76b21df3fd8e88012d5e79"
+      },
+      "source_start_s": 0,
+      "source_end_s": 9.949999999999925,
+      "video_duration_s": 10,
+      "fps": 20,
+      "frame_count": 200,
+      "full_recording_requested": false,
+      "not_trained_policy": true,
+      "qualified_exact_pair_only": true,
+      "triangle_audit_sha256": "2eb1eca45b60e24ca8e3dd08df0889e2723855c383484cf1fb350801238c9785",
+      "sampling": "nearest recorded actual qpos; no interpolation, target playback or mj_step",
+      "source_unchanged": true,
+      "source_folder": "outputs/pose_set_v1/right_intercept/fast_links_v1/observed_center_stages_plan_v1/native_pair_v2/video_v1",
+      "source_manifest_sha256": "ee1a808384b99f49460fbb68c33e13a26a83664bc1120d6a532f8e9a1565e8ea",
+      "file": "right_observed_stages.mp4",
+      "video_sha256": "892a697e5905f7949f90a4981135cabc1403e1ff469cdc4d8d98efb4ce2f7579",
+      "note": "0-10 s excerpt of a completed 16 s record; full-window decision comes from the separate comparison, not the crop."
+    },
+    "fast_combo_failure": {
+      "status": "completed",
+      "label": "Lower-grip candidate: late hit at 7.651 s",
+      "source_sha256": {
+        "scene.xml": "141a8307b11a5eb2b64f564d5057abdda763b173559ef5075836d75ad8891071",
+        "trace.npz": "7e92d2cfec01891080b4a7cc4485d7f05cdc4e446233c53cf1f115db7300633b",
+        "summary.json": "3aebf7dd30003e453049fe3d6964e449ac62d996a7e492ef53ceef249e558f8c"
+      },
+      "source_start_s": 3.9999999999996705,
+      "source_end_s": 9.949999999999925,
+      "video_duration_s": 6,
+      "fps": 20,
+      "frame_count": 120,
+      "full_recording_requested": false,
+      "not_trained_policy": true,
+      "qualified_exact_pair_only": false,
+      "triangle_audit_sha256": "d4169fd320686b91d40a02d7bddf6ff2c67dc27391d6afea47a5a98e1c4c769c",
+      "sampling": "nearest recorded actual qpos; no interpolation, target playback or mj_step",
+      "source_unchanged": true,
+      "source_folder": "outputs/pose_set_v1/unloaded_up_probe_framework_v2/left/video_failure_v1",
+      "source_manifest_sha256": "83d1525fba3965c8e65675705313ce5d494124f86536c8b92e225a27a5637548",
+      "file": "fast_combo_failure.mp4",
+      "video_sha256": "cf1910b70cb0efd418d77c10f265b978ac324bd05a2c6770b6a5125a68ada747",
+      "defence_succeeded": false,
+      "note": "Failed lower-grip replacement; early contact followed by hit at 7.651128913315903 s. Not included as a usable defence."
+    }
+  }
+}

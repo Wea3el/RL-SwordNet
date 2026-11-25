@@ -1,0 +1,31 @@
+{
+  "schema_version": 1,
+  "bank_version": "compact_v1_engagement_candidate_01",
+  "purpose": "Six continuous candidate actions plus wait. NOT a qualified training bank: side defences still leak.",
+  "ready_source": "outputs/compact_bank_v1_natural/engagement01/report.json",
+  "ready_key": "center_qpos_rad",
+  "bridge_reference_speed_rad_s": 1.0,
+  "bridge_rest_s": 0.15,
+  "scoring": "config/scoring_triangle_v1_candidate.json",
+  "skills": [
+    {"id": 1, "name": "attack_left", "kind": "attack", "region": "left", "source_type": "scheduled", "source": "outputs/compact_bank_v1_natural/native_left01/native", "slot": "a1", "review_evidence": "outputs/compact_bank_v1_natural/native_left01/result.json"},
+    {"id": 2, "name": "attack_right", "kind": "attack", "region": "right", "source_type": "scheduled", "source": "outputs/compact_bank_v1_natural/native_right01/native", "slot": "a1", "review_evidence": "outputs/compact_bank_v1_natural/native_right01/result.json"},
+    {"id": 3, "name": "attack_upper", "kind": "attack", "region": "upper", "source_type": "scheduled", "source": "outputs/compact_bank_v1_natural/native_upper01/native", "slot": "a1", "review_evidence": "outputs/compact_bank_v1_natural/native_upper01/result.json"},
+    {"id": 4, "name": "defence_left", "kind": "defence", "region": "left", "source_type": "scheduled", "source": "outputs/compact_bank_v1_new_defence/left_fixedbase00/native", "slot": "a2", "review_evidence": "outputs/compact_bank_v1_new_defence/left_fixedbase00/comparison.json"},
+    {"id": 5, "name": "defence_right", "kind": "defence", "region": "right", "source_type": "scheduled", "source": "outputs/compact_bank_v1_new_defence/right_fixedbase00/native", "slot": "a2", "review_evidence": "outputs/compact_bank_v1_new_defence/right_fixedbase00/comparison.json"},
+    {"id": 6, "name": "defence_upper", "kind": "defence", "region": "upper", "source_type": "scheduled", "source": "outputs/compact_bank_v1_new_defence/upper_dwell12_delay010/native", "slot": "a2", "review_evidence": "outputs/compact_bank_v1_new_defence/upper_dwell12_delay010/comparison.json"}
+  ],
+  "scope_notes": [
+    "This is an auditable candidate, NOT the requested fully effective training bank. Both side defences currently fail the paired full-window gate.",
+    "The three attacks have hit-and-recovery evidence in both physical slots. Upper defence has scheduled pair evidence, not yet unrestricted or learned-policy coverage.",
+    "Each skill starts and ends at the same ready vector. No qpos teleport, angle wrapping or clipping is permitted during execution.",
+    "Attack region means the defender-local region; defence region means the own-local region. Local left/right coverage differs from physical-slot swapping.",
+    "Any adoption of this ready vector must use it equally for A1 and A2 and all three matchup types; never silently transfer old-ready certificates.",
+    "Wait/continue is action 0. A busy skill is not an extra PPO decision. Real settled feedback is required before another skill.",
+    "The joint table constrains angles. Reference and actual speed reports are diagnostics, not measured motor certification.",
+    "All three regions retain the same reward. Whole-blade scoring, neutral weapon contact and approved foul rules remain unchanged.",
+    "This small first bank does not claim all historical guards or cut families are complete.",
+    "Shared live triangle scoring, seven-ID training interfaces, repeat/transition and A2 continuous-action exploit tests remain required before training admission.",
+    "Different-duration A1 skills must not be discounted as equal elapsed time. The training adapter must preserve physical-time reward/discount accounting and exclude busy continuation ticks from independent sampled decisions; A2 uses the same physical episode duration."
+  ]
+}

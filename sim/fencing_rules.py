@@ -3,7 +3,7 @@
 Version 2 scores the *physical flat-ended blade cylinders*, not a tip, an
 animation label, a capsule extended behind the guard, or a declared block.
 Blade/weapon contacts themselves never award points or immunity. The native
-adapter reads the three blade collision proxies built by ``assembly.py``:
+adapter reads every numerically indexed blade collision proxy in the model:
 their first endpoint is the blade-side ``shinai_guard_far``, NOT guard_near.
 
 The sweep interpolates both cylinder-axis endpoints between successive native
@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from typing import Mapping
+import weakref
 
 import numpy as np
 
@@ -28,6 +29,7 @@ _DISTANCE_EPS_M = 1e-10
 _FRACTION_EPS = 1e-9
 _TIME_EPS_S = 1e-10
 _MAX_EVALUATIONS = 8192
+_ADAPTER_TOPOLOGY_CACHE = weakref.WeakKeyDictionary()
 
 
 @dataclass(frozen=True)
@@ -58,29 +60,33 @@ class BladeSection:
 
 
 def blade_sections_from_scene(scene):
-    """Read all three native flat-ended blade proxies for each agent.
+    """Read all native flat-ended blade proxies for each agent.
 
     Call ``mj_forward`` after changing state and before taking a snapshot.
     No radius is invented or borrowed from the old 10mm tip-scoring setting.
     This function neither changes collision masks nor classifies contacts.
+    Model-local enumeration also supports historical three-cylinder XMLs;
+    it never assumes that a current profile has only three scoring sections.
     """
-    import mujoco
+    from .blade_geometry import blade_collision_geom_ids
 
     result = {}
+    topology = _ADAPTER_TOPOLOGY_CACHE.setdefault(scene.model, {})
     for owner, mapping in scene.agents.items():
-        sections = []
-        for index in range(3):
-            name = mapping["prefix"] + f"shinai_blade_collision_{index}"
-            gid = mujoco.mj_name2id(scene.model, mujoco.mjtObj.mjOBJ_GEOM, name)
-            if gid < 0 or scene.model.geom_type[gid] != int(mujoco.mjtGeom.mjGEOM_CYLINDER):
-                raise ValueError(f"Missing native flat-ended blade cylinder: {name}")
-            radius, half_length = scene.model.geom_size[gid, :2]
-            direction = scene.data.geom_xmat[gid].reshape(3, 3)[:, 2]
-            center = scene.data.geom_xpos[gid]
-            sections.append(BladeSection(center-half_length*direction,
-                                         center+half_length*direction,
-                                         radius, name))
-        result[owner] = tuple(sections)
+        prefix = mapping["prefix"]
+        if prefix not in topology:
+            ids = np.asarray(blade_collision_geom_ids(scene.model, prefix), dtype=int)
+            topology[prefix] = ids, tuple(scene.model.geom(int(i)).name for i in ids)
+        ids, names = topology[prefix]
+        # Cache only immutable model topology, never q-dependent positions,
+        # orientations or radii. Every snapshot still owns its endpoint data.
+        radii = scene.model.geom_size[ids, 0]
+        half = scene.model.geom_size[ids, 1, None]
+        directions = scene.data.geom_xmat[ids].reshape(-1, 3, 3)[:, :, 2]
+        centers = scene.data.geom_xpos[ids]
+        starts, ends = centers-half*directions, centers+half*directions
+        result[owner] = tuple(BladeSection(a, b, r, name)
+                              for a, b, r, name in zip(starts, ends, radii, names))
     return result
 
 
@@ -109,6 +115,38 @@ def point_cylinder_distance(point, section):
     return distance, closest
 
 
+def _point_cylinder_distances(point, starts, ends, radii):
+    """Batch the unchanged finite-cylinder formula; preserve row order/ties.
+
+    This is the same solid side/cap/corner distance as the public scalar
+    function, not a capsule, bounding sphere, profile interpolation or new
+    contact tolerance. The first minimal row remains the witness on a tie.
+    """
+    point = np.asarray(point, dtype=float)
+    starts, ends, radii = (np.asarray(v, dtype=float) for v in (starts, ends, radii))
+    if (point.shape != (3,) or starts.ndim != 2 or starts.shape[1:] != (3,)
+            or not len(starts) or ends.shape != starts.shape or radii.shape != (len(starts),)
+            or not all(np.isfinite(v).all() for v in (point, starts, ends, radii))
+            or np.any(radii <= 0)):
+        raise ValueError("Finite point and nondegenerate cylinder required")
+    axis = ends-starts
+    length = np.linalg.norm(axis, axis=1)
+    if not np.isfinite(length).all() or np.any(length <= 1e-12):
+        raise ValueError("Finite point and nondegenerate cylinder required")
+    direction = axis/length[:, None]
+    offset = point-starts
+    axial = np.sum(offset*direction, axis=1)
+    radial = offset-axial[:, None]*direction
+    radial_distance = np.linalg.norm(radial, axis=1)
+    closest = starts+np.clip(axial, 0., length)[:, None]*direction
+    ratio = np.ones_like(radial_distance)
+    np.divide(radii, radial_distance, out=ratio, where=radial_distance > 0)
+    closest += radial*np.minimum(1., ratio)[:, None]
+    distance = np.hypot(np.maximum(0., radial_distance-radii),
+                        np.maximum(np.maximum(0., -axial), axial-length))
+    return distance, closest
+
+
 class _UnresolvedSweep(RuntimeError):
     pass
 
@@ -120,17 +158,27 @@ def _motion_bound(before, after):
     transported radial vector moves at most radius * |axis'| / min|axis|.
     The minimum interpolated axis length is solved, not assumed from frames.
     """
-    bounds = []
-    for first, last in zip(before, after):
-        axis, delta = first.end-first.start, (last.end-last.start)-(first.end-first.start)
-        dd = float(delta@delta)
-        fraction = float(np.clip(-(axis@delta)/dd, 0., 1.)) if dd else 0.
-        minimum_length = float(np.linalg.norm(axis+fraction*delta))
-        if minimum_length <= 1e-10:
-            raise _UnresolvedSweep("interpolated_blade_axis_degenerate")
-        endpoint_speed = max(np.linalg.norm(last.start-first.start), np.linalg.norm(last.end-first.end))
-        bounds.append(float(endpoint_speed+first.radius_m*np.linalg.norm(delta)/minimum_length))
-    return max(bounds)
+    first_start = np.asarray([s.start for s in before])
+    first_end = np.asarray([s.end for s in before])
+    last_start = np.asarray([s.start for s in after])
+    last_end = np.asarray([s.end for s in after])
+    return _motion_bound_arrays(first_start, first_end, last_start, last_end,
+                                np.asarray([s.radius_m for s in before]))
+
+
+def _motion_bound_arrays(first_start, first_end, last_start, last_end, radii):
+    axis = first_end-first_start
+    delta = (last_end-last_start)-axis
+    dd = np.sum(delta*delta, axis=1)
+    fraction = np.zeros_like(dd)
+    np.divide(-np.sum(axis*delta, axis=1), dd, out=fraction, where=dd != 0)
+    fraction = np.clip(fraction, 0., 1.)
+    minimum_length = np.linalg.norm(axis+fraction[:, None]*delta, axis=1)
+    if np.any(minimum_length <= 1e-10):
+        raise _UnresolvedSweep("interpolated_blade_axis_degenerate")
+    endpoint_speed = np.maximum(np.linalg.norm(last_start-first_start, axis=1),
+                                np.linalg.norm(last_end-first_end, axis=1))
+    return float(np.max(endpoint_speed+radii*np.linalg.norm(delta, axis=1)/minimum_length))
 
 
 def _first_strictly_negative(evaluate, left, right, lipschitz, *, evaluation_budget):
@@ -250,12 +298,39 @@ class FirstTouchScorer:
             raise ValueError("noncontiguous_physics_step_times")
         if set(before) != set(self.centers) or set(after) != set(self.centers):
             raise ValueError("both_blade_snapshots_required")
+        packed = {}
         for owner in self.centers:
             first, last = tuple(before[owner]), tuple(after[owner])
             if not first or len(first) != len(last):
                 raise ValueError("matching_nonempty_blade_sections_required")
             if self._last is not None and len(self._last[owner]) != len(first):
                 raise ValueError("blade_section_count_changed")
+            if not all(isinstance(s, BladeSection) for s in (*first, *last)):
+                raise ValueError("BladeSection_snapshots_required")
+            starts = np.asarray([s.start for s in first])
+            ends = np.asarray([s.end for s in first])
+            new_starts = np.asarray([s.start for s in last])
+            new_ends = np.asarray([s.end for s in last])
+            radii = np.asarray([s.radius_m for s in first])
+            new_radii = np.asarray([s.radius_m for s in last])
+            names = tuple(s.name for s in first)
+            new_names = tuple(s.name for s in last)
+            valid = (all(np.isfinite(v).all() for v in (starts, ends, new_starts, new_ends))
+                     and names == new_names and np.all(np.abs(radii-new_radii) <= 1e-12))
+            if initialization:
+                valid = valid and np.array_equal(starts, new_starts) and np.array_equal(ends, new_ends)
+            if self._last is not None:
+                old = self._last[owner]
+                valid = (valid and tuple(s.name for s in old) == names
+                         and np.array_equal(np.asarray([s.radius_m for s in old]), radii)
+                         and np.allclose(np.asarray([s.start for s in old]), starts, rtol=0., atol=1e-10)
+                         and np.allclose(np.asarray([s.end for s in old]), ends, rtol=0., atol=1e-10))
+            packed[owner] = starts, ends, new_starts, new_ends, radii
+            if valid:
+                continue
+            # Preserve the scalar invalid-input error ordering. The common
+            # valid case does its identical comparisons in batches instead
+            # of 100+ per-section allclose calls every physics tick.
             for index, (a, b) in enumerate(zip(first, last)):
                 if not isinstance(a, BladeSection) or not isinstance(b, BladeSection):
                     raise ValueError("BladeSection_snapshots_required")
@@ -271,28 +346,31 @@ class FirstTouchScorer:
                             or not np.allclose(old.start, a.start, rtol=0., atol=1e-10)
                             or not np.allclose(old.end, a.end, rtol=0., atol=1e-10)):
                         raise ValueError("blade_state_discontinuity_between_steps")
+        return packed
 
     def update(self, before_segments, after_segments, t0, t1):
         if self.failure:
             return []
         pending = []
         try:
-            self._check_frames(before_segments, after_segments, t0, t1)
+            packed = self._check_frames(before_segments, after_segments, t0, t1)
             for owner, center in self.centers.items():
                 before, after = tuple(before_segments[owner]), tuple(after_segments[owner])
-                bound = _motion_bound(before, after)
+                starts, ends, new_starts, new_ends, radii = packed[owner]
+                delta_start, delta_end = new_starts-starts, new_ends-ends
+                bound = _motion_bound_arrays(starts, ends, new_starts, new_ends, radii)
                 cache = {}
 
                 def sample(fraction):
                     if fraction not in cache:
-                        samples = []
-                        for first, last in zip(before, after):
-                            section = BladeSection(first.start+fraction*(last.start-first.start),
-                                                   first.end+fraction*(last.end-first.end),
-                                                   first.radius_m, first.name)
-                            distance, closest = point_cylinder_distance(center, section)
-                            samples.append((distance-self.target_radii[owner], closest, section))
-                        cache[fraction] = min(samples, key=lambda row: row[0])
+                        sample_starts = starts+fraction*delta_start
+                        sample_ends = ends+fraction*delta_end
+                        distances, points = _point_cylinder_distances(center, sample_starts, sample_ends, radii)
+                        selected = int(np.argmin(distances))
+                        section = BladeSection(sample_starts[selected], sample_ends[selected],
+                                               radii[selected], before[selected].name)
+                        cache[fraction] = (float(distances[selected]-self.target_radii[owner]),
+                                           points[selected], section)
                         self.minimum_clearance_m[owner] = min(self.minimum_clearance_m[owner], cache[fraction][0])
                     return cache[fraction][0]
 

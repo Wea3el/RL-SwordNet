@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "status": "new_pose_materials_not_connected_to_legacy_training_entry",
+  "scope": "Read-only code and artifact audit. Model compilation and bank loading were inspected without mj_step, optimization or training. New release inspector is separate from this assessment.",
+  "native_steps": 0,
+  "optimizer_updates": 0,
+  "latest_user_direction": {
+    "publish_bounded_usable_A1_version": true,
+    "occasional_difficult_combo_defence_failure_may_remain": true,
+    "must_learn_both_attack_and_defence": true,
+    "action_name_rewards_or_forced_attack_defence_alternation_approved": false,
+    "interpretation": "A clean physical loss on a difficult combo can be a valid training outcome. It is not a reason to demand universal defence before a bounded release. This does not authorize stale models, unconnected graphs, hidden resets, fabricated successful defence, or ignored numerical/evidence failures."
+  },
+  "bottom_line": [
+    "The repository contains a real bounded PPO training driver, but it is wired to the old five-action, single-Guard A1 family, not the current pose_set_v1 multi-node catalog.",
+    "The a1_selfplay CLI performs ZERO optimizer updates. The actual bounded optimizer loop is sim.a1_train.",
+    "The documented old v5 bank currently fails its model-hash loader check; the documented outputs/a1_prepared/library is absent in this workspace.",
+    "The new catalog cannot be supplied to the old --bank argument. A graph loader/inspector is useful packaging, but does not itself migrate the environment, policy, rollout or PPO."
+  ],
+  "nonintegrating_probes": {
+    "old_documented_bank": {
+      "path": "outputs/a1_dual_parry_hold8_dt1ms_candidate_v5/library",
+      "exists": true,
+      "load_a1_library_result": "ValueError: A1 bank model hashes changed"
+    },
+    "documented_fresh_bank": {"path": "outputs/a1_prepared/library", "exists": false},
+    "new_catalog_as_legacy_bank": {
+      "path": "outputs/pose_set_v1/integrated_catalog_candidate_v4.json",
+      "load_a1_library_result": "NotADirectoryError: loader appends /bank.json to a file path"
+    },
+    "old_environment_scene_builder": {
+      "call": "build_duel_scene(1.75), no integration",
+      "joint_ranges_rad": "all seven joints [-pi, pi]",
+      "matches_current_confirmed_joint_ranges": false,
+      "all_13_new_named_guards_have_J0_outside_old_range": true,
+      "old_target": "one sphere per robot, local center [0.32,0,1.05], radius 0.06 m",
+      "new_material_target": "three disjoint left/right/upper regions, radius 0.10 m, defined by the packaged scoring snapshot"
+    }
+  },
+  "findings": [
+    {
+      "id": "F1", "priority": "must_migrate",
+      "code": ["sim/a1_env.py:60", "sim/a1_env.py:72", "sim/a1_env.py:186", "sim/duel_scene.py:80"],
+      "finding": "A1DuelEnv loads A1Library and uses build_duel_scene without confirmed joint ranges; both physical slots get legacy A1Controller. The RK4/1ms profile does not replace the old joint-coordinate limits.",
+      "minimum_change": "A separate versioned graph environment should use the same build_limited_duel, confirmed constraints, geometry and position_control as current qualified material trials. Do not clip or wrap new q into the old scene."
+    },
+    {
+      "id": "F2", "priority": "must_migrate",
+      "code": ["sim/a1_skills.py:29", "sim/a1_skills.py:380", "sim/a1_control.py:31"],
+      "finding": "Legacy bank format is a directory with bank.json and exactly guard/stab/slash_left/parry_left/parry_right NPZ curves. Every path must begin and end at one exact common Guard. New catalog edges have different start/end nodes and distinct unloaded contexts.",
+      "minimum_change": "Load an immutable package with explicit ordered edge IDs and exact nodes/curves. Use SkillGraphExecutor per slot; only outgoing edges of the current actual stable node are available. No automatic bridge, forced return to hub, interpolation refit or context-node merge."
+    },
+    {
+      "id": "F3", "priority": "must_migrate",
+      "code": ["sim/a1_policy.py:24", "sim/a1_policy.py:64", "sim/a1_policy.py:99", "sim/a1_policy.py:159"],
+      "finding": "Policy/encoder are hardcoded to 5 logits and 30 features. Own action IDs are restricted to 0..4 and include a five-way one-hot. They have no explicit current graph-node/context identity.",
+      "minimum_change": "Create a new feature/action version from the frozen release manifest: wait=0, explicit ordered edges thereafter; encode own current node and own active action/progress without exposing opponent labels, phase or future. Reinitialize incompatible actor/encoder weights; do not relabel a five-logit checkpoint."
+    },
+    {
+      "id": "F4", "priority": "must_migrate",
+      "code": ["sim/a1_rollout.py:84", "sim/a1_ppo.py:90", "sim/a1_ppo.py:98", "sim/a1_ppo.py:103", "sim/a1_selfplay.py:210"],
+      "finding": "Rollout/PPO independently enforce five-action masks and 30-dimensional features; collector action counts also have length five. Updating only the actor head is insufficient. PPO currently requires the first learner decision at time zero, while SkillGraphExecutor starts unavailable until a real 100 ms stability gate.",
+      "minimum_change": "Version mask dimensions, feature dimensions and replay identities consistently across encoder, buffer, PPO, snapshots and export. Explicitly define shared initial warmup/decision-time origin or represent the forced initial interval; do not waive the stability gate or fabricate a time-zero decision."
+    },
+    {
+      "id": "F5", "priority": "must_migrate",
+      "code": ["sim/a1_env.py:193", "sim/a1_env.py:199", "sim/a1_env.py:298", "sim/a1_env.py:302"],
+      "finding": "Training env settles one old target sphere with FirstTouchScorer. Current material qualification uses separate all-three-region audits; those offline reports do not activate a three-region online reward function.",
+      "minimum_change": "Use one shared online three-region event definition for both slots, aggregate all events from the same 1 ms physics tick, and preserve existing foul-before-hit settlement. Keep valid physical loss distinct from invalid numeric/contact-evidence transitions."
+    },
+    {
+      "id": "F6", "priority": "retain",
+      "code": ["sim/a1_env.py:84", "sim/a1_env.py:265", "sim/a1_env.py:302", "sim/a1_selfplay.py:215"],
+      "finding": "Useful plumbing already exists: simultaneous current-state observations, no opponent script metadata in actor features, busy no-op exclusion, first terminal physical settlement, independent frozen opponents, complete-episode transactional buffers and no hidden retries.",
+      "minimum_change": "Preserve these contracts while replacing the graph/model/feature interfaces; do not rewrite the full learner solely to add the new bank."
+    },
+    {
+      "id": "F7", "priority": "retain_with_new_identity",
+      "code": ["sim/a1_selfplay.py:67", "sim/a1_selfplay.py:141", "sim/a1_train.py:140", "sim/a1_train.py:210"],
+      "finding": "Snapshots bind actual model arrays, scene config, bank data, runtime and encoder; a1_train really performs PPO updates and maintains a four-snapshot frozen opponent pool. a1_selfplay's public CLI remains a zero-update collector.",
+      "minimum_change": "Bind the new package hash, exact graph ordering, scorer, current constraints and new encoder/action versions. Old snapshots should fail compatibility checks."
+    },
+    {
+      "id": "F8", "priority": "scope_warning",
+      "code": ["sim/a1_train.py:33", "sim/a1_train.py:37", "sim/a1_selfplay.py:156"],
+      "finding": "Existing training is bounded A1-family versus frozen A1-family, with physical-slot alternation: 1..8 updates, 2/4/6/8 episodes per update, at most 32 episodes, 80 s per episode. It is not the planned continuous-action A2 training implementation.",
+      "minimum_change": "A first A1-only training release can be labelled as such. Do not claim A1-versus-continuous-A2 fairness or final cross-play; those require the later shared adapter and independent A2 actor."
+    },
+    {
+      "id": "F9", "priority": "scope_warning",
+      "code": ["sim/a1_policy.py:135", "sim/a1_policy.py:161"],
+      "finding": "The old learnable initialization has 0.25/s departure hazard, about 4 s expected wait when all four nonwait actions are available. Naively spreading its mass over 34 graph edges then masking the 10 initial outgoing edges gives about 13.586 s expected wait, not the original hazard.",
+      "minimum_change": "Define an explicit availability-aware exploration initialization for the new version and report actual wait/busy/choice statistics. This is not permission for forced attack/defence alternation or a fixed tactic."
+    },
+    {
+      "id": "F10", "priority": "scope_warning",
+      "code": ["sim/a1_env.py:168", "sim/a1_env.py:324", "sim/feedback_policy.py:64"],
+      "finding": "Legacy environment exports decision-step traces; new validation has used full 1 ms state traces and actual 100 ms gates. The graph executor remains uninterruptible during each active edge, so observed threats can arrive while the mask is closed.",
+      "minimum_change": "For release regression evidence, retain full-rate diagnostics and record busy intervals and first available responses. Do not automatically unmask mid-curve; a known clean difficult-combo miss may remain a labelled limitation."
+    }
+  ],
+  "minimum_release_migration": [
+    {
+      "order": 1,
+      "deliverable": "Frozen package and inspector",
+      "contract": "Package all exact nodes/edges, file hashes, constraints, scoring and known evidence limits. An inspect/new_executor API is a loader, not a training environment or automatic admission."
+    },
+    {
+      "order": 2,
+      "deliverable": "Separate graph-native step/reset environment",
+      "contract": "Use confirmed limited model and identical low-level controller, no new leash default. Per-slot actual graph state, 1 ms stability feedback, 10 ms targets, simultaneous 20 ms policy decisions; only explicit outgoing edges and wait/continue. Preserve context-specific unloaded nodes."
+    },
+    {
+      "order": 3,
+      "deliverable": "Common online scorer and physical outcome contract",
+      "contract": "Both slots use exactly the packaged three-region geometry and common existing legal-contact/foul settlement. Physical target losses remain valid data, including known hard-combo misses. Numerical failure or missing reliable contact provenance stays invalid and stops the staged batch. First-touch training termination and full-window diagnostic validation remain distinct."
+    },
+    {
+      "order": 4,
+      "deliverable": "New encoder, mask, buffer, PPO and snapshot versions",
+      "contract": "Eliminate five/30 hardcoding throughout. Preserve physical-time returns, complete transactions and frozen opponent identities. Resolve initial 100 ms readiness versus time-zero PPO assumption explicitly. No old-policy weight reuse by action-name substitution."
+    },
+    {
+      "order": 5,
+      "deliverable": "Bounded training and held-out attack/defence evaluation",
+      "contract": "Run a small explicit training budget only after the native adapter passes its finite regression set. Label it A1-versus-A1 if no A2 adapter exists. Do not demand universal defence or a fully trained policy to publish the usable technical entry."
+    }
+  ],
+  "finite_validation_before_new_training_entry": [
+    "No-integration tests: every packaged edge keeps exact knots/coefficients and named endpoints; masks reject wrong-node, 99 ms ready and busy requests; aliases cannot merge different execution contexts; altered package/score/model/action-order hashes fail closed.",
+    "Native adapter equivalence on one already-qualified attack and one observed staged defence: compare all issued references to the archived recipe; verify the online all-three-region scorer and real entry/exit gates. Reuse old material certificates as inputs, not as proof of the new environment adapter.",
+    "One known difficult continuous combo as a negative control: if physically clean but hit, preserve loss/reward and the busy-response record. Never convert it into successful defence or an invalid batch merely to improve reported success.",
+    "One complete two-episode/two-slot collection and one optimizer update: replay old probabilities under recorded masks, verify model/package identity, independent frozen opponent, unchanged opponent weights, valid sample commit and safe checkpoint reload. No long self-play campaign is required to demonstrate this technical entry.",
+    "Held-out physical attack and defence opportunities with wait/attack baselines, not only action counts: confirm that always-wait can lose, a valid attack can score, and a known defence can prevent a specific threat. Report both capacities and known misses separately."
+  ],
+  "learning_both_attack_and_defence_without_unapproved_reward_rules": {
+    "already_present_reward": "Only physical terminal hit/foul rewards, timeout zero; no action-name reward in the inspected env or PPO.",
+    "not_approved_here": ["reward for selecting parry/attack by name", "block immunity", "mandatory attack/defence alternation", "guaranteed successful parry"],
+    "minimum_training_design": "Use an explicitly documented opponent/state curriculum that presents real attack opportunities and real threats, then mixed/free decisions. Any task mode or active-region choice must be public and part of snapshot identity. This changes exposure, not the physical score or the actor's selected move.",
+    "evaluation": "Measure physical scoring, being hit, response opportunities, actual loaded interception and known counterattack outcomes on held-out episodes; choosing both names does not prove either ability. A short technical PPO run cannot promise learned balanced fencing.",
+    "future_A2_boundary": "Keep shared model, physical observation availability, scoring and time budgets compatible with later A2. A1-only release does not demonstrate the continuous A2 adapter or final frozen-policy cross-play."
+  },
+  "source_fingerprints": {
+    "sim/a1_env.py": "6a88b8ef063295212e94202b6331b62a9f50b567a195f73f42881f8a818d2289",
+    "sim/a1_policy.py": "a72fcd17b5bf3185a1e64714981b8c5f9a7e5153acbf63371898088ea2269e70",
+    "sim/a1_selfplay.py": "f320578caee879aa5201e2a3f3d9d24254d9a2560e2ebd0d4a834bde387a80ae",
+    "sim/a1_train.py": "cfac831b20c2386cd5d3a3071d3e6814349f0efbed31e94e0010c5fd425640fc",
+    "sim/a1_control.py": "9a1b25b31e63bad7c214d4235fbd55ec82cf23411d546a405d51d1f605c5c323",
+    "sim/a1_skills.py": "7af652b83962a466d11d544c9809b2133ba861962c2a3ed2a26b655e409e90e3",
+    "sim/a1_ppo.py": "83c53c77ae7eb356d91531ec9539ef4f72bafd12cb01e813341c50d3921ae940",
+    "sim/duel_scene.py": "4b1b1ccb44188e8fe7db456f4da518c3a162a921e5559ce6818abecd6b1e114e",
+    "sim/feedback_policy.py": "cf4d5da5f7bcdafaa42b063da637e9384663b3f6cc9481425ff8b0f08fa9b259",
+    "config/joint_constraints_observed.json": "d6ca8132a6b4456325bbdd5f905e07db74c02644a0e30eb528b74f450db10a32",
+    "outputs/pose_set_v1/integrated_catalog_candidate_v4.json": "498817a2b715bc257c38c57cba30219346ec37d37e9fb6d750f716a706fa5cdb"
+  },
+  "shared_source_modified_by_this_audit": false,
+  "new_training_run_started": false,
+  "training_admission_claimed": false
+}

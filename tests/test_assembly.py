@@ -25,6 +25,7 @@ from sim.assembly import (
     load_assembly_config,
     run_assembly_check,
 )
+from sim.blade_geometry import blade_collision_geom_ids
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -362,8 +363,9 @@ class AssemblyTests(unittest.TestCase):
         start = np.flatnonzero(np.isclose(profile[:, 0], dims["guard_far_m"], rtol=0, atol=1e-12))[-1]
         blade_profile = profile[start:]
         intervals, radii = [], []
-        for i in range(3):
-            geom = object_id(m, mujoco.mjtObj.mjOBJ_GEOM, f"shinai_blade_collision_{i}")
+        blade_geoms = blade_collision_geom_ids(m)
+        self.assertEqual(len(blade_geoms), self.assembly.config['collision']['blade_profile_contract']['section_count'])
+        for geom in blade_geoms:
             self.assertEqual(m.geom_type[geom], mujoco.mjtGeom.mjGEOM_CYLINDER,
                              "Rounded capsule endpoints leave a zero-area neck between segments")
             direction = d.geom_xmat[geom].reshape(3, 3)[:, 2]
@@ -381,10 +383,14 @@ class AssemblyTests(unittest.TestCase):
                                   float(interior.max()) if interior.size else 0.)
             self.assertGreaterEqual(radius, expected_radius-1e-9,
                                     "Collision cylinder misses a profile peak between uniform samples")
+            local_minimum = min(float(np.min(np.interp([a,b],blade_profile[:,0],blade_profile[:,1]))),
+                                float(interior.min()) if interior.size else float('inf'))
+            self.assertLessEqual(radius-local_minimum,
+                self.assembly.config['collision']['blade_profile_contract']['declared_max_radial_excess_m']+1e-9)
             intervals.append((a, b))
             radii.append(radius)
         self.assertAlmostEqual(intervals[0][0], dims["guard_far_m"], places=9)
-        for i in range(2):
+        for i in range(len(intervals)-1):
             self.assertAlmostEqual(intervals[i][1], intervals[i+1][0], places=9)
             self.assertGreater(min(radii[i], radii[i+1]), 1e-4)
         self.assertAlmostEqual(intervals[-1][1], dims["tip_from_grip_m"], places=9)

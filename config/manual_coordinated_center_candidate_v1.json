@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "candidate_id": "upright_small_retraction_center_hold_v1",
+  "status": "offline_candidate_not_for_training",
+  "attack": "cut_down_center",
+  "start_s": 0.75,
+  "time_s": [0.0, 2.0, 5.5, 13.25],
+  "offsets_rad": [
+    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    [-0.65, -0.07403285, 0.0, 0.20995282, 0.0, 0.14459737, 0.0],
+    [-0.65, -0.07403285, 0.0, 0.20995282, 0.0, 0.14459737, 0.0],
+    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+  ]
+}
